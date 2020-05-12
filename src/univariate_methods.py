@@ -7,7 +7,7 @@ def return_fields(file_loc="../data/student_data.csv"):
     :return:
     '''
 
-    isinstance(file_loc, str)
+    assert isinstance(file_loc, str)
 
     df = pd.read_csv(file_loc)
 
@@ -34,6 +34,30 @@ def return_fields(file_loc="../data/student_data.csv"):
             res[k] = v
 
     return res
+
+
+def get_counts(field_name='', file_loc="../data/student_data.csv"):
+    '''
+    returns frequency counts of the input field from the dataframe
+    :param file_loc: path to the csv file
+    :param field_name: string, name of the field
+    :return: returns a dictionary with frequency distribution
+    '''
+
+    assert isinstance(field_name, str)
+
+    df = pd.read_csv(file_loc)
+
+    assert field_name in df.columns
+    field_data = df[field_name]
+
+    return field_data.value_counts()
+
+
+print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
+
+
+
 
 
 
