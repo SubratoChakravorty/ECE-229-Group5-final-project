@@ -20,19 +20,33 @@ df = pd.read_csv(student_data_file)
 categories = return_fields('../../data/student_data.csv')
 
 col_options = [dict(label=x, value=x) for x in df.columns]
-app.layout = html.Div(
-    [
-        html.H1("Explore the Data"),
-        html.P("Click a category on the inner plot to filter"),
-        html.Div(
-            html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
-            style={"width": "25%", "float": "left"},
-        ),
-        dcc.Graph(id="graph",
-                  style={"width": "75%", "display": "inline-block"},
-                  animate=False),
-    ]
-)
+app.layout = html.Div([
+    dcc.Tabs([
+        dcc.Tab(label="Introduction", children=[
+            html.H2("A Brief Introduction to the Data")  # TODO: fill this out, should be like the presentation
+            # TODO: explain where the data comes from and our goals with the dashoard
+            # TODO: explain the purpose of, and how to navigate each tab
+        ]),
+        dcc.Tab(label="Explore", children=[
+            html.H1("Explore the Data"),
+            html.P("Click a category on the inner plot to filter"),
+            html.Div(
+                html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
+                style={"width": "25%", "float": "left"},
+            ),
+            dcc.Graph(id="graph",
+                      style={"width": "75%", "display": "inline-block"},
+                      animate=False),
+        ]),
+        dcc.Tab(label="Inspect", children=[
+            html.H1("Univariate Analysis")
+        ]),
+        dcc.Tab(label="Insights", children=[
+            html.H1("Multivariate Statistical Analysis")
+        ]),
+
+    ])
+])
 
 
 @app.callback(Output("graph", "figure"), [Input('category_selector', "value")])
@@ -44,9 +58,7 @@ def make_figure(fields):
     :param fields: 
     :return: 
     """
-    if fields is None:
-        # TODO: return text telling the user to select data
-
+    if not fields:
         fig = px.sunburst(
             {'x': ["Select a category"],
              'value': [1]},
