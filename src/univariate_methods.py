@@ -70,13 +70,32 @@ def get_field_data(field_name='', file_loc="../data/student_data.csv"):
     field_data = df[field_name]
 
     return field_data
-#
+
+
+def get_sunburst_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv"):
+    '''
+    returns a dataframe with mean and count of groups segregated using input fields
+    :param color_var: continuous y variable
+    :param fields: list of fields
+    :param file_loc: path to the dataframe
+    :return: returns a dataframe with info to build a sunburst plot
+    '''
+
+    assert isinstance(fields, list)
+    assert isinstance(color_var, str)
+
+    df = pd.read_csv(file_loc)
+    df = df[fields + [color_var]]
+    assert color_var in df.columns
+    assert all([(isinstance(field, str) and field in df.columns) for field in fields])
+
+    df = df.groupby(by=fields)
+
+    flat_df = df.count().reset_index().rename(columns={color_var: 'count'})
+    flat_df['mean'] = df.mean()[color_var].values
+    return flat_df
+
+
 # print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
 
-
-
-
-
-
-# print(return_fields())
-
+# print(get_sunburst_data(['X1RACE','X1SEX','N1SEX']))
