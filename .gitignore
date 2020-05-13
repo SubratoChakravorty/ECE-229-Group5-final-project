@@ -2,7 +2,7 @@ _build/
 _static/
 _templates/
 __pycache__/
-.idea/*
+.idea/
 /data/hsls_09_school_v1_0.csv
 /data/hsls_16_student_v1_0.csv
 *.bat

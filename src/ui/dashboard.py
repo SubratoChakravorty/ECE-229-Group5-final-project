@@ -23,6 +23,7 @@ dimensions = ["x", "y"]
 app.layout = html.Div(
     [
         html.H1("Explore the Data"),
+        html.H2("Click a category on the inner plot to filter"),
         html.Div(
             [html.P([d + ":", dcc.Dropdown(id=d, options=col_options)]) for d in dimensions],
             style={"width": "25%", "float": "left"},

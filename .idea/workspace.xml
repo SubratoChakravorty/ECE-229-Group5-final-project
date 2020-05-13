@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7384b9df-e472-4f79-8587-a565aad01f0d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ui/dashboard.py" afterDir="false" />
+    <list default="true" id="7384b9df-e472-4f79-8587-a565aad01f0d" name="Default Changelist" comment="exclude IDE artifacts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/dashboard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/univariate_methods.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/univariate_methods.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +39,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -155,7 +155,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1589244868937</updated>
-      <workItem from="1589325130196" duration="4644000" />
+      <workItem from="1589325130196" duration="8814000" />
     </task>
     <task id="LOCAL-00001" summary="exclude IDE artifacts">
       <created>1589325376265</created>
@@ -187,36 +187,36 @@
     <option name="LAST_COMMIT_MESSAGE" value="exclude IDE artifacts" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="499" y="79" width="912" height="904" key="CommitChangelistDialog2" timestamp="1589325376211">
+    <state x="499" y="79" width="912" height="904" key="CommitChangelistDialog2" timestamp="1589330006205">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state x="499" y="79" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.1010@0.27.1920.1010" timestamp="1589325376211" />
-    <state width="1874" height="254" key="GridCell.Tab.0.bottom" timestamp="1589329165446">
+    <state x="499" y="79" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.1010@0.27.1920.1010" timestamp="1589330006205" />
+    <state width="1874" height="321" key="GridCell.Tab.0.bottom" timestamp="1589344561465">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="254" key="GridCell.Tab.0.bottom/0.27.1920.1010@0.27.1920.1010" timestamp="1589329165446" />
-    <state width="1874" height="254" key="GridCell.Tab.0.center" timestamp="1589329165445">
+    <state width="1874" height="321" key="GridCell.Tab.0.bottom/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561465" />
+    <state width="1874" height="321" key="GridCell.Tab.0.center" timestamp="1589344561464">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="254" key="GridCell.Tab.0.center/0.27.1920.1010@0.27.1920.1010" timestamp="1589329165445" />
-    <state width="1874" height="254" key="GridCell.Tab.0.left" timestamp="1589329165445">
+    <state width="1874" height="321" key="GridCell.Tab.0.center/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561464" />
+    <state width="1874" height="321" key="GridCell.Tab.0.left" timestamp="1589344561464">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="254" key="GridCell.Tab.0.left/0.27.1920.1010@0.27.1920.1010" timestamp="1589329165445" />
-    <state width="1874" height="254" key="GridCell.Tab.0.right" timestamp="1589329165446">
+    <state width="1874" height="321" key="GridCell.Tab.0.left/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561464" />
+    <state width="1874" height="321" key="GridCell.Tab.0.right" timestamp="1589344561465">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="254" key="GridCell.Tab.0.right/0.27.1920.1010@0.27.1920.1010" timestamp="1589329165446" />
-    <state x="449" y="166" key="SettingsEditor" timestamp="1589325273440">
+    <state width="1874" height="321" key="GridCell.Tab.0.right/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561465" />
+    <state x="449" y="166" key="SettingsEditor" timestamp="1589334865277">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state x="449" y="166" key="SettingsEditor/0.27.1920.1010@0.27.1920.1010" timestamp="1589325273440" />
+    <state x="449" y="166" key="SettingsEditor/0.27.1920.1010@0.27.1920.1010" timestamp="1589334865277" />
     <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589328857940">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
     <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.1010@0.27.1920.1010" timestamp="1589328857940" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ECE_229_Group5_final_project$dashboard.coverage" NAME="dashboard Coverage Results" MODIFIED="1589329841928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
+    <SUITE FILE_PATH="coverage/ECE_229_Group5_final_project$dashboard.coverage" NAME="dashboard Coverage Results" MODIFIED="1589331424455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
   </component>
 </project>

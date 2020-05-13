@@ -54,7 +54,7 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
-print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
+# print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
 
 
 
