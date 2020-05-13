@@ -1,4 +1,6 @@
+import json
 import pandas as pd
+from collections.abc import Iterable
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -54,10 +56,30 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
+def get_var_info(name, file="../data/description.json"):
+    """
+    Usage:
+        1. Single variable: get_var_info("N1ALTCERT")
+        2. Batch variables: get_var_info(["N1ALTCERT", "N1COURSE"])
+
+    :param name: One or more variables for inquiry
+    :return: returns a dictionary associated with the variable or a list
+        of dictionaries corresponds to each variable in name.
+    """
+    assert isinstance(name, str) or isinstance(name, Iterable)
+
+    with open(file, "r") as f:
+        content = json.load(f)
+    
+    # Single variable
+    if isinstance(name, str):
+        return content[name]
+    
+    # Multiple variables
+    return [content[key] for key in name]
+    
+    
 print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
-
-
-
 
 
 
