@@ -12,3 +12,4 @@ conf.py
 index.rst
 main.py
 *.ipynb
+.idea/
