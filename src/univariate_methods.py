@@ -1,6 +1,8 @@
 import json
-import pandas as pd
 from collections.abc import Iterable
+from typing import Tuple
+
+import pandas as pd
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -74,7 +76,8 @@ def get_field_data(field_name='', file_loc="../data/student_data.csv"):
     return field_data
 
 
-def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv"):
+def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
+        -> Tuple[pd.DataFrame, float]:
     '''
     returns a dataframe with mean and count of groups segregated using input fields
     :param color_var: continuous y variable
@@ -88,6 +91,8 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
     df = pd.read_csv(file_loc)
     df = df[fields + [color_var]]
+    color_var_mean = df[color_var].mean()
+
     assert color_var in df.columns
     assert all([(isinstance(field, str) and field in df.columns) for field in fields])
 
@@ -95,7 +100,7 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
     flat_df = df.count().reset_index().rename(columns={color_var: 'count'})
     flat_df['mean'] = df.mean()[color_var].values
-    return flat_df
+    return flat_df, color_var_mean
 
 
 # print(get_counts('X1SEX', file_loc='../data/student_data.csv'))

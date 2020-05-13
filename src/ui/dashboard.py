@@ -1,41 +1,44 @@
 """
 Just run using `python dashboard.py`
 """
-from typing import Union, List, Tuple
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import pandas as pd
 import plotly.express as px
 from dash.dependencies import Input, Output
 
-from src.univariate_methods import return_fields
+from src.config import student_data_file
+from src.univariate_methods import return_fields, get_counts_means_data
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_css)
 
-student_data_file = '../../data/student_data.csv'
-df = pd.read_csv(student_data_file)
-categories = return_fields('../../data/student_data.csv')
-
-col_options = [dict(label=x, value=x) for x in df.columns]
-
-introduction_tab = dcc.Tab(label="Introduction", children=[
+introduction_tab = dcc.Tab(
+    label="Introduction",
+    children=[
     html.H2("A Brief Introduction to the Data")  # TODO: fill this out, should be like the presentation
     # TODO: explain where the data comes from and our goals with the dashoard
     # TODO: explain the purpose of, and how to navigate each tab
-])
+    ]
+)
+
+categories = return_fields('../../data/student_data.csv')
+col_options = [dict(label=x, value=x) for x in categories]
 
 explore_tab = dcc.Tab(
     label="Explore",
     children=[
         html.H1("Explore the Data"), html.P("Click a category on the inner plot to filter"),
         html.Div(
-            html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
-            style={"width": "25%", "float": "left"},
+            [
+                html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
+                html.P(["Select score:", dcc.Dropdown(id='color_var_selector', options=col_options)]),
+            ],
+            style={"width": "25%", "float": "left"}
         ),
-        dcc.Graph(id="graph", style={"width": "75%", "display": "inline-block"},
+        dcc.Graph(id="graph",
+                  style={"width": "75%", "display": "inline-block"},
                   animate=False),
     ]
 )
@@ -55,17 +58,19 @@ insights_tab = dcc.Tab(
 )
 
 app.layout = html.Div([
-    dcc.Tabs([
-        introduction_tab,
-        explore_tab,
-        inspect_tab,
-        insights_tab,
-    ])
+    dcc.Tabs(
+        [
+            introduction_tab,
+            explore_tab,
+            inspect_tab,
+            insights_tab,
+        ],
+    )
 ])
 
 
-@app.callback(Output("graph", "figure"), [Input('category_selector', "value")])
-def make_figure(fields):
+@app.callback(Output('graph', 'figure'), [Input('category_selector', 'value'), Input('color_var_selector', 'value')])
+def make_sunburst(fields, color_var):
     """
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
     continuous variable, used to color the segments.
@@ -81,10 +86,16 @@ def make_figure(fields):
             hover_data=None
         )
         return fig
+    elif not color_var:
+        fig = px.sunburst(
+            {'x'    : ["Select a score"],
+             'value': [1]},
+            path=['x'],
+            hover_data=None
+        )
+        return fig
 
-    color_var = 'X1SCIEFF'
-
-    data, color_var_mean = get_group_counts_and_means(fields, color_var)
+    data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
 
     fig = px.sunburst(
         data,
@@ -92,29 +103,11 @@ def make_figure(fields):
         values='count',
         color='mean',
         hover_data=fields,  # TODO: figure out what the best hover data is
-        color_continuous_scale='RdBu',
-        color_continuous_midpoint=color_var_mean)
+        color_continuous_scale='Portland',
+        color_continuous_midpoint=color_var_mean,
+    )
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
-
-
-def get_group_counts_and_means(fields: Union[List, Tuple], color_var: str) -> Tuple[pd.DataFrame, float]:
-    """
-    Returns a `DataFrame` filtered and grouped by `fields` with columns for the count of each group and the mean of the
-    continuous `color_var` for each group.
-
-    :param fields:
-    :param color_var:
-    :return: DataFrame and mean of color_var
-    """
-    df_filtered = df[fields + [color_var]]
-
-    gr = df_filtered.groupby(by=fields)
-    data = gr.count().reset_index().rename(columns={color_var: 'count'})
-    mean = gr.mean().reset_index()[color_var]
-    data['mean'] = mean
-
-    color_var_mean = df_filtered[color_var].mean()
-    return data, color_var_mean
 
 
 if __name__ == '__main__':
