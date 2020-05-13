@@ -54,7 +54,24 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
-print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
+def get_field_data(field_name='', file_loc="../data/student_data.csv"):
+    '''
+    returns the input field data from the dataframe
+    :param field_name: string, field name
+    :param file_loc: string, path to the dataset
+    :return: returns the input field data as pandas series
+    '''
+
+    assert isinstance(field_name, str)
+
+    df = pd.read_csv(file_loc)
+
+    assert field_name in df.columns
+    field_data = df[field_name]
+
+    return field_data
+#
+# print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
 
 
 
