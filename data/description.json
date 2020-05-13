@@ -1,0 +1,138 @@
+{
+    "N1ALTCERT": {
+        "desp": "Science teacher entered profession through alternative certification program",
+        "title": "Alternative certification"
+    },
+    "N1CONCEPTS": {
+        "desp": "teaching basic science concepts",
+        "title": "Basic concepts"
+    },
+    "N1COURSE": {
+        "desp": "Science Course",
+        "title": "Science Course"
+    },
+    "N1GROUP": {
+        "desp": "Science teacher has students work in small groups",
+        "title": "Work group"
+    },
+    "N1HIDEG": {
+        "desp": "Science teacher's highest degree",
+        "title": "Teacher's highest degree"
+    },
+    "N1INTEREST": {
+        "desp": "increasing students' interest in science",
+        "title": "Increase interest"
+    },
+    "N1SCIJOB": {
+        "desp": "Science teacher held science-related prior to becoming a teacher",
+        "title": "Had science-related job"
+    },
+    "N1SCIYRS912": {
+        "desp": "Years science teacher has taught high school science",
+        "title": "Experience in science teaching"
+    },
+    "N1SEX": {
+        "desp": "Science Teacher's Sex",
+        "title": "Teacher's gender"
+    },
+    "N1TERMS": {
+        "desp": "important science terms/facts N1SKILLS science process/inquiry skills",
+        "title": "Important science terms"
+    },
+    "S1STCHCONF": {
+        "desp": "9th grader's fall 09 science teacher thinks all students can be successful",
+        "title": "Teacher's confident"
+    },
+    "S1STCHFAIR": {
+        "desp": "9th grader's fall 2009 science teacher treats every student fairly",
+        "title": "Fair teachers"
+    },
+    "S1STCHMISTKE": {
+        "desp": "9th grader's fall 09 science teacher think mistakes OK if students learn",
+        "title": "Teacher's tolerance for mistake"
+    },
+    "S1STCHRESPCT": {
+        "desp": "9th grader's fall 2009 science teacher treats students with respect",
+        "title": "Teacher respect"
+    },
+    "S1STCHVALUES": {
+        "desp": "9th grader's fall 2009 science teacher values/listens to students' ideas",
+        "title": "Teacher's values"
+    },
+    "S1TEACTIV": {
+        "desp": "Time/effort in math/science means not enough time for extracurriculars",
+        "title": "Time/effort extracurriculars"
+    },
+    "S1TEFRNDS": {
+        "desp": "Time/effort in math/science means not enough time with friends",
+        "title": "Time/effort friends"
+    },
+    "S1TEMAKEFUN": {
+        "desp": "Time/effort in math/science means people will make fun of 9th grader",
+        "title": "Time/effort make fun"
+    },
+    "S1TEPOPULAR": {
+        "desp": "Time/effort in math/science means 9th grader won't be popular",
+        "title": "Time/effort popular"
+    },
+    "STU_ID": {
+        "desp": "Student ID",
+        "title": "Student ID"
+    },
+    "X1CONTROL": {
+        "desp": "School Control",
+        "title": "School Control"
+    },
+    "X1LOCALE": {
+        "desp": "School Locale (Urbanicity)",
+        "title": "School Locale"
+    },
+    "X1RACE": {
+        "desp": "Student's Race",
+        "title": "Student's Race"
+    },
+    "X1SCIEFF": {
+        "desp": "Student Science Self-efficacy",
+        "title": "Science Self-efficacy"
+    },
+    "X1SCIID": {
+        "desp": "Scale of student's science identity",
+        "title": "Science identity"
+    },
+    "X1SCIINT": {
+        "desp": "Scale of student's interest in fall 2009 science course",
+        "title": "Science interest"
+    },
+    "X1SCIUTI": {
+        "desp": "Scale of student's science utility",
+        "title": "Science utility"
+    },
+    "X1SES": {
+        "desp": "Socioeconomic status",
+        "title": "Socio-economic status"
+    },
+    "X1SEX": {
+        "desp": "Student Sex",
+        "title": "Student gender"
+    },
+    "X1TSCERT": {
+        "desp": "Science teacher's science teaching certification",
+        "title": "Teacher's science certification"
+    },
+    "X1TSRACE": {
+        "desp": "Science Teacher's Race",
+        "title": "Teacher's race"
+    },
+    "X3TGPAENG": {
+        "desp": "English GPA",
+        "title": "English GPA"
+    },
+    "X3TGPAMAT": {
+        "desp": "Mathematics GPA",
+        "title": "Math GPA"
+    },
+    "X3TGPASCI": {
+        "desp": "Science GPA",
+        "title": "Science GPA"
+    }
+}
