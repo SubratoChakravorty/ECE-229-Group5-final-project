@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-
     <list default="true" id="7384b9df-e472-4f79-8587-a565aad01f0d" name="Default Changelist" comment="exclude IDE artifacts">
+      <change beforePath="$PROJECT_DIR$/.idea/ECE-229-Group5-final-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ECE-229-Group5-final-project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/dashboard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/univariate_methods.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/univariate_methods.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +16,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Python Unit Test" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -40,12 +41,12 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/ui/test" />
       <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/src/ui/test" />
     </key>
   </component>
   <component name="RunManager" selected="Python.dashboard">
@@ -85,6 +86,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/ui/dashboard.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="interactive" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ECE-229-Group5-final-project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/sandbox/dash_sandbox" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sandbox/dash_sandbox/interactive.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -140,6 +163,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.dashboard" />
+        <item itemvalue="Python.interactive" />
         <item itemvalue="Python.univariate_methods" />
         <item itemvalue="Python.clean_data" />
         <item itemvalue="Python.main" />
@@ -157,6 +181,7 @@
       <option name="presentableId" value="Default" />
       <updated>1589244868937</updated>
       <workItem from="1589325130196" duration="8814000" />
+      <workItem from="1589345101858" duration="6245000" />
     </task>
     <task id="LOCAL-00001" summary="exclude IDE artifacts">
       <created>1589325376265</created>
@@ -192,32 +217,37 @@
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
     <state x="499" y="79" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.1010@0.27.1920.1010" timestamp="1589330006205" />
-    <state width="1874" height="321" key="GridCell.Tab.0.bottom" timestamp="1589344561465">
+    <state width="1874" height="237" key="GridCell.Tab.0.bottom" timestamp="1589350844187">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="321" key="GridCell.Tab.0.bottom/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561465" />
-    <state width="1874" height="321" key="GridCell.Tab.0.center" timestamp="1589344561464">
+    <state width="1874" height="237" key="GridCell.Tab.0.bottom/0.27.1920.1010@0.27.1920.1010" timestamp="1589350844187" />
+    <state width="1874" height="237" key="GridCell.Tab.0.center" timestamp="1589350844187">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="321" key="GridCell.Tab.0.center/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561464" />
-    <state width="1874" height="321" key="GridCell.Tab.0.left" timestamp="1589344561464">
+    <state width="1874" height="237" key="GridCell.Tab.0.center/0.27.1920.1010@0.27.1920.1010" timestamp="1589350844187" />
+    <state width="1874" height="237" key="GridCell.Tab.0.left" timestamp="1589350844186">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="321" key="GridCell.Tab.0.left/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561464" />
-    <state width="1874" height="321" key="GridCell.Tab.0.right" timestamp="1589344561465">
+    <state width="1874" height="237" key="GridCell.Tab.0.left/0.27.1920.1010@0.27.1920.1010" timestamp="1589350844186" />
+    <state width="1874" height="237" key="GridCell.Tab.0.right" timestamp="1589350844187">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state width="1874" height="321" key="GridCell.Tab.0.right/0.27.1920.1010@0.27.1920.1010" timestamp="1589344561465" />
-    <state x="449" y="166" key="SettingsEditor" timestamp="1589334865277">
+    <state width="1874" height="237" key="GridCell.Tab.0.right/0.27.1920.1010@0.27.1920.1010" timestamp="1589350844187" />
+    <state x="449" y="166" key="SettingsEditor" timestamp="1589349130454">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state x="449" y="166" key="SettingsEditor/0.27.1920.1010@0.27.1920.1010" timestamp="1589334865277" />
-    <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589328857940">
+    <state x="449" y="166" key="SettingsEditor/0.27.1920.1010@0.27.1920.1010" timestamp="1589349130454" />
+    <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589347360147">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.1010@0.27.1920.1010" timestamp="1589328857940" />
+    <state x="731" y="446" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.1010@0.27.1920.1010" timestamp="1589347360147" />
+    <state x="171" y="241" width="618" height="580" key="find.popup" timestamp="1589347337485">
+      <screen x="0" y="27" width="1920" height="1010" />
+    </state>
+    <state x="171" y="241" width="618" height="580" key="find.popup/0.27.1920.1010@0.27.1920.1010" timestamp="1589347337485" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ECE_229_Group5_final_project$dashboard.coverage" NAME="dashboard Coverage Results" MODIFIED="1589331424455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
+    <SUITE FILE_PATH="coverage/ECE_229_Group5_final_project$dashboard.coverage" NAME="dashboard Coverage Results" MODIFIED="1589351765158" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
+    <SUITE FILE_PATH="coverage/ECE_229_Group5_final_project$interactive.coverage" NAME="interactive Coverage Results" MODIFIED="1589347039170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sandbox/dash_sandbox" />
   </component>
 </project>
