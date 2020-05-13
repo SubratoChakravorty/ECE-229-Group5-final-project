@@ -77,11 +77,3 @@ def get_var_info(name, file="../data/description.json"):
     
     # Multiple variables
     return [content[key] for key in name]
-    
-    
-print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
-
-
-
-# print(return_fields())
-
