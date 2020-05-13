@@ -72,7 +72,7 @@ def get_field_data(field_name='', file_loc="../data/student_data.csv"):
     return field_data
 
 
-def get_sunburst_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv"):
+def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv"):
     '''
     returns a dataframe with mean and count of groups segregated using input fields
     :param color_var: continuous y variable
