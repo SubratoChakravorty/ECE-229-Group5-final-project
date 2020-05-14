@@ -1,7 +1,6 @@
 import json
 from collections.abc import Iterable
 from typing import Tuple
-
 import pandas as pd
 
 
@@ -107,24 +106,28 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
 # print(get_sunburst_data(['X1RACE','X1SEX','N1SEX']))
 
-def get_var_info(name, file="../data/description.json"):
+
+def get_var_group(group, file="../data/var_group.json"):
+    """
+    return a list of variables of a certain group
+    """
+    with open(file, "r") as f:
+        content = json.load(f)
+
+    return content[group]
+
+
+def get_var_info(file="../data/variables.csv"):
     """
     Usage:
         1. Single variable: get_var_info("N1ALTCERT")
         2. Batch variables: get_var_info(["N1ALTCERT", "N1COURSE"])
 
     :param name: One or more variables for inquiry
-    :return: returns a dictionary associated with the variable or a list
-        of dictionaries corresponds to each variable in name.
+    :return: returns a pd.DataFrame associated with the variable or a
+        subset of pd.DataFrame corresponds to each variable in name.
     """
-    assert isinstance(name, str) or isinstance(name, Iterable)
-
-    with open(file, "r") as f:
-        content = json.load(f)
-    
-    # Single variable
-    if isinstance(name, str):
-        return content[name]
+    df = pd.read_csv(file)
     
     # Multiple variables
-    return [content[key] for key in name]
+    return df
