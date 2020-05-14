@@ -8,18 +8,54 @@ import dash_html_components as html
 import plotly.express as px
 from dash.dependencies import Input, Output
 
+# for kai's vscode relative path issue only
+# just ignore it
+import sys
+sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project")
+
 from src.config import student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data
 
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+# color for frontend
+colors = {
+    'background': '#111111',
+    'text': '#7FDBFF'
+}
+# load first page markdown file
+with open("../txt/Readme.md", "r") as f:
+    markdown_first_page = f.read()
+
 app = dash.Dash(__name__, external_stylesheets=external_css)
 
 introduction_tab = dcc.Tab(
     label="Introduction",
     children=[
-    html.H2("A Brief Introduction to the Data")  # TODO: fill this out, should be like the presentation
-    # TODO: explain where the data comes from and our goals with the dashoard
-    # TODO: explain the purpose of, and how to navigate each tab
+    html.H1(
+        children="Analysis of Ninth Grader’s Science Self Efficacy",
+        style={
+            'textAlign': 'center',
+            'color': colors['text'],
+        }
+    ),
+    html.H2(
+        children="ECE229 - Team 5",
+        style={
+            'textAlign': 'center',
+            'color': colors['text'],
+        }
+    ),
+    # html.Div(children='Dash: A web application framework for Python.', style={
+    #     'textAlign': 'center',
+    #     'color': colors['text']
+    # }),
+
+    # Todo: make it looks nicer
+    html.Div([
+        dcc.Markdown(
+            children=markdown_first_page)
+    ])
     ]
 )
 
