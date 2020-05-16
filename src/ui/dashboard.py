@@ -252,19 +252,34 @@ app.layout = html.Div(
         
         html.Div(
             [
-                html.H1("Explore the Data"), html.P("Click a category on the inner plot to filter"),
                 html.Div(
                     [
+                        html.H1("Explore the Data"), 
+                        html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
                         html.P(["Select score:", dcc.Dropdown(id='color_var_selector', options=col_options)]),
                     ],
-                    style={"width": "25%", "float": "left"}
+                    className="pretty_container four columns",
                 ),
-                dcc.Graph(id="graph1",
-                        style={"width": "75%", "display": "inline-block"},
-                        animate=False)
+                    
+                # html.Div(
+                #     [
+                #         html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
+                #         html.P(["Select score:", dcc.Dropdown(id='color_var_selector', options=col_options)]),
+                #     ],
+                #     # style={"width": "25%", "float": "left"},
+                #     className="pretty_container four columns",
+                # ),
+                html.Div(
+                        [
+                            dcc.Graph(id="graph1",
+                                # style={"width": "75%", "display": "inline-block"},
+                                animate=False)
+                        ],
+                        className="pretty_container four columns",
+                    )
             ],
-            className="pretty_container",
+            # className="pretty_container",
         ),
 
         ######################################################< TAG3 PART >##################################################
