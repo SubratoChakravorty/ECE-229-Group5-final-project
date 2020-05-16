@@ -7,12 +7,12 @@ import copy
 import pathlib
 import dash
 import math
-#import datetime as dt
+import datetime as dt
 import pandas as pd
 from dash.dependencies import Input, Output, State, ClientsideFunction
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_table as dt
+# import dash_table as dt
 
 # Multi-dropdown options
 from controls import COUNTIES, WELL_STATUSES, WELL_TYPES, WELL_COLORS
@@ -290,6 +290,14 @@ app.layout = html.Div(
                             value=list(WELL_TYPES.keys()),
                             className="dcc_control",
                         ),
+                        dcc.RangeSlider(
+                            id="year_slider",
+                            min=1960,
+                            max=2017,
+                            value=[1990, 2010],
+                            marks={str(1990): str(1990), str(2010): str(2010)},
+                            className="dcc_control",
+                        ),
                     ],
                     className="pretty_container four columns",
                     id="cross-filter-options",
@@ -390,6 +398,75 @@ def make_sunburst(fields, color_var):
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
 
+# get relative data folder
+PATH = pathlib.Path(__file__).parent
+DATA_PATH = "/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/dash-oil-and-gas/data/wellspublic.csv"
+
+# Load data
+df = pd.read_csv(DATA_PATH, low_memory=False)
+df["Date_Well_Completed"] = pd.to_datetime(df["Date_Well_Completed"])
+df = df[df["Date_Well_Completed"] > dt.datetime(1960, 1, 1)]
+
+def filter_dataframe(df, well_statuses, well_types, year_slider):
+    dff = df[
+        df["Well_Status"].isin(well_statuses)
+        & df["Well_Type"].isin(well_types)
+        & (df["Date_Well_Completed"] > dt.datetime(year_slider[0], 1, 1))
+        & (df["Date_Well_Completed"] < dt.datetime(year_slider[1], 1, 1))
+    ]
+    return df
+
+# Selectors -> count graph
+@app.callback(
+    Output("count_graph", "figure"),
+    [
+        Input("well_statuses", "value"),
+        Input("well_types", "value"),
+        Input("year_slider", "value"),
+    ],
+)
+def make_count_figure(well_statuses, well_types, year_slider):
+
+    layout_count = copy.deepcopy(layout)
+
+    dff = filter_dataframe(df, well_statuses, well_types, [1960, 2017])
+    g = dff[["API_WellNo", "Date_Well_Completed"]]
+    g.index = g["Date_Well_Completed"]
+    g = g.resample("A").count()
+
+    colors = []
+    for i in range(1960, 2018):
+        if i >= int(year_slider[0]) and i < int(year_slider[1]):
+            colors.append("rgb(123, 199, 255)")
+        else:
+            colors.append("rgba(123, 199, 255, 0.2)")
+
+    data = [
+        dict(
+            type="scatter",
+            mode="markers",
+            x=g.index,
+            y=g["API_WellNo"] / 2,
+            name="All Wells",
+            opacity=0,
+            hoverinfo="skip",
+        ),
+        dict(
+            type="bar",
+            x=g.index,
+            y=g["API_WellNo"],
+            name="All Wells",
+            marker=dict(color=colors),
+        ),
+    ]
+
+    layout_count["title"] = "Completed Wells/Year"
+    layout_count["dragmode"] = "select"
+    layout_count["showlegend"] = False
+    layout_count["autosize"] = True
+
+    figure = dict(data=data, layout=layout_count)
+    return figure
 
 if __name__ == '__main__':
     app.run_server(debug=True)
