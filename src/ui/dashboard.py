@@ -21,10 +21,11 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 from src.config import variables_file, student_data_file
-from src.univariate_methods import return_fields, get_counts_means_data
+from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data
 
 
 # Style configuration
@@ -269,26 +270,17 @@ app.layout = html.Div(
                         html.H1("Univariate Analysis"),
                         html.P("Select categories:", className="control_label"),
                         dcc.Dropdown(
-                            id="well_statuses",
-                            options=well_status_options,
-                            multi=True,
-                            value=list(WELL_STATUSES.keys()),
+                            id="continuous_selector",
+                            options=populate_dropdown('continuous'),
                             className="dcc_control",
                         ),
-                        html.P("Select score:", className="control_label"),
-                        dcc.Dropdown(
-                            id="well_types",
-                            options=well_type_options,
-                            multi=True,
-                            value=list(WELL_TYPES.keys()),
-                            className="dcc_control",
-                        ),
-                        dcc.RangeSlider(
-                            id="year_slider",
-                            min=1960,
-                            max=2017,
-                            value=[1990, 2010],
-                            marks={str(1990): str(1990), str(2010): str(2010)},
+                        html.P("Select bar width:", className="control_label"),
+                        dcc.Slider(
+                            id="width_slider",
+                            min=2,
+                            max=20,
+                            value=5,
+                            marks={str(5): str(5), str(30): str(30)},
                             className="dcc_control",
                         ),
                     ],
@@ -323,10 +315,12 @@ app.layout = html.Div(
                             id="info-container",
                             className="row container-display",
                         ),
-                        html.Div(
-                            [dcc.Graph(id="count_graph")],
-                            id="countGraphContainer",
-                            className="pretty_container",
+                        # html.Div(
+                        #     [dcc.Graph(id="count_graph")],
+                        #     id="countGraphContainer",
+                        #     className="pretty_container",
+                        # ),
+                        html.Div([dcc.Graph(id="hist_plot", animate=False)],
                         ),
                     ],
                     id="right-column",
@@ -351,6 +345,23 @@ app.layout = html.Div(
     style={"display": "flex", "flex-direction": "column"},
 )
 
+@app.callback(Output('hist_plot', 'figure'),
+              [Input('continuous_selector', 'value'),Input('width_slider', 'value')])
+def make_hist_plot(fields,bar_width):
+    if not fields:
+        return {'data': []}
+    else:
+        data = get_field_data(fields, file_loc=student_data_file)
+        Width = (max(data)-min(data))/bar_width
+        data = get_binned_data(fields, Width, file_loc=student_data_file)
+        fig = go.Figure(data=[go.Bar(
+            x=data["range"],
+            y=data["count"],
+            width=[Width]*bar_width # customize width here
+        )])
+        #fig = px.bar(data, x=fields[0], y='count')
+        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+        return fig
 
 @app.callback(Output('frequency_plot', 'figure'),
               [Input('category_selector', 'value')])

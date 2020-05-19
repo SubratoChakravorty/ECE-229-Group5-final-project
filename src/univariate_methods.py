@@ -2,6 +2,7 @@ import json
 from collections.abc import Iterable
 from typing import Tuple
 import pandas as pd
+import math
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -73,6 +74,33 @@ def get_field_data(field_name='', file_loc="../data/student_data.csv"):
     field_data = df[field_name]
 
     return field_data
+
+def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"):
+    '''
+    returns the count of continuous data count seperated by range
+    :param field_name: string, field name
+    :param file_loc: string, path to the dataset
+    :return: returns midnumber of range and the count of data in diffrent range
+    '''
+
+    assert isinstance(field_name, str)
+
+    df = pd.read_csv(file_loc)
+
+    assert field_name in df.columns
+    field_data = df[field_name]
+    Range = max(field_data) - min(field_data)
+    bins_num = math.ceil(Range / width)
+    bins = list(range(bins_num)) #* int(width)
+    for i in range(len(bins)):
+        bins[i] *= width
+
+    cut = pd.cut(field_data, bins)
+    cut_res = pd.value_counts(cut)  
+    res = {}
+    res["range"] = list(map(lambda x:x.mid,cut_res.index))
+    res["count"] = list(cut_res)
+    return res
 
 
 def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
