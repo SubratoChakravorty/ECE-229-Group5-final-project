@@ -9,7 +9,6 @@ S1TEACTIV,Time/effort extracurriculars,Time/effort in math/science means not eno
 S1TEFRNDS,Time/effort friends,Time/effort in math/science means not enough time with friends,continuous
 S1TEMAKEFUN,Time/effort make fun,Time/effort in math/science means people will make fun of 9th grader,continuous
 S1TEPOPULAR,Time/effort popular,Time/effort in math/science means 9th grader won't be popular,continuous
-STU_ID,Student ID,Student ID,continuous
 X1SCIEFF,Science Self-efficacy,Student Science Self-efficacy,continuous
 X1SCIID,Science identity,Scale of student's science identity,continuous
 X1SCIINT,Science interest,Scale of student's interest in fall 2009 science course,continuous
