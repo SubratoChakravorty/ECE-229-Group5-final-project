@@ -24,8 +24,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
-import sys
-sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/")
+# import sys
+# sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/")
 from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data
 
