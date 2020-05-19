@@ -2,27 +2,17 @@
 Just run using `python dashboard.py`
 """
 # Import required libraries
-import pickle
-import copy
-import pathlib
-import dash
-import math
 import datetime as dt
-import pandas as pd
-from dash.dependencies import Input, Output, State, ClientsideFunction
-import dash_core_components as dcc
-import dash_html_components as html
-# import dash_table as dt
-
-# Multi-dropdown options
-from controls import COUNTIES, WELL_STATUSES, WELL_TYPES, WELL_COLORS
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import pandas as pd
 import plotly.express as px
+
 from dash.dependencies import Input, Output
 
+from controls import WELL_STATUSES, WELL_TYPES
 from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data
 
@@ -65,86 +55,6 @@ well_type_options = [
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 
-layout = dict(
-    autosize=True,
-    automargin=True,
-    margin=dict(l=30, r=30, b=20, t=40),
-    hovermode="closest",
-    plot_bgcolor="#F9F9F9",
-    paper_bgcolor="#F9F9F9",
-    legend=dict(font=dict(size=10), orientation="h"),
-    title="Overview",
-)
-
-introduction_tab = dcc.Tab(
-    label='About',
-    value='what-is',
-    children=html.Div(className='control-tab', children=[
-
-        html.H4(className='how', children="How to use this dashboard"),
-
-        html.P('1. Explore'
-               'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
-        html.P(
-            '2. Inspect'
-            'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
-        html.P(
-            '3. Insights'
-            'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-
-        html.H4(className='Dataset', children="Dataset"),
-        html.P(
-            'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
-            'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
-            'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-
-        html.P("Dataset can be downloaded by clicking: "),
-        html.Div([
-            'Reference: ',
-            html.A('Dataset',
-                   href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
-        ]),
-        html.H4(className='author', children="Author"),
-
-        html.Br()
-
-    ])
-)
-
-inspect_tab = html.Div([
-    dcc.Tab(
-        label="Inspect",
-        children=[
-            html.H1("Univariate Analysis"),
-            html.P("Click a category on the inner plot to filter"),
-            html.Div(
-                [
-                    html.P(["Select continous_var:",
-                            dcc.Dropdown(id='continous_var_selector', options=col_options, multi=True)]),
-                ],
-                style={"width": "25%", "float": "left"}
-            ),
-            dcc.Graph(id="graph2",
-                      style={"width": "75%", "display": "inline-block"},
-                      animate=False)
-        ]
-    ),
-    dcc.Slider(
-        id='continous-slider',
-        min=0,
-        max=100,
-        value=0,
-        # marks={str(year): str(year) for year in df['year'].unique()},
-        step=None
-    ),
-])
-
-insights_tab = dcc.Tab(
-    label="Insights",
-    children=[
-        html.H1("Multivariate Statistical Analysis")
-    ]
-)
 
 # Create app layout
 app.layout = html.Div(
@@ -337,12 +247,6 @@ app.layout = html.Div(
         ),
 
         ######################################################< TAG4 PART >##################################################
-
-        html.Div(
-            [
-                insights_tab,
-            ],
-        ),
 
         # TODO: more graphs
 
