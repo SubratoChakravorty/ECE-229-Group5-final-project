@@ -1,34 +1,34 @@
 name,short,long,type
-N1COURSE,Science Course,Science Course,continuous
+N1COURSE,Science course,Science course,continuous
 N1SCIYRS912,Experience in science teaching,Years science teacher has taught high school science,continuous
 S1STCHFAIR,Fair teachers,9th grader's fall 2009 science teacher treats every student fairly,continuous
-S1STCHMISTKE,Teacher's tolerance for mistake,9th grader's fall 09 science teacher think mistakes OK if students learn,continuous
+S1STCHMISTKE,Teacher's tolerance for mistake,9th grader's fall 09 science teacher think mistakes are OK if students learn,continuous
 S1STCHRESPCT,Teacher respect,9th grader's fall 2009 science teacher treats students with respect,continuous
 S1STCHVALUES,Teacher's values,9th grader's fall 2009 science teacher values/listens to students' ideas,continuous
 S1TEACTIV,Time/effort extracurriculars,Time/effort in math/science means not enough time for extracurriculars,continuous
 S1TEFRNDS,Time/effort friends,Time/effort in math/science means not enough time with friends,continuous
 S1TEMAKEFUN,Time/effort make fun,Time/effort in math/science means people will make fun of 9th grader,continuous
 S1TEPOPULAR,Time/effort popular,Time/effort in math/science means 9th grader won't be popular,continuous
-X1SCIEFF,Science Self-efficacy,Student Science Self-efficacy,continuous
+X1SCIEFF,Science self-efficacy,Student science self-efficacy,continuous
 X1SCIID,Science identity,Scale of student's science identity,continuous
 X1SCIINT,Science interest,Scale of student's interest in fall 2009 science course,continuous
 X1SCIUTI,Science utility,Scale of student's science utility,continuous
-X1SES,Socio-economic status,Socioeconomic status,continuous
+X1SES,Socioeconomic status,Socioeconomic status,continuous
 X3TGPAENG,English GPA,English GPA,continuous
 X3TGPAMAT,Math GPA,Mathematics GPA,continuous
 X3TGPASCI,Science GPA,Science GPA,continuous
-S1STCHCONF,Teacher's confident,9th grader's fall 09 science teacher thinks all students can be successful,continuous
+S1STCHCONF,Teacher's confidence,9th grader's fall 09 science teacher thinks all students can be successful,continuous
 N1ALTCERT,Alternative certification,Science teacher entered profession through alternative certification program,categorical
 N1CONCEPTS,Basic concepts,teaching basic science concepts,categorical
 N1GROUP,Work group,Science teacher has students work in small groups,categorical
 N1HIDEG,Teacher's highest degree,Science teacher's highest degree,categorical
 N1INTEREST,Increase interest,increasing students' interest in science,categorical
 N1SCIJOB,Had science-related job,Science teacher held science-related prior to becoming a teacher,categorical
-N1SEX,Teacher's gender,Science Teacher's Sex,categorical
+N1SEX,Teacher's gender,Science Teacher's sex,categorical
 N1TERMS,Important science terms,important science terms/facts N1SKILLS science process/inquiry skills,categorical
-X1CONTROL,School Control,School Control,categorical
-X1LOCALE,School Locale,School Locale (Urbanicity),categorical
-X1RACE,Student's Race,Student's Race,categorical
-X1SEX,Student gender,Student Sex,categorical
+X1CONTROL,School control,School control,categorical
+X1LOCALE,School locale,School locale (Urbanicity),categorical
+X1RACE,Student's race,Student's race,categorical
+X1SEX,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
-X1TSRACE,Teacher's race,Science Teacher's Race,categorical
+X1TSRACE,Teacher's race,Science teacher's race,categorical
