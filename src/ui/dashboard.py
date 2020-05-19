@@ -26,6 +26,8 @@ from dash.dependencies import Input, Output
 from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data
 
+
+# Style configuration
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # color for frontend
@@ -34,6 +36,7 @@ colors = {
     'text'      : '#7FDBFF'
 }
 
+# Populate fields from data
 categories = return_fields('../../data/student_data.csv')
 col_types = {}
 for cate in categories:
@@ -41,10 +44,11 @@ for cate in categories:
 col_options = [dict(label=x, value=x) for x in categories]
 print(col_types)
 
+vars_df = pd.read_csv(variables_file, index_col=0)
+
 
 def populate_dropdown(category: str):
     assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
-    vars_df = pd.read_csv(variables_file, index_col=0)
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
@@ -58,7 +62,6 @@ well_type_options = [
     {"label": str(col_types[well_type]), "value": str(well_type)}
     for well_type in col_types
 ]
-# print(WELL_STATUSES)
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 
@@ -88,14 +91,6 @@ introduction_tab = dcc.Tab(
         html.P(
             '3. Insights'
             'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-
-        # html.Div([
-        #     'For a look into Circos and the Circos API, please visit the '
-        #     'original repository ',
-        #     html.A('here', href='https://github.com/nicgirault/circosJS)'),
-        #     '.'
-        # ]),
-        # html.H4(className='what-is', children="What is Circos?"),
 
         html.H4(className='Dataset', children="Dataset"),
         html.P(
@@ -222,14 +217,6 @@ app.layout = html.Div(
                     '3. Insights'
                     'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
 
-                # html.Div([
-                #     'For a look into Circos and the Circos API, please visit the '
-                #     'original repository ',
-                #     html.A('here', href='https://github.com/nicgirault/circosJS)'),
-                #     '.'
-                # ]),
-                # html.H4(className='what-is', children="What is Circos?"),
-
                 html.H4(className='Dataset', children="Dataset"),
                 html.P(
                     'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
@@ -259,7 +246,7 @@ app.layout = html.Div(
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='category_selector', options=populate_dropdown('categorical'),
-                                             multi=True)]),
+                                             multi=True)]),  # TODO: hover dropdown to get long text (new component)
                         html.P(["Select score:",
                                 dcc.Dropdown(id='color_var_selector', options=populate_dropdown('continuous'))]),
                     ],
@@ -366,18 +353,15 @@ app.layout = html.Div(
 
 
 @app.callback(Output('frequency_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('sunburst_plot', 'figure')])
-def make_frequency_plot(fields, sunburst_state):
-    if sunburst_state['data'][0]['ids'][0] == "Select a category":
+              [Input('category_selector', 'value')])
+def make_frequency_plot(fields):
+    if not fields:
         return {'data': []}
-    elif sunburst_state['data'][0]['ids'][0] == "Select a score" and fields:
+    else:
         data, _ = get_counts_means_data(fields, file_loc=student_data_file)
         fig = px.bar(data, x=fields[0], y='count')
-    else:
-        data, _ = get_counts_means_data(sunburst_state, file_loc=student_data_file)
-        fig = px.bar(data, x=sunburst_state.pop(), y='count')
-
-    return fig
+        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+        return fig
 
 
 # TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
