@@ -23,12 +23,7 @@ import dash_html_components as html
 import plotly.express as px
 from dash.dependencies import Input, Output
 
-# for kai's vscode relative path issue only
-# just ignore it
-import sys
-sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project")
-
-from src.config import student_data_file
+from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data
 
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -36,11 +31,8 @@ external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 # color for frontend
 colors = {
     'background': '#111111',
-    'text': '#7FDBFF'
+    'text'      : '#7FDBFF'
 }
-# load first page markdown file
-# with open("../txt/Readme.md", "r") as f:
-#     markdown_first_page = f.read()
 
 categories = return_fields('../../data/student_data.csv')
 col_types = {}
@@ -48,6 +40,14 @@ for cate in categories:
     col_types[cate] = cate
 col_options = [dict(label=x, value=x) for x in categories]
 print(col_types)
+
+
+def populate_dropdown(category: str):
+    assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
+    vars_df = pd.read_csv(variables_file, index_col=0)
+    df = vars_df.loc[vars_df['type'] == category, 'short']
+    return [dict(label=v, value=k) for k, v in df.to_dict().items()]
+
 
 well_status_options = [
     {"label": str(col_types[well_status]), "value": str(well_status)}
@@ -73,7 +73,6 @@ layout = dict(
     title="Overview",
 )
 
-
 introduction_tab = dcc.Tab(
     label='About',
     value='what-is',
@@ -82,14 +81,14 @@ introduction_tab = dcc.Tab(
         html.H4(className='how', children="How to use this dashboard"),
 
         html.P('1. Explore'
-                  'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
+               'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
         html.P(
-               '2. Inspect'
-                  'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
+            '2. Inspect'
+            'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
         html.P(
-               '3. Insights'
-                  'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-        
+            '3. Insights'
+            'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
+
         # html.Div([
         #     'For a look into Circos and the Circos API, please visit the '
         #     'original repository ',
@@ -98,19 +97,20 @@ introduction_tab = dcc.Tab(
         # ]),
         # html.H4(className='what-is', children="What is Circos?"),
 
-        html.H4(className='Dataset', children="Dataset"), 
-        html.P('This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
-               'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
-               'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-        
+        html.H4(className='Dataset', children="Dataset"),
+        html.P(
+            'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
+            'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
+            'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
+
         html.P("Dataset can be downloaded by clicking: "),
         html.Div([
             'Reference: ',
             html.A('Dataset',
-                    href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
+                   href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
         ]),
         html.H4(className='author', children="Author"),
-        
+
         html.Br()
 
     ])
@@ -124,21 +124,22 @@ inspect_tab = html.Div([
             html.P("Click a category on the inner plot to filter"),
             html.Div(
                 [
-                    html.P(["Select continous_var:", dcc.Dropdown(id='continous_var_selector', options=col_options, multi=True)]),
+                    html.P(["Select continous_var:",
+                            dcc.Dropdown(id='continous_var_selector', options=col_options, multi=True)]),
                 ],
                 style={"width": "25%", "float": "left"}
             ),
             dcc.Graph(id="graph2",
-                    style={"width": "75%", "display": "inline-block"},
-                    animate=False)
+                      style={"width": "75%", "display": "inline-block"},
+                      animate=False)
         ]
     ),
-        dcc.Slider(
+    dcc.Slider(
         id='continous-slider',
         min=0,
         max=100,
         value=0,
-        #marks={str(year): str(year) for year in df['year'].unique()},
+        # marks={str(year): str(year) for year in df['year'].unique()},
         step=None
     ),
 ])
@@ -149,7 +150,6 @@ insights_tab = dcc.Tab(
         html.H1("Multivariate Statistical Analysis")
     ]
 )
-
 
 # Create app layout
 app.layout = html.Div(
@@ -166,8 +166,8 @@ app.layout = html.Div(
                             src=app.get_asset_url("ucsd-logo.png"),
                             id="plotly-image",
                             style={
-                                "height": "60px",
-                                "width": "auto",
+                                "height"       : "60px",
+                                "width"        : "auto",
                                 "margin-bottom": "25px",
                             },
                         )
@@ -208,20 +208,20 @@ app.layout = html.Div(
         ),
 
         ######################################################< TAG1 PART >##################################################
-    
+
         html.Div(
             [
                 html.H4(className='how', children="How to use this dashboard"),
 
                 html.P('1. Explore'
-                        'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
+                       'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
                 html.P(
                     '2. Inspect'
-                        'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
+                    'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
                 html.P(
                     '3. Insights'
-                        'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-                
+                    'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
+
                 # html.Div([
                 #     'For a look into Circos and the Circos API, please visit the '
                 #     'original repository ',
@@ -230,59 +230,50 @@ app.layout = html.Div(
                 # ]),
                 # html.H4(className='what-is', children="What is Circos?"),
 
-                html.H4(className='Dataset', children="Dataset"), 
-                html.P('This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
+                html.H4(className='Dataset', children="Dataset"),
+                html.P(
+                    'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
                     'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
                     'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-                
+
                 html.P("Dataset can be downloaded by clicking: "),
                 html.Div([
                     'Reference: ',
                     html.A('Dataset',
-                            href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
+                           href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
                 ]),
                 html.H4(className='author', children="Author"),
-                
+
                 html.Br()
             ],
             className="pretty_container",
         ),
 
-        ######################################################< TAG2 PART >##################################################
-        
+        # ##############################################< TAG2 PART >############################################
+
         html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Explore the Data"), 
+                        html.H1("Explore the Data"),
                         html.P("Click a category on the inner plot to filter"),
-                        html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
-                        html.P(["Select score:", dcc.Dropdown(id='color_var_selector', options=col_options)]),
+                        html.P(["Select categories:",
+                                dcc.Dropdown(id='category_selector', options=populate_dropdown('categorical'),
+                                             multi=True)]),
+                        html.P(["Select score:",
+                                dcc.Dropdown(id='color_var_selector', options=populate_dropdown('continuous'))]),
                     ],
                     className="pretty_container four columns",
                 ),
-                    
-                # html.Div(
-                #     [
-                #         html.P(["Select categories:", dcc.Dropdown(id='category_selector', options=col_options, multi=True)]),
-                #         html.P(["Select score:", dcc.Dropdown(id='color_var_selector', options=col_options)]),
-                #     ],
-                #     # style={"width": "25%", "float": "left"},
-                #     className="pretty_container four columns",
-                # ),
-                html.Div(
-                        [
-                            dcc.Graph(id="graph1",
-                                # style={"width": "75%", "display": "inline-block"},
-                                animate=False)
-                        ],
-                        className="pretty_container four columns",
-                    )
+                html.Div([dcc.Graph(id="sunburst_plot", animate=False)],
+                         className="pretty_container four columns"),
+                html.Div([dcc.Graph(id="frequency_plot", animate=False)],
+                         className="pretty_container four columns"),
             ],
-            # className="pretty_container",
+            className="row flex-display",
         ),
 
-        ######################################################< TAG3 PART >##################################################
+        # ################################################< TAG3 PART >#############################################
 
         html.Div(
             [
@@ -365,7 +356,7 @@ app.layout = html.Div(
                 insights_tab,
             ],
         ),
-        
+
         # TODO: more graphs
 
     ],
@@ -373,7 +364,25 @@ app.layout = html.Div(
     style={"display": "flex", "flex-direction": "column"},
 )
 
-@app.callback(Output('graph1', 'figure'), [Input('category_selector', 'value'), Input('color_var_selector', 'value')])
+
+@app.callback(Output('frequency_plot', 'figure'),
+              [Input('category_selector', 'value'), Input('sunburst_plot', 'figure')])
+def make_frequency_plot(fields, sunburst_state):
+    if sunburst_state['data'][0]['ids'][0] == "Select a category":
+        return {'data': []}
+    elif sunburst_state['data'][0]['ids'][0] == "Select a score" and fields:
+        data, _ = get_counts_means_data(fields, file_loc=student_data_file)
+        fig = px.bar(data, x=fields[0], y='count')
+    else:
+        data, _ = get_counts_means_data(sunburst_state, file_loc=student_data_file)
+        fig = px.bar(data, x=sunburst_state.pop(), y='count')
+
+    return fig
+
+
+# TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
+@app.callback(Output('sunburst_plot', 'figure'),
+              [Input('category_selector', 'value'), Input('color_var_selector', 'value')])
 def make_sunburst(fields, color_var):
     """
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
@@ -389,7 +398,6 @@ def make_sunburst(fields, color_var):
             path=['x'],
             hover_data=None
         )
-        return fig
     elif not color_var:
         fig = px.sunburst(
             {'x'    : ["Select a score"],
@@ -397,91 +405,33 @@ def make_sunburst(fields, color_var):
             path=['x'],
             hover_data=None
         )
-        return fig
+    else:
+        data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
 
-    data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
+        # TODO: scale doesn't update when the color_var is changed
+        fig = px.sunburst(
+            data,
+            path=fields,
+            values='count',
+            color='mean',
+            hover_data=fields,  # TODO: figure out what the best hover data is
+            color_continuous_scale='Portland',
+            color_continuous_midpoint=color_var_mean,
+        )
 
-    fig = px.sunburst(
-        data,
-        path=fields,
-        values='count',
-        color='mean',
-        hover_data=fields,  # TODO: figure out what the best hover data is
-        color_continuous_scale='Portland',
-        color_continuous_midpoint=color_var_mean,
-    )
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
 
-# get relative data folder
-PATH = pathlib.Path(__file__).parent
-DATA_PATH = "/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/dash-oil-and-gas/data/wellspublic.csv"
-
-# Load data
-df = pd.read_csv(DATA_PATH, low_memory=False)
-df["Date_Well_Completed"] = pd.to_datetime(df["Date_Well_Completed"])
-df = df[df["Date_Well_Completed"] > dt.datetime(1960, 1, 1)]
 
 def filter_dataframe(df, well_statuses, well_types, year_slider):
-    dff = df[
+    df = df[
         df["Well_Status"].isin(well_statuses)
         & df["Well_Type"].isin(well_types)
         & (df["Date_Well_Completed"] > dt.datetime(year_slider[0], 1, 1))
         & (df["Date_Well_Completed"] < dt.datetime(year_slider[1], 1, 1))
-    ]
+        ]
     return df
 
-# Selectors -> count graph
-@app.callback(
-    Output("count_graph", "figure"),
-    [
-        Input("well_statuses", "value"),
-        Input("well_types", "value"),
-        Input("year_slider", "value"),
-    ],
-)
-def make_count_figure(well_statuses, well_types, year_slider):
-
-    layout_count = copy.deepcopy(layout)
-
-    dff = filter_dataframe(df, well_statuses, well_types, [1960, 2017])
-    g = dff[["API_WellNo", "Date_Well_Completed"]]
-    g.index = g["Date_Well_Completed"]
-    g = g.resample("A").count()
-
-    colors = []
-    for i in range(1960, 2018):
-        if i >= int(year_slider[0]) and i < int(year_slider[1]):
-            colors.append("rgb(123, 199, 255)")
-        else:
-            colors.append("rgba(123, 199, 255, 0.2)")
-
-    data = [
-        dict(
-            type="scatter",
-            mode="markers",
-            x=g.index,
-            y=g["API_WellNo"] / 2,
-            name="All Wells",
-            opacity=0,
-            hoverinfo="skip",
-        ),
-        dict(
-            type="bar",
-            x=g.index,
-            y=g["API_WellNo"],
-            name="All Wells",
-            marker=dict(color=colors),
-        ),
-    ]
-
-    layout_count["title"] = "Completed Wells/Year"
-    layout_count["dragmode"] = "select"
-    layout_count["showlegend"] = False
-    layout_count["autosize"] = True
-
-    figure = dict(data=data, layout=layout_count)
-    return figure
 
 if __name__ == '__main__':
     app.run_server(debug=True)
