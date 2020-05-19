@@ -127,7 +127,7 @@ def get_var_info(file="../data/variables.csv"):
     :return: returns a pd.DataFrame associated with the variable or a
         subset of pd.DataFrame corresponds to each variable in name.
     """
-    df = pd.read_csv(file)
+    df = pd.read_csv(file, index_col=0)
     
     # Multiple variables
     return df
