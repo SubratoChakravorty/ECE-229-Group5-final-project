@@ -14,8 +14,12 @@ from dash.dependencies import Input, Output
 
 from controls import WELL_STATUSES, WELL_TYPES
 from src.config import variables_file, student_data_file
-from src.univariate_methods import return_fields, get_counts_means_data
+from src.univariate_methods import return_fields, get_counts_means_data, get_var_info, get_field_data
 
+
+def get_fields(fields: list, file_loc: str):
+    df = pd.read_csv(file_loc)
+    return df[fields]
 
 # Style configuration
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -26,6 +30,9 @@ colors = {
     'text'      : '#7FDBFF'
 }
 
+plot_lookup = {0: 'box plot',
+               1: 'frequency plot'}
+
 # Populate fields from data
 categories = return_fields('../../data/student_data.csv')
 col_types = {}
@@ -34,7 +41,7 @@ for cate in categories:
 col_options = [dict(label=x, value=x) for x in categories]
 print(col_types)
 
-vars_df = pd.read_csv(variables_file, index_col=0)
+vars_df = get_var_info(variables_file)
 
 
 def populate_dropdown(category: str):
@@ -148,7 +155,7 @@ app.layout = html.Div(
 
         # ##############################################< TAG2 PART >############################################
 
-        html.Div(
+        html.Div(  # Explore
             [
                 html.Div(
                     [
@@ -158,13 +165,17 @@ app.layout = html.Div(
                                 dcc.Dropdown(id='category_selector', options=populate_dropdown('categorical'),
                                              multi=True)]),  # TODO: hover dropdown to get long text (new component)
                         html.P(["Select score:",
-                                dcc.Dropdown(id='color_var_selector', options=populate_dropdown('continuous'))]),
+                                dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
+                        html.P(["Select plot style:",
+                               dcc.Dropdown(id='plot_selector',
+                                            value=1,
+                                            options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
                 ),
-                html.Div([dcc.Graph(id="sunburst_plot", animate=False)],
+                html.Div([dcc.Graph(id="sunburst_plot")],
                          className="pretty_container four columns"),
-                html.Div([dcc.Graph(id="frequency_plot", animate=False)],
+                html.Div([dcc.Graph(id="second_explore_plot")],
                          className="pretty_container four columns"),
             ],
             className="row flex-display",
@@ -248,29 +259,45 @@ app.layout = html.Div(
 
         ######################################################< TAG4 PART >##################################################
 
-        # TODO: more graphs
-
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
 
 
-@app.callback(Output('frequency_plot', 'figure'),
-              [Input('category_selector', 'value')])
-def make_frequency_plot(fields):
-    if not fields:
+def get_empty_sunburst(text:str):
+    return px.sunburst(
+                {'x'    : [text],
+                 'value': [1]},
+                path=['x'],
+                hover_data=None
+            )
+
+
+@app.callback(Output('second_explore_plot', 'figure'),
+              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value'),
+               Input('plot_selector', 'value')])
+def make_second_explore_plot(categorical: list, continuous, plot):
+    if not categorical:
         return {'data': []}
+    elif plot_lookup[plot] == 'frequency plot':
+        data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
+        fig = px.bar(data, x=categorical[0], y='count')
+    elif plot_lookup[plot] == 'box plot':
+        if continuous:
+            data = get_fields([categorical[0], continuous], file_loc=student_data_file)
+            fig = px.box(data, x=categorical[0], y=continuous)
+        else:
+            fig = get_empty_sunburst("select a score")
     else:
-        data, _ = get_counts_means_data(fields, file_loc=student_data_file)
-        fig = px.bar(data, x=fields[0], y='count')
-        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
-        return fig
+        raise ValueError(f"{plot} is not a valid plot option")
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
 
 
 # TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
 @app.callback(Output('sunburst_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('color_var_selector', 'value')])
+              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value')])
 def make_sunburst(fields, color_var):
     """
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
@@ -280,19 +307,9 @@ def make_sunburst(fields, color_var):
     :return: 
     """
     if not fields:
-        fig = px.sunburst(
-            {'x'    : ["Select a category"],
-             'value': [1]},
-            path=['x'],
-            hover_data=None
-        )
+        fig = get_empty_sunburst("select a category")
     elif not color_var:
-        fig = px.sunburst(
-            {'x'    : ["Select a score"],
-             'value': [1]},
-            path=['x'],
-            hover_data=None
-        )
+        fig = get_empty_sunburst("select a score")
     else:
         data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
 
