@@ -85,8 +85,8 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     :return: returns a dataframe with info to build a sunburst plot
     '''
 
-    assert isinstance(fields, list)
-    assert isinstance(color_var, str)
+    assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
+    assert isinstance(color_var, str), f"color_var must be a string, not {type(fields)}"
 
     df = pd.read_csv(file_loc)
     df = df[fields + [color_var]]
