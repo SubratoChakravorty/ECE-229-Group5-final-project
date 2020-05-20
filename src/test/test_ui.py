@@ -47,7 +47,7 @@ def test_ui003_second_univariate_plot_box(dash_duo):
     short_text = dash_duo.find_element('#expl_continuous_selector').text
     short_text, _ = re.compile(r"[^a-zA-Z ]").subn('', short_text)
     name = category_df.loc[category_df['short'] == short_text, 'name'].item()
-    dash_duo.wait_for_contains_text('#second_explore_plot', name, timeout=2)
+    dash_duo.wait_for_contains_text('#second_explore_plot', name, timeout=3)
 
 
 if __name__ == '__main__':
