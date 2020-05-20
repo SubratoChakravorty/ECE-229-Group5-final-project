@@ -5,14 +5,12 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
-import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 from src.config import variables_file, student_data_file
-from src.univariate_methods import return_fields, get_counts_means_data, get_var_info, get_field_data, get_binned_data
-
+from src.univariate_methods import get_counts_means_data, get_var_info, get_field_data, get_binned_data
 
 # Style configuration
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -27,12 +25,6 @@ plot_lookup = {0: 'box plot',
                1: 'frequency plot'}
 
 # Populate fields from data
-categories = return_fields('../../data/student_data.csv')
-col_types = {}
-for cate in categories:
-    col_types[cate] = cate
-col_options = [dict(label=x, value=x) for x in categories]
-
 vars_df = get_var_info(variables_file)
 
 
@@ -143,10 +135,10 @@ app.layout = html.Div(
                         html.H1("Explore the Data"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
-                                dcc.Dropdown(id='category_selector', options=populate_dropdown('categorical'),
-                                             multi=True)]),  # TODO: hover dropdown to get long text (new component)
+                                dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
+                                             multi=True)]),
                         html.P(["Select score:",
-                                dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
+                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'))]),
                         html.P(["Select plot style:",
                                dcc.Dropdown(id='plot_selector',
                                             value=1,
@@ -285,7 +277,7 @@ def get_empty_sunburst(text:str):
 
 
 @app.callback(Output('second_explore_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value'),
+              [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
 def make_second_explore_plot(categorical: list, continuous, plot):
     if not categorical:
@@ -307,7 +299,7 @@ def make_second_explore_plot(categorical: list, continuous, plot):
 
 # TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
 @app.callback(Output('sunburst_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value')])
+              [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value')])
 def make_sunburst(fields, color_var):
     """
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
@@ -337,7 +329,6 @@ def make_sunburst(fields, color_var):
 
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
-
 
 
 if __name__ == '__main__':
