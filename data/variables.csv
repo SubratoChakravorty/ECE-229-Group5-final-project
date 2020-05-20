@@ -1,5 +1,5 @@
 name,short,long,type
-N1COURSE,Science course,Science course,continuous
+COURSE_TYPE,Science course,Science course,categorical
 N1SCIYRS912,Experience in science teaching,Years science teacher has taught high school science,continuous
 S1STCHFAIR,Fair teachers,9th grader's fall 2009 science teacher treats every student fairly,continuous
 S1STCHMISTKE,Teacher's tolerance for mistake,9th grader's fall 09 science teacher think mistakes are ok if students learn,continuous
@@ -18,17 +18,17 @@ X3TGPAENG,English gpa,English gpa,continuous
 X3TGPAMAT,Math gpa,Mathematics gpa,continuous
 X3TGPASCI,Science gpa,Science gpa,continuous
 S1STCHCONF,Teacher's confidence,9th grader's fall 09 science teacher thinks all students can be successful,continuous
-N1ALTCERT,Alternative certification,Science teacher entered profession through alternative certification program,categorical
+ALTCERT,Alternative certification,Science teacher entered profession through alternative certification program,categorical
 N1CONCEPTS,Basic concepts,Teaching basic science concepts,categorical
 N1GROUP,Work group,Science teacher has students work in small groups,categorical
 N1HIDEG,Teacher's highest degree,Science teacher's highest degree,categorical
 N1INTEREST,Increase interest,Increasing students' interest in science,categorical
-N1SCIJOB,Had science-related job,Science teacher held science-related prior to becoming a teacher,categorical
-N1SEX,Teacher's gender,Science teacher's sex,categorical
+SCIJOB,Had science-related job,Science teacher held science-related prior to becoming a teacher,categorical
+N1GEN,Teacher's gender,Science teacher's sex,categorical
 N1TERMS,Important science terms,Important science terms/facts n1skills science process/inquiry skills,categorical
-X1CONTROL,School control,School control,categorical
-X1LOCALE,School locale,School locale (urbanicity),categorical
+SCH_CONTROL,School control,School control,categorical
+SCH_LOCALE,School locale,School locale (urbanicity),categorical
 X1RACE,Student's race,Student's race,categorical
-X1SEX,Student gender,Student sex,categorical
+X1GEN,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
 X1TSRACE,Teacher's race,Science teacher's race,categorical
