@@ -9,21 +9,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.express as px
-<<<<<<< HEAD
 import plotly.graph_objects as go
-=======
 
->>>>>>> e51b6f0ca42f9417f18c33abc5137bf5ea72aa25
 from dash.dependencies import Input, Output
 
 from controls import WELL_STATUSES, WELL_TYPES
 from src.config import variables_file, student_data_file
-<<<<<<< HEAD
-from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data
-=======
-from src.univariate_methods import return_fields, get_counts_means_data, get_var_info, get_field_data
-
->>>>>>> e51b6f0ca42f9417f18c33abc5137bf5ea72aa25
+from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data, get_var_info
 
 def get_fields(fields: list, file_loc: str):
     df = pd.read_csv(file_loc)
