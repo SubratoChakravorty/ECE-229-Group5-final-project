@@ -9,3 +9,13 @@ A conda environment is recommended, otherwise Node.js must be installed separate
 Top-level dependencies:
 - dash
 - pandas
+
+## Testing
+
+run `pytest --headless` in the top directory.
+
+### Dependencies 
+
+- dash[testing]
+- selenium
+- pytest

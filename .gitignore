@@ -14,4 +14,4 @@ main.py
 *.ipynb
 .idea/*
 ./src/helper.ipynb
-
+.pytest_cache
