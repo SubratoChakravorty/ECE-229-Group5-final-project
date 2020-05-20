@@ -7,7 +7,7 @@ dependencies:
   - python>=3.7
   - pytest
   - selenium>=3
-  - dash_bootstrap_components
   - pip
   - pip:
     - dash[testing]
+    - dash_bootstrap_components
