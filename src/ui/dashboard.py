@@ -64,6 +64,7 @@ app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=devi
 
 
 # Create app layout
+categorical_dropdown_opts = populate_dropdown('categorical')
 app.layout = html.Div(
     [
         ######################################################< TOP PART >##################################################
@@ -162,7 +163,7 @@ app.layout = html.Div(
                         html.H1("Explore the Data"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
-                                dcc.Dropdown(id='category_selector', options=populate_dropdown('categorical'),
+                                dcc.Dropdown(id='category_selector', options=categorical_dropdown_opts,
                                              multi=True)]),  # TODO: hover dropdown to get long text (new component)
                         html.P(["Select score:",
                                 dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
@@ -176,6 +177,29 @@ app.layout = html.Div(
                 html.Div([dcc.Graph(id="sunburst_plot")],
                          className="pretty_container four columns"),
                 html.Div([dcc.Graph(id="second_explore_plot")],
+                         className="pretty_container four columns"),
+            ],
+            className="row flex-display",
+        ),
+
+        # ################################################< TAG3 PART >#############################################
+
+        html.Div(  # Explore Correllations
+            [
+                html.Div(
+                    [
+                        html.H1("Explore Correlations"),
+                        html.P(["Select horizontal category:",
+                                dcc.Dropdown(id='h_correlation_selector', options=categorical_dropdown_opts,
+                                             multi=False)]),
+                        html.P(["Select vertical category:",
+                                dcc.Dropdown(id='v_correlation_selector', options=categorical_dropdown_opts)]),
+                        html.P(["Select score:",
+                                dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
+                    ],
+                    className="pretty_container four columns",
+                ),
+                html.Div([dcc.Graph(id="grid_plot")],
                          className="pretty_container four columns"),
             ],
             className="row flex-display",
