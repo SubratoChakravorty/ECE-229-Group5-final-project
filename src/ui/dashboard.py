@@ -3,17 +3,19 @@ Just run using `python dashboard.py`
 """
 import dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
 from src.univariate_methods import get_counts_means_data, get_var_info, get_field_data, get_binned_data
 
-# Style configuration
-external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# # Style configuration
+# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# app.css.append_css({"external_url":external_css})
 
 # color for frontend
 colors = {
@@ -27,6 +29,17 @@ plot_lookup = {0: 'box plot',
 # Populate fields from data
 vars_df = get_var_info(variables_file)
 
+report_text = """
+ __   __    _______    _______    ______  
+|  | |  |  |       |  |       |  |      | 
+|  | |  |  |       |  |  _____|  |  _    |
+|  |_|  |  |       |  | |_____   | | |   |
+|       |  |      _|  |_____  |  | |_|   |
+|       |  |     |_    _____| |  |       |
+|_______|  |_______|  |_______|  |______| 
+
+
+                                        """
 
 def populate_dropdown(category: str):
     assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
@@ -34,7 +47,7 @@ def populate_dropdown(category: str):
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
+app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Create app layout
 app.layout = html.Div(
@@ -73,7 +86,7 @@ app.layout = html.Div(
                             ]
                         )
                     ],
-                    className="one-half column",
+                    className="two-half column",
                     id="title",
                 ),
                 html.Div(
@@ -83,7 +96,7 @@ app.layout = html.Div(
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
                         )
                     ],
-                    className="one-third column",
+                    className="three-third column",
                     id="button",
                 ),
             ],
@@ -124,6 +137,7 @@ app.layout = html.Div(
                 html.Br()
             ],
             className="pretty_container",
+            style={"margin-bottom": "25px"}
         ),
 
         # ##############################################< TAG2 PART >############################################
@@ -151,7 +165,7 @@ app.layout = html.Div(
                 html.Div([dcc.Graph(id="second_explore_plot")],
                          className="pretty_container four columns"),
             ],
-            className="row flex-display",
+            className="flex-display",
             style={"margin-bottom": "25px"}
         ),
 
@@ -207,7 +221,7 @@ app.layout = html.Div(
                                 ),
                             ],
                             id="info-container",
-                            className="row container-display",
+                            className="container-display",
                         ),
                         html.Div(
                             [dcc.Graph(id="hist_plot")],
@@ -219,11 +233,43 @@ app.layout = html.Div(
                     className="eight columns",
                 ),
             ],
-            className="row flex-display",
+            className="flex-display",
             style={"margin-bottom": "25px"}
         ),
 
         ######################################################< TAG4 PART >##################################################
+
+
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Get your report"),
+                        dbc.Button("Report generator", id="open-xl"),
+                        dbc.Modal(
+                            [
+                                dbc.ModalHeader("Report"),
+                                dbc.ModalBody(
+                                    html.Pre(
+                                        report_text
+                                    )
+                                ),
+                                dbc.ModalFooter([
+                                    dbc.Button("Save", id="save-xl", className="ml-auto"), # todo: save
+                                    dbc.Button("Close", id="close-xl", className="ml-auto"),]
+                                ),
+                            ],
+                            id="modal-xl",
+                            size="xl",
+                            centered=True,
+                        ),
+                    ],
+                    className="pretty_container four column",
+                )
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
 
         # TODO: more graphs
 
@@ -233,6 +279,20 @@ app.layout = html.Div(
 )
 
 
+# Report modal
+@app.callback(
+    Output("modal-xl", "is_open"),
+    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
+    [State("modal-xl", "is_open")],
+)
+
+def toggle_modal(n1, n2, n3, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+
+# Four blocks above histogram
 @app.callback(
     [
         Output("max_value", "children"),
@@ -248,7 +308,7 @@ def update_text(data):
     data = get_field_data(data, file_loc=student_data_file).dropna()
     return str(max(data)), str(min(data)), str(round(np.mean(data), 2)), str(np.median(data))
 
-
+# Adjustbale histogram
 @app.callback(Output('hist_plot', 'figure'),
               [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
 def make_hist_plot(fields, bar_width):

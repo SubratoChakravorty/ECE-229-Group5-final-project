@@ -1,0 +1,10 @@
+README.md
+setup.py
+foo.egg-info/PKG-INFO
+foo.egg-info/SOURCES.txt
+foo.egg-info/dependency_links.txt
+foo.egg-info/top_level.txt
+src/__init__.py
+src/clean_data.py
+src/config.py
+src/univariate_methods.py
