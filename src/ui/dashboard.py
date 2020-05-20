@@ -9,6 +9,7 @@ import dash
 import math
 import datetime as dt
 import pandas as pd
+import numpy as np
 from dash.dependencies import Input, Output, State, ClientsideFunction
 import dash_core_components as dcc
 import dash_html_components as html
@@ -24,8 +25,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
-# import sys
-# sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/")
+import sys
+sys.path.append("/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/")
 from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data
 
@@ -54,16 +55,16 @@ def populate_dropdown(category: str):
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
+###### keep this unless there's no bugs in the end
+# well_status_options = [
+#     {"label": str(col_types[well_status]), "value": str(well_status)}
+#     for well_status in col_types
+# ]
 
-well_status_options = [
-    {"label": str(col_types[well_status]), "value": str(well_status)}
-    for well_status in col_types
-]
-
-well_type_options = [
-    {"label": str(col_types[well_type]), "value": str(well_type)}
-    for well_type in col_types
-]
+# well_type_options = [
+#     {"label": str(col_types[well_type]), "value": str(well_type)}
+#     for well_type in col_types
+# ]
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 
@@ -260,6 +261,7 @@ app.layout = html.Div(
                          className="pretty_container four columns"),
             ],
             className="row flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         # ################################################< TAG3 PART >#############################################
@@ -281,7 +283,7 @@ app.layout = html.Div(
                             min=2,
                             max=20,
                             value=5,
-                            marks={str(5): str(5), str(30): str(30)},
+                            marks={str(2): str(2),str(5): str(5), str(20): str(20)},
                             className="dcc_control",
                         ),
                     ],
@@ -293,22 +295,22 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.Div(
-                                    [html.H6(id="well_text"), html.P("No. of Wells")],
+                                    [html.H6(id="max_value"), html.P("Max Value")],
                                     id="wells",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="gasText"), html.P("Gas")],
+                                    [html.H6(id="min_value"), html.P("Min Value")],
                                     id="gas",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="oilText"), html.P("Oil")],
+                                    [html.H6(id="mean_value"), html.P("Mean Value")],
                                     id="oil",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="waterText"), html.P("Water")],
+                                    [html.H6(id="median_value"), html.P("Median Value")],
                                     id="water",
                                     className="mini_container",
                                 ),
@@ -317,8 +319,8 @@ app.layout = html.Div(
                             className="row container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="hist_plot", 
-                            animate=False)],
+                            [dcc.Graph(id="hist_plot")],
+                            id = "adjustableHistPlot",
                             className="pretty_container",
                         ),
                     ],
@@ -327,6 +329,7 @@ app.layout = html.Div(
                 ),
             ],
             className="row flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         ######################################################< TAG4 PART >##################################################
@@ -343,6 +346,23 @@ app.layout = html.Div(
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
+
+
+@app.callback(
+    [
+        Output("max_value", "children"),
+        Output("min_value", "children"),
+        Output("mean_value", "children"),
+        Output("median_value", "children"),
+    ],
+    [Input('continuous_selector', 'value')],
+)
+def update_text(data):
+    if not data:
+        return "","","",""
+    data = get_field_data(data, file_loc=student_data_file).dropna()
+    return str(max(data)), str(min(data)), str(round(np.mean(data),2)),  str(np.median(data))
+
 
 @app.callback(Output('hist_plot', 'figure'),
               [Input('continuous_selector', 'value'),Input('width_slider', 'value')])
@@ -414,16 +434,6 @@ def make_sunburst(fields, color_var):
 
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
-
-
-def filter_dataframe(df, well_statuses, well_types, year_slider):
-    df = df[
-        df["Well_Status"].isin(well_statuses)
-        & df["Well_Type"].isin(well_types)
-        & (df["Date_Well_Completed"] > dt.datetime(year_slider[0], 1, 1))
-        & (df["Date_Well_Completed"] < dt.datetime(year_slider[1], 1, 1))
-        ]
-    return df
 
 
 if __name__ == '__main__':
