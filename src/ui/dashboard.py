@@ -14,10 +14,6 @@ from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data, get_var_info, get_field_data, get_binned_data
 
 
-def get_fields(fields: list, file_loc: str):
-    df = pd.read_csv(file_loc)
-    return df[fields]
-
 # Style configuration
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -299,7 +295,7 @@ def make_second_explore_plot(categorical: list, continuous, plot):
         fig = px.bar(data, x=categorical[0], y='count')
     elif plot_lookup[plot] == 'box plot':
         if continuous:
-            data = get_fields([categorical[0], continuous], file_loc=student_data_file)
+            data = get_field_data([categorical[0], continuous], file_loc=student_data_file)
             fig = px.box(data, x=categorical[0], y=continuous)
         else:
             fig = get_empty_sunburst("select a score")
