@@ -23,3 +23,4 @@ Python:
 
 Other:
 - [chromedriver](http://chromedriver.chromium.org/getting-started)
+- [google-chrome](https://www.google.com/chrome/)
