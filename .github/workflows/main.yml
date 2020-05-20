@@ -5,34 +5,55 @@ name: Python application
 
 on:
   push:
-    branches: [ master ]
+    branches:
+    - master
+    - workflow
   pull_request:
     branches: [ master ]
 
+
 jobs:
-  build:
+  build-and-run:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - uses: s-weigand/setup-conda@v1
-    - run: conda --version
-    - run: which python
-    - name: Install dependencies
-      run: |
-        conda env update
-        conda install flake8
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest -- headless
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - uses: s-weigand/setup-conda@v1
+        with:
+          update-conda: true
+          activate-conda: true
+      - run: conda --version
+      - run: which python
+      - name: setup goole chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libappindicator1 fonts-liberation
+          mkdir temp
+          cd temp
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome*.deb
+          cd ..
+          rm -Rf temp
+          google-chrome-stable --version
+      - name: download chromedriver
+        run: |
+          mkdir temp
+          cd temp
+          wget https://chromedriver.storage.googleapis.com/83.0.4103.39/chromedriver_linux64.zip
+          unzip chromedriver*
+          sudo mv chromedriver /usr/bin/chromedriver
+          cd ..
+          rm -Rf temp
+      - name: conda update
+        shell: bash -l {0}
+        run: conda env create -n my-conda-env -f environment.yml
+      - name: test
+        shell: bash -l {0}
+        run: |
+          source activate my-conda-env
+          pytest --headless
