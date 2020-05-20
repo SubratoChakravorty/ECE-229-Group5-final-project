@@ -16,6 +16,10 @@ run `pytest --headless` in the top directory.
 
 ### Dependencies 
 
+Python:
 - dash[testing]
 - selenium
 - pytest
+
+Other:
+- [chromedriver](http://chromedriver.chromium.org/getting-started)
