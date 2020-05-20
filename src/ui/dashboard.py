@@ -5,7 +5,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
-# Import required libraries
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -13,10 +12,6 @@ from dash.dependencies import Input, Output
 
 from src.config import variables_file, student_data_file
 from src.univariate_methods import return_fields, get_counts_means_data, get_binned_data, get_field_data
-
-# import dash_table as dt
-# Multi-dropdown options
-
 
 # Style configuration
 external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -42,99 +37,8 @@ def populate_dropdown(category: str):
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
-###### keep this unless there's no bugs in the end
-# well_status_options = [
-#     {"label": str(col_types[well_status]), "value": str(well_status)}
-#     for well_status in col_types
-# ]
-
-# well_type_options = [
-#     {"label": str(col_types[well_type]), "value": str(well_type)}
-#     for well_type in col_types
-# ]
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
-
-layout = dict(
-    autosize=True,
-    automargin=True,
-    margin=dict(l=30, r=30, b=20, t=40),
-    hovermode="closest",
-    plot_bgcolor="#F9F9F9",
-    paper_bgcolor="#F9F9F9",
-    legend=dict(font=dict(size=10), orientation="h"),
-    title="Overview",
-)
-
-introduction_tab = dcc.Tab(
-    label='About',
-    value='what-is',
-    children=html.Div(className='control-tab', children=[
-
-        html.H4(className='how', children="How to use this dashboard"),
-
-        html.P('1. Explore'
-               'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
-        html.P(
-            '2. Inspect'
-            'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
-        html.P(
-            '3. Insights'
-            'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-
-        html.H4(className='Dataset', children="Dataset"),
-        html.P(
-            'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
-            'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
-            'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-
-        html.P("Dataset can be downloaded by clicking: "),
-        html.Div([
-            'Reference: ',
-            html.A('Dataset',
-                   href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
-        ]),
-        html.H4(className='author', children="Author"),
-
-        html.Br()
-
-    ])
-)
-
-inspect_tab = html.Div([
-    dcc.Tab(
-        label="Inspect",
-        children=[
-            html.H1("Univariate Analysis"),
-            html.P("Click a category on the inner plot to filter"),
-            html.Div(
-                [
-                    html.P(["Select continous_var:",
-                            dcc.Dropdown(id='continous_var_selector', options=col_options, multi=True)]),
-                ],
-                style={"width": "25%", "float": "left"}
-            ),
-            dcc.Graph(id="graph2",
-                      style={"width": "75%", "display": "inline-block"},
-                      animate=False)
-        ]
-    ),
-    dcc.Slider(
-        id='continous-slider',
-        min=0,
-        max=100,
-        value=0,
-        # marks={str(year): str(year) for year in df['year'].unique()},
-        step=None
-    ),
-])
-
-insights_tab = dcc.Tab(
-    label="Insights",
-    children=[
-        html.H1("Multivariate Statistical Analysis")
-    ]
-)
 
 # Create app layout
 app.layout = html.Div(
@@ -270,7 +174,7 @@ app.layout = html.Div(
                             min=2,
                             max=20,
                             value=5,
-                            marks={str(2): str(2),str(5): str(5), str(20): str(20)},
+                            marks={str(2): str(2), str(5): str(5), str(20): str(20)},
                             className="dcc_control",
                         ),
                     ],
@@ -307,7 +211,7 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             [dcc.Graph(id="hist_plot")],
-                            id = "adjustableHistPlot",
+                            id="adjustableHistPlot",
                             className="pretty_container",
                         ),
                     ],
@@ -320,12 +224,6 @@ app.layout = html.Div(
         ),
 
         ######################################################< TAG4 PART >##################################################
-
-        html.Div(
-            [
-                insights_tab,
-            ],
-        ),
 
         # TODO: more graphs
 
@@ -346,27 +244,28 @@ app.layout = html.Div(
 )
 def update_text(data):
     if not data:
-        return "","","",""
+        return "", "", "", ""
     data = get_field_data(data, file_loc=student_data_file).dropna()
-    return str(max(data)), str(min(data)), str(round(np.mean(data),2)),  str(np.median(data))
+    return str(max(data)), str(min(data)), str(round(np.mean(data), 2)), str(np.median(data))
 
 
 @app.callback(Output('hist_plot', 'figure'),
-              [Input('continuous_selector', 'value'),Input('width_slider', 'value')])
-def make_hist_plot(fields,bar_width):
+              [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
+def make_hist_plot(fields, bar_width):
     if not fields:
         return {'data': []}
     else:
         data = get_field_data(fields, file_loc=student_data_file)
-        Width = (max(data)-min(data))/bar_width
+        Width = (max(data) - min(data)) / bar_width
         data = get_binned_data(fields, Width, file_loc=student_data_file)
         fig = go.Figure(data=[go.Bar(
             x=data["range"],
             y=data["count"],
-            width=[Width]*bar_width 
+            width=[Width] * bar_width
         )])
         fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
         return fig
+
 
 @app.callback(Output('frequency_plot', 'figure'),
               [Input('category_selector', 'value')])
