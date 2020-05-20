@@ -10,3 +10,4 @@ dependencies:
   - pip
   - pip:
     - dash[testing]
+    - dash_bootstrap_components
