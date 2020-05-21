@@ -15,3 +15,5 @@ main.py
 .idea/*
 ./src/helper.ipynb
 .pytest_cache
+/dash*
+/foo*
