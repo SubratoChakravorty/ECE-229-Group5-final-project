@@ -17,3 +17,4 @@ main.py
 .pytest_cache
 /dash*
 /foo*
+.vscode/
