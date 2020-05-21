@@ -38,6 +38,7 @@ report_text = """
 |       |  |     |_    _____| |  |       |
 |_______|  |_______|  |_______|  |______| 
 
+    Report
 
                                         """
 
@@ -176,24 +177,34 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H1("Univariate Analysis"),
-                        html.P("Select categories:", className="control_label"),
-                        dcc.Dropdown(
-                            id="continuous_selector",
-                            options=populate_dropdown('continuous'),
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select a continuous variable:",
+                                dcc.Dropdown
+                                (
+                                    id="continuous_selector",
+                                    options=populate_dropdown('continuous'),
+                                    # className="dcc_control",
+                                ),
+                            ]
                         ),
-                        html.P("Select bar width:", className="control_label"),
-                        dcc.Slider(
-                            id="width_slider",
-                            min=2,
-                            max=20,
-                            value=5,
-                            marks={str(2): str(2), str(5): str(5), str(20): str(20)},
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select hist width:",
+                                dcc.Slider(
+                                    id="width_slider",
+                                    min=2,
+                                    max=20,
+                                    value=5,
+                                    marks={str(2): str(2), str(5): str(5), str(20): str(20)},
+                                    # className="dcc_control",
+                                ),
+                            ]
                         ),
+                        
                     ],
                     className="pretty_container four columns",
-                    id="cross-filter-options",
+                    id="univariate analysis",
                 ),
                 html.Div(
                     [
@@ -252,7 +263,8 @@ app.layout = html.Div(
                                 dbc.ModalBody(
                                     html.Pre(
                                         report_text
-                                    )
+                                    ),
+                                    id="Report_body"
                                 ),
                                 dbc.ModalFooter([
                                     dbc.Button("Save", id="save-xl", className="ml-auto"), # todo: save
@@ -264,6 +276,7 @@ app.layout = html.Div(
                             centered=True,
                         ),
                     ],
+                    id="report",
                     className="pretty_container four column",
                 )
             ],
@@ -321,7 +334,8 @@ def make_hist_plot(fields, bar_width):
         fig = go.Figure(data=[go.Bar(
             x=data["range"],
             y=data["count"],
-            width=[Width] * bar_width
+            width=[Width] * bar_width,
+            name="Adjustable Histogram"
         )])
         fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
         return fig
