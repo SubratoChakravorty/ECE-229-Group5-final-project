@@ -49,6 +49,20 @@ def test_ui003_second_univariate_plot_box(dash_duo):
     name = category_df.loc[category_df['short'] == short_text, 'name'].item()
     dash_duo.wait_for_contains_text('#second_explore_plot', name, timeout=3)
 
+def test_ui004_histogram_plot(dash_duo):
+    dash_duo.start_server(app)
+    dash_duo.select_dcc_dropdown('#continuous_selector', index=1)
+    dash_duo.wait_for_element('#width_slider', timeout=2)
+    dash_duo.wait_for_element('#hist_plot', timeout=2)
+
+def test_ui005_four_blocks(dash_duo):
+    dash_duo.start_server(app)
+    dash_duo.wait_for_element('#info-container', timeout=2)
+
+def test_ui006_report(dash_duo):
+    dash_duo.start_server(app)
+    dash_duo.wait_for_element('#open-xl', timeout=2)
+    dash_duo.wait_for_element('#report', timeout=2)
 
 if __name__ == '__main__':
     unittest.main()
