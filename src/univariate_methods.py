@@ -141,9 +141,14 @@ def get_var_group(group, file="../data/var_group.json"):
     """
     return a list of variables of a certain group
     """
+    assert isinstance(file, str)
+    assert isinstance(group, str)
+
     with open(file, "r") as f:
         content = json.load(f)
-
+    
+    assert group in content
+    
     return content[group]
 
 
@@ -157,6 +162,8 @@ def get_var_info(file="../data/variables.csv"):
     :return: returns a pd.DataFrame associated with the variable or a
         subset of pd.DataFrame corresponds to each variable in name.
     """
+    assert isinstance(file, str)
+    
     df = pd.read_csv(file, index_col=0)
     
     # Multiple variables
