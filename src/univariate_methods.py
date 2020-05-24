@@ -1,8 +1,9 @@
+from functools import lru_cache
 import json
-from collections.abc import Iterable
-from typing import Tuple
-import pandas as pd
 import math
+from typing import Union, Tuple
+
+import pandas as pd
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -58,16 +59,19 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
-def get_field_data(field_name='', file_loc="../data/student_data.csv"):
+@lru_cache(maxsize=20)
+def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student_data.csv"):
     '''
     returns the input field data from the dataframe
     :param field_name: string or list of strings, field name
     :param file_loc: string, path to the dataset
     :return: returns the input field data as pandas series
     '''
-    if isinstance(field_name, list) or isinstance(field_name, tuple):
+    assert not isinstance(field_name, list), "A sequence of fields must be passed as a tuple"
+    if isinstance(field_name, tuple):
         for e in field_name:
             assert isinstance(e, str)
+        field_name = list(field_name)
     else:
         assert isinstance(field_name, str)
 

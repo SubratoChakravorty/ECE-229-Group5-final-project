@@ -42,13 +42,15 @@ report_text = """
 
                                         """
 
+
 def populate_dropdown(category: str):
     assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+                external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Create app layout
 app.layout = html.Div(
@@ -155,9 +157,9 @@ app.layout = html.Div(
                         html.P(["Select score:",
                                 dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'))]),
                         html.P(["Select plot style:",
-                               dcc.Dropdown(id='plot_selector',
-                                            value=1,
-                                            options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
+                                dcc.Dropdown(id='plot_selector',
+                                             value=1,
+                                             options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
                 ),
@@ -181,7 +183,7 @@ app.layout = html.Div(
                             [
                                 "Select a continuous variable:",
                                 dcc.Dropdown
-                                (
+                                    (
                                     id="continuous_selector",
                                     options=populate_dropdown('continuous'),
                                     # className="dcc_control",
@@ -201,7 +203,7 @@ app.layout = html.Div(
                                 ),
                             ]
                         ),
-                        
+
                     ],
                     className="pretty_container four columns",
                     id="univariate analysis",
@@ -250,7 +252,6 @@ app.layout = html.Div(
 
         ######################################################< TAG4 PART >##################################################
 
-
         html.Div(
             [
                 html.Div(
@@ -267,8 +268,8 @@ app.layout = html.Div(
                                     id="Report_body"
                                 ),
                                 dbc.ModalFooter([
-                                    dbc.Button("Save", id="save-xl", className="ml-auto"), # todo: save
-                                    dbc.Button("Close", id="close-xl", className="ml-auto"),]
+                                    dbc.Button("Save", id="save-xl", className="ml-auto"),  # todo: save
+                                    dbc.Button("Close", id="close-xl", className="ml-auto"), ]
                                 ),
                             ],
                             id="modal-xl",
@@ -298,7 +299,6 @@ app.layout = html.Div(
     [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
     [State("modal-xl", "is_open")],
 )
-
 def toggle_modal(n1, n2, n3, is_open):
     if n1 or n2:
         return not is_open
@@ -321,7 +321,8 @@ def update_text(data):
     data = get_field_data(data, file_loc=student_data_file).dropna()
     return str(max(data)), str(min(data)), str(round(np.mean(data), 2)), str(np.median(data))
 
-# Adjustbale histogram
+
+# Adjustable histogram
 @app.callback(Output('hist_plot', 'figure'),
               [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
 def make_hist_plot(fields, bar_width):
@@ -341,33 +342,72 @@ def make_hist_plot(fields, bar_width):
         return fig
 
 
-def get_empty_sunburst(text:str):
+def get_empty_sunburst(text: str):
+    """
+    Generates and empty sunburst plot with `text` at its center
+
+    :param text: informational text to display
+    :return: `plotly` figure
+    """
     return px.sunburst(
-                {'x'    : [text],
-                 'value': [1]},
-                path=['x'],
-                hover_data=None
-            )
+        {'x'    : [text],
+         'value': [1]},
+        path=['x'],
+        hover_data=None
+    )
 
 
 @app.callback(Output('second_explore_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
 def make_second_explore_plot(categorical: list, continuous, plot):
+    """
+    Make a plot based on the categorical and continuous data selected. Choose a box plot or frequency plot depending
+    on the plot selected.
+
+    :param categorical: list of data categories
+    :param continuous: single continuous data field
+    :param plot: "frequency plot" or "box plot"
+    :return: `plotly` figure
+    """
     if not categorical:
         return {'data': []}
     elif plot_lookup[plot] == 'frequency plot':
-        data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
-        fig = px.bar(data, x=categorical[0], y='count')
+        fig = get_frequency_plot(categorical)
     elif plot_lookup[plot] == 'box plot':
         if continuous:
-            data = get_field_data([categorical[0], continuous], file_loc=student_data_file)
-            fig = px.box(data, x=categorical[0], y=continuous)
+            fig = get_box_plot(categorical, continuous)
         else:
             fig = get_empty_sunburst("select a score")
     else:
         raise ValueError(f"{plot} is not a valid plot option")
+
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
+def get_box_plot(categorical, continuous):
+    """
+    Create a box plot given the categories as the x axis and the continuous field as the y-axis
+
+    :param categorical: list of categorical data fields
+    :param continuous: single continuous variable
+    :return: `plotly` figure
+    """
+    data = get_field_data((categorical[0], continuous), file_loc=student_data_file)
+    fig = px.box(data, x=categorical[0], y=continuous)
+    return fig
+
+
+def get_frequency_plot(categorical):
+    """
+    Create a frequency plot of the count of each category
+
+    :param categorical: list of categorical data fields
+    :return: `plotly` figure
+    """
+    data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
+    fig = px.bar(data, x=categorical[0], y='count')
     return fig
 
 
@@ -379,9 +419,9 @@ def make_sunburst(fields, color_var):
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
     continuous variable, used to color the segments.
     
-    :param color_var:
-    :param fields:
-    :return: 
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
     """
     if not fields:
         fig = get_empty_sunburst("Select a category")
