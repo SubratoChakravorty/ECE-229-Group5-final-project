@@ -149,7 +149,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Explore the Data"),
+                        html.H1("Explore"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
@@ -160,6 +160,10 @@ app.layout = html.Div(
                                 dcc.Dropdown(id='plot_selector',
                                              value=1,
                                              options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
+                        html.P("Tips:"),
+                        html.P("The color of each segment indicates the mean of the selected score"),
+                        html.P("The size of each segment represents the size of that student population"),
+                        html.P("Click on a category to zoom in"),
                     ],
                     className="pretty_container four columns",
                 ),
@@ -428,20 +432,31 @@ def make_sunburst(fields, color_var):
     elif not color_var:
         fig = get_empty_sunburst("Select a score")
     else:
-        data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
-
-        # TODO: scale doesn't update when the color_var is changed
-        fig = px.sunburst(
-            data,
-            path=fields,
-            values='count',
-            color='mean',
-            hover_data=fields,  # TODO: figure out what the best hover data is
-            color_continuous_scale='Portland',
-            color_continuous_midpoint=color_var_mean,
-        )
+        fig = get_sunburst_plot(color_var, fields)
 
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
+def get_sunburst_plot(color_var, fields):
+    """
+    Create a sunburst plot
+
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
+    """
+    data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
+    # TODO: scale doesn't update when the color_var is changed
+    fig = px.sunburst(
+        data,
+        path=fields,
+        values='count',
+        color='mean',
+        hover_data=fields,  # TODO: figure out what the best hover data is
+        color_continuous_scale='Portland',
+        color_continuous_midpoint=color_var_mean,
+    )
     return fig
 
 
