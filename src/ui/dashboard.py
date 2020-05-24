@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
-from src.univariate_methods import get_counts_means_data, get_var_info, get_field_data, get_binned_data
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
 
 # # Style configuration
 # external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -410,7 +410,7 @@ def get_frequency_plot(categorical):
     :param categorical: list of categorical data fields
     :return: `plotly` figure
     """
-    data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
+    data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
     fig = px.bar(data, x=categorical[0], y='count')
     return fig
 
@@ -446,7 +446,7 @@ def get_sunburst_plot(color_var, fields):
     :param fields: Categorical data fields with which to size segments by frequency
     :return: `plotly` figure
     """
-    data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
+    data, color_var_mean = get_hierarchical_data(fields, color_var, file_loc=student_data_file)
     # TODO: scale doesn't update when the color_var is changed
     fig = px.sunburst(
         data,
