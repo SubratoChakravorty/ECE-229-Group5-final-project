@@ -120,7 +120,7 @@ def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     '''
 
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
-    assert isinstance(color_var, str), f"color_var must be a string, not {type(fields)}"
+    assert isinstance(color_var, str), f"color_var must be a string, not {type(color_var)}"
 
     df = load_data_frame(file_loc)
     df = df[fields + [color_var]]
