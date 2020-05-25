@@ -57,23 +57,29 @@ def populate_dropdown(category: str) -> List[dict]:
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-def fig_formatter(func):
-    def wrapper(*args, **kwargs):
-        fig = func(*args, **kwargs)
-        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0),
-                          paper_bgcolor='rgba(0,0,0,0)',
-                          plot_bgcolor='rgba(0,0,0,0)')
-        return fig
+def fig_formatter(**kw):
+    t = kw.get('t', 0)
+    l = kw.get('l', 0)
+    r = kw.get('r', 0)
+    b = kw.get('b', 0)
 
-    return wrapper
+    def wrap(func):
+        def wrapped(*args, **kwargs):
+            fig = func(*args, **kwargs)
+            fig.update_layout(margin=dict(t=t, l=l, r=r, b=b),
+                              paper_bgcolor='rgba(0,0,0,0)',
+                              plot_bgcolor='rgba(0,0,0,0)')
+            return fig
+        return wrapped
+    return wrap
 
 
 correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'continuous'].index.to_list(),
                                             student_data_file)
 
 
-@fig_formatter
-def make_correlation_matrix():
+@fig_formatter()
+def make_correlation_heatmap():
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     df = correlation_matrix.rename(columns=short_name_lookup)
     df = df.rename(index=short_name_lookup)
@@ -228,7 +234,7 @@ app.layout = html.Div(
                             [
                                 "Select a continuous variable:",
                                 dcc.Dropdown
-                                (
+                                    (
                                     id="continuous_selector",
                                     options=populate_dropdown('continuous'),
                                     value='X1SCIEFF'
@@ -296,31 +302,27 @@ app.layout = html.Div(
 
         # ################################################< TAG3 PART >#############################################
 
-        html.Div(  # Correllations
+        # Correllations
+        html.Div(
             [
-                html.Div(
-                    [
-                        html.H1("Correlation"),
-                        html.P(["Select x-axis:",
-                                dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'),
-                                             multi=True)]),
-                        html.P(["Select y-axis:",
-                                dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'))]),
-                    ],
-                    className="pretty_container four columns",
+                html.Div([
+                    html.H1("Correlation"),
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
+                                            'S1TEFRNDS', 'X1SCIINT']),
+                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="correlation_bar")
+                    ]),
+                ],
+                    className="pretty_container six columns"
                 ),
-                html.Div([dcc.Graph(id="correlation_bar")],
-                         className="pretty_container twelve columns"),
+                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
+                         className="pretty_container six columns",),
             ],
             className="flex-display",
-        ),
-
-        html.Div([
-            html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_matrix())],
-                     className="pretty_container sixteen columns"),
-        ],
-            className="flex-display",
-            style={"margin-bottom": "25px"}
         ),
 
         ######################################################< TAG4 PART >##################################################
@@ -357,9 +359,6 @@ app.layout = html.Div(
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
-
-        # TODO: more graphs
-
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
@@ -413,7 +412,7 @@ def make_hist_plot(fields, bar_width):
         return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_histogram(bar_width, fields):
     """
     Generate a histogram plot
@@ -434,7 +433,7 @@ def get_histogram(bar_width, fields):
     return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_empty_sunburst(text: str):
     """
     Generates an empty sunburst plot with `text` at its center
@@ -477,7 +476,7 @@ def make_second_explore_plot(categorical: list, continuous, plot):
     return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_box_plot(categorical, continuous):
     """
     Create a box plot given the categories as the x axis and the continuous field as the y-axis
@@ -492,7 +491,7 @@ def get_box_plot(categorical, continuous):
     return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_frequency_plot(categorical):
     """
     Create a frequency plot of the count of each category
@@ -531,7 +530,7 @@ def make_sunburst(fields, color_var):
     return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_sunburst_plot(color_var, fields):
     """
     Create a sunburst plot
@@ -564,9 +563,21 @@ def make_correlation_bar_plot(x: List[str], y: str):
     return fig
 
 
-@fig_formatter
+@fig_formatter()
 def get_correlation_bar_plot(x: List[str], y: str):
-    raise NotImplementedError()
+    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
+    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
+    for item in x:
+        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
+
+    series = correlation_matrix.loc[x, y]
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    series = series.rename(index=short_name_lookup)
+    return px.bar(
+        series,
+        x=series.index,
+        y=y,
+    )
 
 
 if __name__ == '__main__':
