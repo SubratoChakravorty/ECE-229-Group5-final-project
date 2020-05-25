@@ -65,5 +65,9 @@ def test_ui006_report(dash_duo):
     dash_duo.wait_for_element('#open-xl', timeout=2)
     dash_duo.wait_for_element('#report', timeout=2)
 
+def test_ui007_toggle_model(dash_duo):
+    dash_duo.start_server(app)
+    dash_duo.toggle_window()
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(unittest.TestCase)
