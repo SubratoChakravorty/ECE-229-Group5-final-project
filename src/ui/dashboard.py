@@ -14,6 +14,7 @@ from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
+from src.multivariate_methods import get_correlation_matrix
 
 # # Style configuration
 # external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -45,33 +46,44 @@ report_text = """
                                         """
 
 
-def populate_dropdown(category: str):
+def populate_dropdown(category: str) -> List[dict]:
+    """
+    Generate a list of dictionaries to use to populate the dropdown menues
+    :param category: 'continuous' or 'categorical'
+    :return: a list of dicts with keys 'label' and 'value'
+    """
     assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-# TODO: DELETE
-import pandas as pd
-dummy_data = pd.DataFrame([[1.0, 0.0421226815469731, 0.031178169969044295, 0.05900702384323323, -0.409533145874167, -0.33940695612164506, 0.18670181427887142],
-      [0.0421226815469731, 1.0, 0.11684678549417286, 0.15936121140219361, 0.16831144977024404, 0.14158363352461317, -0.03066753253934124],
-      [0.031178169969044295, 0.11684678549417286, 1.0, 0.5936883225858387, 0.3371292154829527, 0.24951161775091865, -0.01849904265944017],
-      [0.05900702384323323, 0.15936121140219361, 0.5936883225858387, 1.0, 0.37813903095566864, 0.2781009904663162, -0.0956039084488694],
-      [-0.409533145874167, 0.16831144977024404, 0.3371292154829527, 0.37813903095566864, 1.0, 0.7172266582920588, -0.290106449655687],
-      [-0.33940695612164506, 0.14158363352461317, 0.24951161775091865, 0.2781009904663162, 0.7172266582920588, 1.0, -0.28262591579580115],
-      [0.18670181427887142, -0.03066753253934124, -0.01849904265944017, -0.0956039084488694, -0.290106449655687, -0.28262591579580115, 1.]],
-                          index=["fp_time", "uid", "revenue", "num_trans", "act_days", "lt", "delt_pmnt_log"],
-                          columns=["fp_time", "uid", "revenue", "num_trans", "act_days", "lt", "delt_pmnt_log"])
-############
+def fig_formatter(func):
+    def wrapper(*args, **kwargs):
+        fig = func(*args, **kwargs)
+        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0),
+                          paper_bgcolor='rgba(0,0,0,0)',
+                          plot_bgcolor='rgba(0,0,0,0)')
+        return fig
+
+    return wrapper
+
+
+correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'continuous'].index.to_list(),
+                                            student_data_file)
+
+
+@fig_formatter
 def make_correlation_matrix():
-    x = dummy_data.columns
-    y = dummy_data.columns
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    df = correlation_matrix.rename(columns=short_name_lookup)
+    df = df.rename(index=short_name_lookup)
     fig = px.imshow(
-        dummy_data,
-        x=x,
-        y=y,
+        df,
+        labels=short_name_lookup,
+        x=df.index,
+        y=df.columns,
     )
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    fig.layout.xaxis.tickangle = 45
     return fig
 
 
@@ -182,7 +194,7 @@ app.layout = html.Div(
                                              multi=True, value=['N1HIDEG'])]),
                         html.P(["Select score:",
                                 dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
-                                             value='X1SCIEFF'),]),
+                                             value='X1SCIEFF'), ]),
                         html.P(["Select plot style:",
                                 dcc.Dropdown(id='plot_selector',
                                              value=1,
@@ -194,11 +206,11 @@ app.layout = html.Div(
                           html.P("Tips:"),
                           html.P("The color of each segment indicates the mean of the selected score"),
                           html.P("The size of each segment represents the size of that student population"),
-                          html.P("Click on a category to zoom in"),],
+                          html.P("Click on a category to zoom in"), ],
                          className="pretty_container four columns"),
                 html.Div([dcc.Graph(id="second_explore_plot"),
                           html.P("Tips:"),
-                          html.P("The x-axis is the first-selected categorical variable"),],
+                          html.P("The x-axis is the first-selected categorical variable"), ],
                          className="pretty_container four columns"),
             ],
             className="flex-display",
@@ -216,21 +228,22 @@ app.layout = html.Div(
                             [
                                 "Select a continuous variable:",
                                 dcc.Dropdown
-                                    (
+                                (
                                     id="continuous_selector",
                                     options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
                                 ),
                             ]
                         ),
                         html.P(
                             [
-                                "Select hist width:",
+                                "Select bin width:",
                                 dcc.Slider(
                                     id="width_slider",
                                     min=2,
                                     max=20,
-                                    value=5,
-                                    marks={str(2): str(2), str(5): str(5), str(20): str(20)},
+                                    value=10,
+                                    marks={'2': '2', '5': '5', '10': '10', '20': '20'},
                                 ),
                             ]
                         ),
@@ -305,7 +318,7 @@ app.layout = html.Div(
         html.Div([
             html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_matrix())],
                      className="pretty_container sixteen columns"),
-            ],
+        ],
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
@@ -386,25 +399,45 @@ def update_text(data):
 @app.callback(Output('hist_plot', 'figure'),
               [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
 def make_hist_plot(fields, bar_width):
+    """
+    Histogram plot callback
+
+    :param fields: content of dropdown menu
+    :param bar_width: value of slider
+    :return: `plotly` figure
+    """
     if not fields:
         return {'data': []}
     else:
-        data = get_field_data(fields, file_loc=student_data_file)
-        Width = (max(data) - min(data)) / bar_width
-        data = get_binned_data(fields, Width, file_loc=student_data_file)
-        fig = go.Figure(data=[go.Bar(
-            x=data["range"],
-            y=data["count"],
-            width=[Width] * bar_width,
-            name="Adjustable Histogram"
-        )])
-        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+        fig = get_histogram(bar_width, fields)
         return fig
 
 
+@fig_formatter
+def get_histogram(bar_width, fields):
+    """
+    Generate a histogram plot
+
+    :param bar_width: The histogram bin width
+    :param fields: The continuous variable to examine
+    :return: `plotly` histogram figure
+    """
+    data = get_field_data(fields, file_loc=student_data_file)
+    Width = (max(data) - min(data)) / bar_width
+    data = get_binned_data(fields, Width, file_loc=student_data_file)
+    fig = go.Figure(data=[go.Bar(
+        x=data["range"],
+        y=data["count"],
+        width=[Width] * bar_width,
+        name="Adjustable Histogram"
+    )])
+    return fig
+
+
+@fig_formatter
 def get_empty_sunburst(text: str):
     """
-    Generates and empty sunburst plot with `text` at its center
+    Generates an empty sunburst plot with `text` at its center
 
     :param text: informational text to display
     :return: `plotly` figure
@@ -441,11 +474,10 @@ def make_second_explore_plot(categorical: list, continuous, plot):
             fig = get_empty_sunburst("select a score")
     else:
         raise ValueError(f"{plot} is not a valid plot option")
-
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
 
 
+@fig_formatter
 def get_box_plot(categorical, continuous):
     """
     Create a box plot given the categories as the x axis and the continuous field as the y-axis
@@ -460,6 +492,7 @@ def get_box_plot(categorical, continuous):
     return fig
 
 
+@fig_formatter
 def get_frequency_plot(categorical):
     """
     Create a frequency plot of the count of each category
@@ -492,10 +525,13 @@ def make_sunburst(fields, color_var):
     else:
         fig = get_sunburst_plot(color_var, fields)
 
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0),
+                      paper_bgcolor='rgba(0,0,0,0)',
+                      plot_bgcolor='rgba(0,0,0,0)')
     return fig
 
 
+@fig_formatter
 def get_sunburst_plot(color_var, fields):
     """
     Create a sunburst plot
@@ -525,11 +561,10 @@ def make_correlation_bar_plot(x: List[str], y: str):
         fig = get_empty_sunburst("Select a y variable")
     else:
         fig = get_correlation_bar_plot(x, y)
-
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
 
 
+@fig_formatter
 def get_correlation_bar_plot(x: List[str], y: str):
     raise NotImplementedError()
 
