@@ -1,28 +1,21 @@
 """
 Just run using `python dashboard.py`
 """
-# Import required libraries
-import datetime as dt
-
 import dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
-import pandas as pd
+import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
+from dash.dependencies import Input, Output, State
 
-from dash.dependencies import Input, Output
-
-from controls import WELL_STATUSES, WELL_TYPES
 from src.config import variables_file, student_data_file
-from src.univariate_methods import return_fields, get_counts_means_data, get_var_info, get_field_data
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
 
-
-def get_fields(fields: list, file_loc: str):
-    df = pd.read_csv(file_loc)
-    return df[fields]
-
-# Style configuration
-external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# # Style configuration
+# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# app.css.append_css({"external_url":external_css})
 
 # color for frontend
 colors = {
@@ -34,14 +27,20 @@ plot_lookup = {0: 'box plot',
                1: 'frequency plot'}
 
 # Populate fields from data
-categories = return_fields('../../data/student_data.csv')
-col_types = {}
-for cate in categories:
-    col_types[cate] = cate
-col_options = [dict(label=x, value=x) for x in categories]
-print(col_types)
-
 vars_df = get_var_info(variables_file)
+
+report_text = """
+ __   __    _______    _______    ______  
+|  | |  |  |       |  |       |  |      | 
+|  | |  |  |       |  |  _____|  |  _    |
+|  |_|  |  |       |  | |_____   | | |   |
+|       |  |      _|  |_____  |  | |_|   |
+|       |  |     |_    _____| |  |       |
+|_______|  |_______|  |_______|  |______| 
+
+    Report
+
+                                        """
 
 
 def populate_dropdown(category: str):
@@ -50,18 +49,8 @@ def populate_dropdown(category: str):
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-well_status_options = [
-    {"label": str(col_types[well_status]), "value": str(well_status)}
-    for well_status in col_types
-]
-
-well_type_options = [
-    {"label": str(col_types[well_type]), "value": str(well_type)}
-    for well_type in col_types
-]
-
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
-
+app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+                external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Create app layout
 categorical_dropdown_opts = populate_dropdown('categorical')
@@ -101,7 +90,7 @@ app.layout = html.Div(
                             ]
                         )
                     ],
-                    className="one-half column",
+                    className="two-half column",
                     id="title",
                 ),
                 html.Div(
@@ -111,7 +100,7 @@ app.layout = html.Div(
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
                         )
                     ],
-                    className="one-third column",
+                    className="three-third column",
                     id="button",
                 ),
             ],
@@ -152,34 +141,43 @@ app.layout = html.Div(
                 html.Br()
             ],
             className="pretty_container",
+            style={"margin-bottom": "25px"}
         ),
 
         # ##############################################< TAG2 PART >############################################
 
-        html.Div(  # Explore
+        html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Explore the Data"),
+                        html.H1("Explore"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
-                                dcc.Dropdown(id='category_selector', options=categorical_dropdown_opts,
-                                             multi=True)]),  # TODO: hover dropdown to get long text (new component)
+                                dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
+                                             multi=True, value=['N1HIDEG'])]),
                         html.P(["Select score:",
-                                dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
+                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
+                                             value='X1SCIEFF'),]),
                         html.P(["Select plot style:",
-                               dcc.Dropdown(id='plot_selector',
-                                            value=1,
-                                            options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
+                                dcc.Dropdown(id='plot_selector',
+                                             value=1,
+                                             options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
                 ),
-                html.Div([dcc.Graph(id="sunburst_plot")],
+                html.Div([dcc.Graph(id="sunburst_plot"),
+                          html.P("Tips:"),
+                          html.P("The color of each segment indicates the mean of the selected score"),
+                          html.P("The size of each segment represents the size of that student population"),
+                          html.P("Click on a category to zoom in"),],
                          className="pretty_container four columns"),
-                html.Div([dcc.Graph(id="second_explore_plot")],
+                html.Div([dcc.Graph(id="second_explore_plot"),
+                          html.P("Tips:"),
+                          html.P("The x-axis is the first-selected categorical variable"),],
                          className="pretty_container four columns"),
             ],
-            className="row flex-display",
+            className="flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         # ################################################< TAG3 PART >#############################################
@@ -212,65 +210,66 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H1("Univariate Analysis"),
-                        html.P("Select categories:", className="control_label"),
-                        dcc.Dropdown(
-                            id="well_statuses",
-                            options=well_status_options,
-                            multi=True,
-                            value=list(WELL_STATUSES.keys()),
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select a continuous variable:",
+                                dcc.Dropdown
+                                    (
+                                    id="continuous_selector",
+                                    options=populate_dropdown('continuous'),
+                                    # className="dcc_control",
+                                ),
+                            ]
                         ),
-                        html.P("Select score:", className="control_label"),
-                        dcc.Dropdown(
-                            id="well_types",
-                            options=well_type_options,
-                            multi=True,
-                            value=list(WELL_TYPES.keys()),
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select hist width:",
+                                dcc.Slider(
+                                    id="width_slider",
+                                    min=2,
+                                    max=20,
+                                    value=5,
+                                    marks={str(2): str(2), str(5): str(5), str(20): str(20)},
+                                    # className="dcc_control",
+                                ),
+                            ]
                         ),
-                        dcc.RangeSlider(
-                            id="year_slider",
-                            min=1960,
-                            max=2017,
-                            value=[1990, 2010],
-                            marks={str(1990): str(1990), str(2010): str(2010)},
-                            className="dcc_control",
-                        ),
+
                     ],
                     className="pretty_container four columns",
-                    id="cross-filter-options",
+                    id="univariate analysis",
                 ),
                 html.Div(
                     [
                         html.Div(
                             [
                                 html.Div(
-                                    [html.H6(id="well_text"), html.P("No. of Wells")],
+                                    [html.H6(id="max_value"), html.P("Max Value")],
                                     id="wells",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="gasText"), html.P("Gas")],
+                                    [html.H6(id="min_value"), html.P("Min Value")],
                                     id="gas",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="oilText"), html.P("Oil")],
+                                    [html.H6(id="mean_value"), html.P("Mean Value")],
                                     id="oil",
                                     className="mini_container",
                                 ),
                                 html.Div(
-                                    [html.H6(id="waterText"), html.P("Water")],
+                                    [html.H6(id="median_value"), html.P("Median Value")],
                                     id="water",
                                     className="mini_container",
                                 ),
                             ],
                             id="info-container",
-                            className="row container-display",
+                            className="container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="count_graph")],
-                            id="countGraphContainer",
+                            [dcc.Graph(id="hist_plot")],
+                            id="adjustableHistPlot",
                             className="pretty_container",
                         ),
                     ],
@@ -278,10 +277,46 @@ app.layout = html.Div(
                     className="eight columns",
                 ),
             ],
-            className="row flex-display",
+            className="flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         ######################################################< TAG4 PART >##################################################
+
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Get your report"),
+                        dbc.Button("Report generator", id="open-xl"),
+                        dbc.Modal(
+                            [
+                                dbc.ModalHeader("Report"),
+                                dbc.ModalBody(
+                                    html.Pre(
+                                        report_text
+                                    ),
+                                    id="Report_body"
+                                ),
+                                dbc.ModalFooter([
+                                    dbc.Button("Save", id="save-xl", className="ml-auto"),  # todo: save
+                                    dbc.Button("Close", id="close-xl", className="ml-auto"), ]
+                                ),
+                            ],
+                            id="modal-xl",
+                            size="xl",
+                            centered=True,
+                        ),
+                    ],
+                    id="report",
+                    className="pretty_container four column",
+                )
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
+
+        # TODO: more graphs
 
     ],
     id="mainContainer",
@@ -289,77 +324,167 @@ app.layout = html.Div(
 )
 
 
-def get_empty_sunburst(text:str):
+# Report modal
+@app.callback(
+    Output("modal-xl", "is_open"),
+    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
+    [State("modal-xl", "is_open")],
+)
+def toggle_modal(n1, n2, n3, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+
+# Four blocks above histogram
+@app.callback(
+    [
+        Output("max_value", "children"),
+        Output("min_value", "children"),
+        Output("mean_value", "children"),
+        Output("median_value", "children"),
+    ],
+    [Input('continuous_selector', 'value')],
+)
+def update_text(data):
+    if not data:
+        return "", "", "", ""
+    data = get_field_data(data, file_loc=student_data_file).dropna()
+    return str(max(data)), str(min(data)), str(round(np.mean(data), 2)), str(np.median(data))
+
+
+# Adjustable histogram
+@app.callback(Output('hist_plot', 'figure'),
+              [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
+def make_hist_plot(fields, bar_width):
+    if not fields:
+        return {'data': []}
+    else:
+        data = get_field_data(fields, file_loc=student_data_file)
+        Width = (max(data) - min(data)) / bar_width
+        data = get_binned_data(fields, Width, file_loc=student_data_file)
+        fig = go.Figure(data=[go.Bar(
+            x=data["range"],
+            y=data["count"],
+            width=[Width] * bar_width,
+            name="Adjustable Histogram"
+        )])
+        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+        return fig
+
+
+def get_empty_sunburst(text: str):
+    """
+    Generates and empty sunburst plot with `text` at its center
+
+    :param text: informational text to display
+    :return: `plotly` figure
+    """
     return px.sunburst(
-                {'x'    : [text],
-                 'value': [1]},
-                path=['x'],
-                hover_data=None
-            )
+        {'x'    : [text],
+         'value': [1]},
+        path=['x'],
+        hover_data=None
+    )
 
 
 @app.callback(Output('second_explore_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value'),
+              [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
 def make_second_explore_plot(categorical: list, continuous, plot):
+    """
+    Make a plot based on the categorical and continuous data selected. Choose a box plot or frequency plot depending
+    on the plot selected.
+
+    :param categorical: list of data categories
+    :param continuous: single continuous data field
+    :param plot: "frequency plot" or "box plot"
+    :return: `plotly` figure
+    """
     if not categorical:
         return {'data': []}
     elif plot_lookup[plot] == 'frequency plot':
-        data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
-        fig = px.bar(data, x=categorical[0], y='count')
+        fig = get_frequency_plot(categorical)
     elif plot_lookup[plot] == 'box plot':
         if continuous:
-            data = get_fields([categorical[0], continuous], file_loc=student_data_file)
-            fig = px.box(data, x=categorical[0], y=continuous)
+            fig = get_box_plot(categorical, continuous)
         else:
             fig = get_empty_sunburst("select a score")
     else:
         raise ValueError(f"{plot} is not a valid plot option")
+
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
+def get_box_plot(categorical, continuous):
+    """
+    Create a box plot given the categories as the x axis and the continuous field as the y-axis
+
+    :param categorical: list of categorical data fields
+    :param continuous: single continuous variable
+    :return: `plotly` figure
+    """
+    labels = vars_df.loc[categorical + [continuous], 'short'].to_dict()
+    data = get_field_data((categorical[0], continuous), file_loc=student_data_file)
+    fig = px.box(data, x=categorical[0], y=continuous, labels=labels)
+    return fig
+
+
+def get_frequency_plot(categorical):
+    """
+    Create a frequency plot of the count of each category
+
+    :param categorical: list of categorical data fields
+    :return: `plotly` figure
+    """
+    labels = vars_df.loc[categorical, 'short'].to_dict()
+    data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
+    fig = px.bar(data, x=categorical[0], y='count', labels=labels)
     return fig
 
 
 # TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
 @app.callback(Output('sunburst_plot', 'figure'),
-              [Input('category_selector', 'value'), Input('continuous_var_selector', 'value')])
+              [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value')])
 def make_sunburst(fields, color_var):
     """
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
     continuous variable, used to color the segments.
     
-    :param fields: 
-    :return: 
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
     """
     if not fields:
-        fig = get_empty_sunburst("select a category")
+        fig = get_empty_sunburst("Select a category")
     elif not color_var:
-        fig = get_empty_sunburst("select a score")
+        fig = get_empty_sunburst("Select a score")
     else:
-        data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
-
-        # TODO: scale doesn't update when the color_var is changed
-        fig = px.sunburst(
-            data,
-            path=fields,
-            values='count',
-            color='mean',
-            hover_data=fields,  # TODO: figure out what the best hover data is
-            color_continuous_scale='Portland',
-            color_continuous_midpoint=color_var_mean,
-        )
+        fig = get_sunburst_plot(color_var, fields)
 
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     return fig
 
 
-def filter_dataframe(df, well_statuses, well_types, year_slider):
-    df = df[
-        df["Well_Status"].isin(well_statuses)
-        & df["Well_Type"].isin(well_types)
-        & (df["Date_Well_Completed"] > dt.datetime(year_slider[0], 1, 1))
-        & (df["Date_Well_Completed"] < dt.datetime(year_slider[1], 1, 1))
-        ]
-    return df
+def get_sunburst_plot(color_var, fields):
+    """
+    Create a sunburst plot
+
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
+    """
+    data, color_var_mean = get_hierarchical_data(fields, color_var, file_loc=student_data_file)
+    fig = px.sunburst(
+        data,
+        path=fields,
+        values='count',
+        color='mean',
+        color_continuous_scale='Portland',
+        color_continuous_midpoint=color_var_mean,
+    )
+    return fig
 
 
 if __name__ == '__main__':

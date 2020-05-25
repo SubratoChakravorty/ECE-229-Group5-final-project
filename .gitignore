@@ -12,4 +12,10 @@ conf.py
 index.rst
 main.py
 *.ipynb
-.idea/
+.idea/*
+./src/helper.ipynb
+.pytest_cache
+/dash*
+/foo*
+.vscode/
+.coverage

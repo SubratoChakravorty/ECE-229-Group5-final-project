@@ -1,6 +1,8 @@
+from functools import lru_cache
 import json
-from collections.abc import Iterable
-from typing import Tuple
+import math
+from typing import Union, Tuple
+
 import pandas as pd
 
 
@@ -57,12 +59,34 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
-def get_field_data(field_name='', file_loc="../data/student_data.csv"):
+@lru_cache(maxsize=20)
+def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student_data.csv"):
     '''
     returns the input field data from the dataframe
-    :param field_name: string, field name
+    :param field_name: string or list of strings, field name
     :param file_loc: string, path to the dataset
     :return: returns the input field data as pandas series
+    '''
+    assert not isinstance(field_name, list), "A sequence of fields must be passed as a tuple"
+    if isinstance(field_name, tuple):
+        for e in field_name:
+            assert isinstance(e, str)
+        field_name = list(field_name)
+    else:
+        assert isinstance(field_name, str)
+
+    df = pd.read_csv(file_loc)
+
+    field_data = df[field_name]
+
+    return field_data
+
+def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"):
+    '''
+    returns the count of continuous data count seperated by range
+    :param field_name: string, field name
+    :param file_loc: string, path to the dataset
+    :return: returns midnumber of range and the count of data in diffrent range
     '''
 
     assert isinstance(field_name, str)
@@ -71,11 +95,21 @@ def get_field_data(field_name='', file_loc="../data/student_data.csv"):
 
     assert field_name in df.columns
     field_data = df[field_name]
+    Range = max(field_data) - min(field_data)
+    bins_num = math.ceil(Range / width)
+    bins = list(range(bins_num)) #* int(width)
+    for i in range(len(bins)):
+        bins[i] *= width
 
-    return field_data
+    cut = pd.cut(field_data, bins)
+    cut_res = pd.value_counts(cut)  
+    res = {}
+    res["range"] = list(map(lambda x:x.mid,cut_res.index))
+    res["count"] = list(cut_res)
+    return res
 
 
-def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
+def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
         -> Tuple[pd.DataFrame, float]:
     '''
     returns a dataframe with mean and count of groups segregated using input fields
@@ -88,7 +122,7 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(color_var, str), f"color_var must be a string, not {type(fields)}"
 
-    df = pd.read_csv(file_loc)
+    df = load_data_frame(file_loc)
     df = df[fields + [color_var]]
     color_var_mean = df[color_var].mean()
 
@@ -102,6 +136,17 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     return flat_df, color_var_mean
 
 
+@lru_cache(maxsize=10)
+def load_data_frame(file_loc: str) -> pd.DataFrame:
+    """
+    Used to store dataframes loaded from a csv.
+
+    :param file_loc: path to the csv
+    :return: pandas dataframe
+    """
+    return pd.read_csv(file_loc)
+
+
 # print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
 
 # print(get_sunburst_data(['X1RACE','X1SEX','N1SEX']))
@@ -111,9 +156,14 @@ def get_var_group(group, file="../data/var_group.json"):
     """
     return a list of variables of a certain group
     """
+    assert isinstance(file, str)
+    assert isinstance(group, str)
+
     with open(file, "r") as f:
         content = json.load(f)
-
+    
+    assert group in content
+    
     return content[group]
 
 
@@ -127,6 +177,8 @@ def get_var_info(file="../data/variables.csv"):
     :return: returns a pd.DataFrame associated with the variable or a
         subset of pd.DataFrame corresponds to each variable in name.
     """
+    assert isinstance(file, str)
+    
     df = pd.read_csv(file, index_col=0)
     
     # Multiple variables

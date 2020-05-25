@@ -1,0 +1,15 @@
+channels:
+  - defaults
+dependencies:
+  - dash>=1.4
+  - pandas>=1.0
+  - plotly>=4.6
+  - python>=3.7
+  - pytest
+  - selenium>=3
+  - pip
+  - pip:
+    - dash[testing]
+    - dash_bootstrap_components
+    - sphinx==1.8.5
+    - sphinx_rtd_theme==0.4.2
