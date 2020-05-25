@@ -1,5 +1,6 @@
 from setuptools import setup
 
+# todo: finish or delete this
 setup(
    name='foo',
    version='1.0',

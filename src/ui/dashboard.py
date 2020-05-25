@@ -1,6 +1,8 @@
 """
 Just run using `python dashboard.py`
 """
+from typing import List
+
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -11,7 +13,8 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
-from src.univariate_methods import get_counts_means_data, get_var_info, get_field_data, get_binned_data
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
+from src.multivariate_methods import get_correlation_matrix
 
 # # Style configuration
 # external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -38,16 +41,60 @@ report_text = """
 |       |  |     |_    _____| |  |       |
 |_______|  |_______|  |_______|  |______| 
 
+    Report
 
                                         """
 
-def populate_dropdown(category: str):
+
+def populate_dropdown(category: str) -> List[dict]:
+    """
+    Generate a list of dictionaries to use to populate the dropdown menues
+    :param category: 'continuous' or 'categorical'
+    :return: a list of dicts with keys 'label' and 'value'
+    """
     assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
     df = vars_df.loc[vars_df['type'] == category, 'short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=[dbc.themes.BOOTSTRAP])
+def fig_formatter(**kw):
+    t = kw.get('t', 0)
+    l = kw.get('l', 0)
+    r = kw.get('r', 0)
+    b = kw.get('b', 0)
+
+    def wrap(func):
+        def wrapped(*args, **kwargs):
+            fig = func(*args, **kwargs)
+            fig.update_layout(margin=dict(t=t, l=l, r=r, b=b),
+                              paper_bgcolor='rgba(0,0,0,0)',
+                              plot_bgcolor='rgba(0,0,0,0)')
+            return fig
+        return wrapped
+    return wrap
+
+
+correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'continuous'].index.to_list(),
+                                            student_data_file)
+
+
+@fig_formatter()
+def make_correlation_heatmap():
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    df = correlation_matrix.rename(columns=short_name_lookup)
+    df = df.rename(index=short_name_lookup)
+    fig = px.imshow(
+        df,
+        labels=short_name_lookup,
+        x=df.index,
+        y=df.columns,
+    )
+    fig.layout.xaxis.tickangle = 45
+    return fig
+
+
+app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+                external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Create app layout
 app.layout = html.Div(
@@ -146,23 +193,30 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Explore the Data"),
+                        html.H1("Explore"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
-                                             multi=True)]),
+                                             multi=True, value=['N1HIDEG'])]),
                         html.P(["Select score:",
-                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'))]),
+                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
+                                             value='X1SCIEFF'), ]),
                         html.P(["Select plot style:",
-                               dcc.Dropdown(id='plot_selector',
-                                            value=1,
-                                            options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
+                                dcc.Dropdown(id='plot_selector',
+                                             value=1,
+                                             options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
                 ),
-                html.Div([dcc.Graph(id="sunburst_plot")],
+                html.Div([dcc.Graph(id="sunburst_plot"),
+                          html.P("Tips:"),
+                          html.P("The color of each segment indicates the mean of the selected score"),
+                          html.P("The size of each segment represents the size of that student population"),
+                          html.P("Click on a category to zoom in"), ],
                          className="pretty_container four columns"),
-                html.Div([dcc.Graph(id="second_explore_plot")],
+                html.Div([dcc.Graph(id="second_explore_plot"),
+                          html.P("Tips:"),
+                          html.P("The x-axis is the first-selected categorical variable"), ],
                          className="pretty_container four columns"),
             ],
             className="flex-display",
@@ -176,24 +230,33 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H1("Univariate Analysis"),
-                        html.P("Select categories:", className="control_label"),
-                        dcc.Dropdown(
-                            id="continuous_selector",
-                            options=populate_dropdown('continuous'),
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select a continuous variable:",
+                                dcc.Dropdown
+                                    (
+                                    id="continuous_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
+                                ),
+                            ]
                         ),
-                        html.P("Select bar width:", className="control_label"),
-                        dcc.Slider(
-                            id="width_slider",
-                            min=2,
-                            max=20,
-                            value=5,
-                            marks={str(2): str(2), str(5): str(5), str(20): str(20)},
-                            className="dcc_control",
+                        html.P(
+                            [
+                                "Select bin width:",
+                                dcc.Slider(
+                                    id="width_slider",
+                                    min=2,
+                                    max=20,
+                                    value=10,
+                                    marks={'2': '2', '5': '5', '10': '10', '20': '20'},
+                                ),
+                            ]
                         ),
+
                     ],
                     className="pretty_container four columns",
-                    id="cross-filter-options",
+                    id="univariate analysis",
                 ),
                 html.Div(
                     [
@@ -237,8 +300,32 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
-        ######################################################< TAG4 PART >##################################################
+        # ################################################< TAG3 PART >#############################################
 
+        # Correllations
+        html.Div(
+            [
+                html.Div([
+                    html.H1("Correlation"),
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
+                                            'S1TEFRNDS', 'X1SCIINT']),
+                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="correlation_bar")
+                    ]),
+                ],
+                    className="pretty_container six columns"
+                ),
+                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
+                         className="pretty_container six columns",),
+            ],
+            className="flex-display",
+        ),
+
+        ######################################################< TAG4 PART >##################################################
 
         html.Div(
             [
@@ -252,11 +339,12 @@ app.layout = html.Div(
                                 dbc.ModalBody(
                                     html.Pre(
                                         report_text
-                                    )
+                                    ),
+                                    id="Report_body"
                                 ),
                                 dbc.ModalFooter([
-                                    dbc.Button("Save", id="save-xl", className="ml-auto"), # todo: save
-                                    dbc.Button("Close", id="close-xl", className="ml-auto"),]
+                                    dbc.Button("Save", id="save-xl", className="ml-auto"),  # todo: save
+                                    dbc.Button("Close", id="close-xl", className="ml-auto"), ]
                                 ),
                             ],
                             id="modal-xl",
@@ -264,15 +352,13 @@ app.layout = html.Div(
                             centered=True,
                         ),
                     ],
+                    id="report",
                     className="pretty_container four column",
                 )
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
-
-        # TODO: more graphs
-
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
@@ -285,7 +371,6 @@ app.layout = html.Div(
     [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
     [State("modal-xl", "is_open")],
 )
-
 def toggle_modal(n1, n2, n3, is_open):
     if n1 or n2:
         return not is_open
@@ -308,52 +393,115 @@ def update_text(data):
     data = get_field_data(data, file_loc=student_data_file).dropna()
     return str(max(data)), str(min(data)), str(round(np.mean(data), 2)), str(np.median(data))
 
-# Adjustbale histogram
+
+# Adjustable histogram
 @app.callback(Output('hist_plot', 'figure'),
               [Input('continuous_selector', 'value'), Input('width_slider', 'value')])
 def make_hist_plot(fields, bar_width):
+    """
+    Histogram plot callback
+
+    :param fields: content of dropdown menu
+    :param bar_width: value of slider
+    :return: `plotly` figure
+    """
     if not fields:
         return {'data': []}
     else:
-        data = get_field_data(fields, file_loc=student_data_file)
-        Width = (max(data) - min(data)) / bar_width
-        data = get_binned_data(fields, Width, file_loc=student_data_file)
-        fig = go.Figure(data=[go.Bar(
-            x=data["range"],
-            y=data["count"],
-            width=[Width] * bar_width
-        )])
-        fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+        fig = get_histogram(bar_width, fields)
         return fig
 
 
-def get_empty_sunburst(text:str):
+@fig_formatter()
+def get_histogram(bar_width, fields):
+    """
+    Generate a histogram plot
+
+    :param bar_width: The histogram bin width
+    :param fields: The continuous variable to examine
+    :return: `plotly` histogram figure
+    """
+    data = get_field_data(fields, file_loc=student_data_file)
+    Width = (max(data) - min(data)) / bar_width
+    data = get_binned_data(fields, Width, file_loc=student_data_file)
+    fig = go.Figure(data=[go.Bar(
+        x=data["range"],
+        y=data["count"],
+        width=[Width] * bar_width,
+        name="Adjustable Histogram"
+    )])
+    return fig
+
+
+@fig_formatter()
+def get_empty_sunburst(text: str):
+    """
+    Generates an empty sunburst plot with `text` at its center
+
+    :param text: informational text to display
+    :return: `plotly` figure
+    """
     return px.sunburst(
-                {'x'    : [text],
-                 'value': [1]},
-                path=['x'],
-                hover_data=None
-            )
+        {'x'    : [text],
+         'value': [1]},
+        path=['x'],
+        hover_data=None
+    )
 
 
 @app.callback(Output('second_explore_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
 def make_second_explore_plot(categorical: list, continuous, plot):
+    """
+    Make a plot based on the categorical and continuous data selected. Choose a box plot or frequency plot depending
+    on the plot selected.
+
+    :param categorical: list of data categories
+    :param continuous: single continuous data field
+    :param plot: "frequency plot" or "box plot"
+    :return: `plotly` figure
+    """
     if not categorical:
         return {'data': []}
     elif plot_lookup[plot] == 'frequency plot':
-        data, _ = get_counts_means_data(categorical, file_loc=student_data_file)
-        fig = px.bar(data, x=categorical[0], y='count')
+        fig = get_frequency_plot(categorical)
     elif plot_lookup[plot] == 'box plot':
         if continuous:
-            data = get_field_data([categorical[0], continuous], file_loc=student_data_file)
-            fig = px.box(data, x=categorical[0], y=continuous)
+            fig = get_box_plot(categorical, continuous)
         else:
             fig = get_empty_sunburst("select a score")
     else:
         raise ValueError(f"{plot} is not a valid plot option")
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
+@fig_formatter()
+def get_box_plot(categorical, continuous):
+    """
+    Create a box plot given the categories as the x axis and the continuous field as the y-axis
+
+    :param categorical: list of categorical data fields
+    :param continuous: single continuous variable
+    :return: `plotly` figure
+    """
+    labels = vars_df.loc[categorical + [continuous], 'short'].to_dict()
+    data = get_field_data((categorical[0], continuous), file_loc=student_data_file)
+    fig = px.box(data, x=categorical[0], y=continuous, labels=labels)
+    return fig
+
+
+@fig_formatter()
+def get_frequency_plot(categorical):
+    """
+    Create a frequency plot of the count of each category
+
+    :param categorical: list of categorical data fields
+    :return: `plotly` figure
+    """
+    labels = vars_df.loc[categorical, 'short'].to_dict()
+    data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
+    fig = px.bar(data, x=categorical[0], y='count', labels=labels)
     return fig
 
 
@@ -365,30 +513,71 @@ def make_sunburst(fields, color_var):
     Callback to generate the sunburst figure based on the selected categorical input fields and the desired 
     continuous variable, used to color the segments.
     
-    :param color_var:
-    :param fields:
-    :return: 
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
     """
     if not fields:
         fig = get_empty_sunburst("Select a category")
     elif not color_var:
         fig = get_empty_sunburst("Select a score")
     else:
-        data, color_var_mean = get_counts_means_data(fields, color_var, file_loc=student_data_file)
+        fig = get_sunburst_plot(color_var, fields)
 
-        # TODO: scale doesn't update when the color_var is changed
-        fig = px.sunburst(
-            data,
-            path=fields,
-            values='count',
-            color='mean',
-            hover_data=fields,  # TODO: figure out what the best hover data is
-            color_continuous_scale='Portland',
-            color_continuous_midpoint=color_var_mean,
-        )
-
-    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0),
+                      paper_bgcolor='rgba(0,0,0,0)',
+                      plot_bgcolor='rgba(0,0,0,0)')
     return fig
+
+
+@fig_formatter()
+def get_sunburst_plot(color_var, fields):
+    """
+    Create a sunburst plot
+
+    :param color_var: The continuous variable with which to color the segments
+    :param fields: Categorical data fields with which to size segments by frequency
+    :return: `plotly` figure
+    """
+    data, color_var_mean = get_hierarchical_data(fields, color_var, file_loc=student_data_file)
+    fig = px.sunburst(
+        data,
+        path=fields,
+        values='count',
+        color='mean',
+        color_continuous_scale='Portland',
+        color_continuous_midpoint=color_var_mean,
+    )
+    return fig
+
+
+@app.callback(Output('correlation_bar', 'figure'),
+              [Input('corr_x_selector', 'value'), Input('corr_y_selector', 'value')])
+def make_correlation_bar_plot(x: List[str], y: str):
+    if not x:
+        fig = get_empty_sunburst("Select an x variable")
+    elif not y:
+        fig = get_empty_sunburst("Select a y variable")
+    else:
+        fig = get_correlation_bar_plot(x, y)
+    return fig
+
+
+@fig_formatter()
+def get_correlation_bar_plot(x: List[str], y: str):
+    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
+    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
+    for item in x:
+        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
+
+    series = correlation_matrix.loc[x, y]
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    series = series.rename(index=short_name_lookup)
+    return px.bar(
+        series,
+        x=series.index,
+        y=y,
+    )
 
 
 if __name__ == '__main__':

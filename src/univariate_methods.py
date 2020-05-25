@@ -1,8 +1,9 @@
+from functools import lru_cache
 import json
-from collections.abc import Iterable
-from typing import Tuple
-import pandas as pd
 import math
+from typing import Union, Tuple
+
+import pandas as pd
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -58,16 +59,19 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
     return field_data.value_counts()
 
 
-def get_field_data(field_name='', file_loc="../data/student_data.csv"):
+@lru_cache(maxsize=20)
+def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student_data.csv"):
     '''
     returns the input field data from the dataframe
     :param field_name: string or list of strings, field name
     :param file_loc: string, path to the dataset
     :return: returns the input field data as pandas series
     '''
-    if isinstance(field_name, list) or isinstance(field_name, tuple):
+    assert not isinstance(field_name, list), "A sequence of fields must be passed as a tuple"
+    if isinstance(field_name, tuple):
         for e in field_name:
             assert isinstance(e, str)
+        field_name = list(field_name)
     else:
         assert isinstance(field_name, str)
 
@@ -105,7 +109,7 @@ def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"
     return res
 
 
-def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
+def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
         -> Tuple[pd.DataFrame, float]:
     '''
     returns a dataframe with mean and count of groups segregated using input fields
@@ -116,9 +120,9 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     '''
 
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
-    assert isinstance(color_var, str), f"color_var must be a string, not {type(fields)}"
+    assert isinstance(color_var, str), f"color_var must be a string, not {type(color_var)}"
 
-    df = pd.read_csv(file_loc)
+    df = load_data_frame(file_loc)
     df = df[fields + [color_var]]
     color_var_mean = df[color_var].mean()
 
@@ -130,6 +134,17 @@ def get_counts_means_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
     flat_df = df.count().reset_index().rename(columns={color_var: 'count'})
     flat_df['mean'] = df.mean()[color_var].values
     return flat_df, color_var_mean
+
+
+@lru_cache(maxsize=10)
+def load_data_frame(file_loc: str) -> pd.DataFrame:
+    """
+    Used to store dataframes loaded from a csv.
+
+    :param file_loc: path to the csv
+    :return: pandas dataframe
+    """
+    return pd.read_csv(file_loc)
 
 
 # print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
