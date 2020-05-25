@@ -66,9 +66,9 @@ def test_ui006_report(dash_duo):
 
 def test_ui007_toggle_model(dash_duo):
     dash_duo.start_server(app)
-    dash_duo.multiple_click(selector='#open-xl', clicks=1)
-    dash_duo.multiple_click(selector='#close-xl', clicks=1)
-    dash_duo.multiple_click(selector='#save-xl', clicks=1)
+    dash_duo.multiple_click("#open-xl", clicks=1)
+    dash_duo.multiple_click("#close-xl", clicks=1)
+    dash_duo.multiple_click("#save-xl", clicks=1)
     # dash_duo.toggle_window()
 
 if __name__ == '__main__':
