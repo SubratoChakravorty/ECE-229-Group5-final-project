@@ -1,5 +1,7 @@
 import pandas as pd
 
+from .univariate_methods import load_data_frame
+
 
 def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     '''
@@ -11,7 +13,7 @@ def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(file_loc, str), f"file_loc must be a string, not {type(file_loc)}"
 
-    df = pd.read_csv(file_loc)
+    df = load_data_frame(file_loc)
     df_sub = df[fields]
 
     assert all([(isinstance(field, str) and field in df.columns) for field in fields])
