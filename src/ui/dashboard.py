@@ -1,6 +1,8 @@
 """
 Just run using `python dashboard.py`
 """
+from typing import List
+
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -49,11 +51,34 @@ def populate_dropdown(category: str):
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
+# TODO: DELETE
+import pandas as pd
+dummy_data = pd.DataFrame([[1.0, 0.0421226815469731, 0.031178169969044295, 0.05900702384323323, -0.409533145874167, -0.33940695612164506, 0.18670181427887142],
+      [0.0421226815469731, 1.0, 0.11684678549417286, 0.15936121140219361, 0.16831144977024404, 0.14158363352461317, -0.03066753253934124],
+      [0.031178169969044295, 0.11684678549417286, 1.0, 0.5936883225858387, 0.3371292154829527, 0.24951161775091865, -0.01849904265944017],
+      [0.05900702384323323, 0.15936121140219361, 0.5936883225858387, 1.0, 0.37813903095566864, 0.2781009904663162, -0.0956039084488694],
+      [-0.409533145874167, 0.16831144977024404, 0.3371292154829527, 0.37813903095566864, 1.0, 0.7172266582920588, -0.290106449655687],
+      [-0.33940695612164506, 0.14158363352461317, 0.24951161775091865, 0.2781009904663162, 0.7172266582920588, 1.0, -0.28262591579580115],
+      [0.18670181427887142, -0.03066753253934124, -0.01849904265944017, -0.0956039084488694, -0.290106449655687, -0.28262591579580115, 1.]],
+                          index=["fp_time", "uid", "revenue", "num_trans", "act_days", "lt", "delt_pmnt_log"],
+                          columns=["fp_time", "uid", "revenue", "num_trans", "act_days", "lt", "delt_pmnt_log"])
+############
+def make_correlation_matrix():
+    x = dummy_data.columns
+    y = dummy_data.columns
+    fig = px.imshow(
+        dummy_data,
+        x=x,
+        y=y,
+    )
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
                 external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Create app layout
-categorical_dropdown_opts = populate_dropdown('categorical')
 app.layout = html.Div(
     [
         ######################################################< TOP PART >##################################################
@@ -182,29 +207,6 @@ app.layout = html.Div(
 
         # ################################################< TAG3 PART >#############################################
 
-        html.Div(  # Explore Correllations
-            [
-                html.Div(
-                    [
-                        html.H1("Explore Correlations"),
-                        html.P(["Select horizontal category:",
-                                dcc.Dropdown(id='h_correlation_selector', options=categorical_dropdown_opts,
-                                             multi=False)]),
-                        html.P(["Select vertical category:",
-                                dcc.Dropdown(id='v_correlation_selector', options=categorical_dropdown_opts)]),
-                        html.P(["Select score:",
-                                dcc.Dropdown(id='continuous_var_selector', options=populate_dropdown('continuous'))]),
-                    ],
-                    className="pretty_container four columns",
-                ),
-                html.Div([dcc.Graph(id="grid_plot")],
-                         className="pretty_container four columns"),
-            ],
-            className="row flex-display",
-        ),
-
-        # ################################################< TAG3 PART >#############################################
-
         html.Div(
             [
                 html.Div(
@@ -217,7 +219,6 @@ app.layout = html.Div(
                                     (
                                     id="continuous_selector",
                                     options=populate_dropdown('continuous'),
-                                    # className="dcc_control",
                                 ),
                             ]
                         ),
@@ -230,7 +231,6 @@ app.layout = html.Div(
                                     max=20,
                                     value=5,
                                     marks={str(2): str(2), str(5): str(5), str(20): str(20)},
-                                    # className="dcc_control",
                                 ),
                             ]
                         ),
@@ -276,6 +276,35 @@ app.layout = html.Div(
                     id="right-column",
                     className="eight columns",
                 ),
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
+
+        # ################################################< TAG3 PART >#############################################
+
+        html.Div(  # Correllations
+            [
+                html.Div(
+                    [
+                        html.H1("Correlation"),
+                        html.P(["Select x-axis:",
+                                dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'),
+                                             multi=True)]),
+                        html.P(["Select y-axis:",
+                                dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'))]),
+                    ],
+                    className="pretty_container four columns",
+                ),
+                html.Div([dcc.Graph(id="correlation_bar")],
+                         className="pretty_container twelve columns"),
+            ],
+            className="flex-display",
+        ),
+
+        html.Div([
+            html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_matrix())],
+                     className="pretty_container sixteen columns"),
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
@@ -485,6 +514,24 @@ def get_sunburst_plot(color_var, fields):
         color_continuous_midpoint=color_var_mean,
     )
     return fig
+
+
+@app.callback(Output('correlation_bar', 'figure'),
+              [Input('corr_x_selector', 'value'), Input('corr_y_selector', 'value')])
+def make_correlation_bar_plot(x: List[str], y: str):
+    if not x:
+        fig = get_empty_sunburst("Select an x variable")
+    elif not y:
+        fig = get_empty_sunburst("Select a y variable")
+    else:
+        fig = get_correlation_bar_plot(x, y)
+
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    return fig
+
+
+def get_correlation_bar_plot(x: List[str], y: str):
+    raise NotImplementedError()
 
 
 if __name__ == '__main__':
