@@ -1,6 +1,3 @@
-import pandas as pd
-
-# df = pd.read_csv("../data/student_data.csv")
 import numpy as np
 import pandas as pd
 import argparse
@@ -8,12 +5,20 @@ import argparse
 
 def clean(school_path='../data/hsls_09_school_v1_0.csv', student_path='../data/hsls_16_student_v1_0.csv'):
     '''
-	This method preprocesses the data for both schools
-	and students and returns dataframe objects corresponding to each of these factors.
-	Returns a list of the following:
-	Dataframe object containing school variables.
-	Dataframe object containing student variables.
-	'''
+    This method preprocesses the data for both schools and students \
+    and returns dataframe objects corresponding to each of these factors.
+
+    Returns a list of the following:
+    Dataframe object containing school variables.
+    Dataframe object containing student variables.
+
+    :param school_path: Path to the school.csv file
+    :type school_path: str
+    :param student_path: Path to the student.csv file
+    :type student_path: str
+    :returns: Cleaned school and student data.
+    :rtype: tuple of two pandas.DataFrame
+    '''
 
     assert isinstance(school_path, str) and isinstance(student_path, str), "path variables must be of type str"
 

@@ -8,8 +8,12 @@ import pandas as pd
 
 def return_fields(file_loc="../data/student_data.csv"):
     '''
-    returns the field values from the dataset
-    :return:
+    Returns the field values from the dataset
+
+    :param file_loc: Path to the csv file
+    :type file_loc: str
+    :returns: Key-value pair
+    :rtype: dict
     '''
 
     assert isinstance(file_loc, str)
@@ -43,10 +47,14 @@ def return_fields(file_loc="../data/student_data.csv"):
 
 def get_counts(field_name='', file_loc="../data/student_data.csv"):
     '''
-    returns frequency counts of the input field from the dataframe
-    :param file_loc: path to the csv file
-    :param field_name: string, name of the field
-    :return: returns a dictionary with frequency distribution
+    Returns frequency counts of the input field from the dataframe
+
+    :param file_loc: Path to the csv file
+    :type file_loc: str
+    :param field_name: The name of the field
+    :type field_name: str
+    :returns: Frequency distribution
+    :rtype: dict
     '''
 
     assert isinstance(field_name, str)
@@ -62,10 +70,14 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
 @lru_cache(maxsize=20)
 def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student_data.csv"):
     '''
-    returns the input field data from the dataframe
-    :param field_name: string or list of strings, field name
-    :param file_loc: string, path to the dataset
-    :return: returns the input field data as pandas series
+    Returns the input field data from the dataframe
+
+    :param field_name: Field name
+    :type field_name: str or list of str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: Input field data.
+    :rtype: pandas.Series
     '''
     assert not isinstance(field_name, list), "A sequence of fields must be passed as a tuple"
     if isinstance(field_name, tuple):
@@ -83,10 +95,14 @@ def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student
 
 def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"):
     '''
-    returns the count of continuous data count seperated by range
-    :param field_name: string, field name
-    :param file_loc: string, path to the dataset
-    :return: returns midnumber of range and the count of data in diffrent range
+    Returns the count of continuous data count seperated by range
+
+    :param field_name: Field name
+    :type field_name: str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: Midnumber of range and the count of data in different range
+    :rtype: dict
     '''
 
     assert isinstance(field_name, str)
@@ -112,11 +128,16 @@ def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"
 def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
         -> Tuple[pd.DataFrame, float]:
     '''
-    returns a dataframe with mean and count of groups segregated using input fields
+    Returns a dataframe with mean and count of groups segregated using input fields
+    
+    :param fields: List of fields
+    :type fields: list
     :param color_var: continuous y variable
-    :param fields: list of fields
-    :param file_loc: path to the dataframe
-    :return: returns a dataframe with info to build a sunburst plot
+    :type color_var: str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: A dataframe with info to build a sunburst plot
+    :rtype: pandas.DataFrame
     '''
 
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
@@ -141,25 +162,29 @@ def load_data_frame(file_loc: str) -> pd.DataFrame:
     """
     Used to store dataframes loaded from a csv.
 
-    :param file_loc: path to the csv
-    :return: pandas dataframe
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: Data
+    :rtype: pandas.DataFrame
     """
     return pd.read_csv(file_loc)
 
 
-# print(get_counts('X1SEX', file_loc='../data/student_data.csv'))
-
-# print(get_sunburst_data(['X1RACE','X1SEX','N1SEX']))
-
-
-def get_var_group(group, file="../data/var_group.json"):
+def get_var_group(group, file_loc="../data/var_group.json"):
     """
-    return a list of variables of a certain group
+    Return a list of variables of a certain group
+    
+    :param group: Group of the variable to get
+    :type group: str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: List of variables in the specific group
+    :rtype: list
     """
-    assert isinstance(file, str)
+    assert isinstance(file_loc, str)
     assert isinstance(group, str)
 
-    with open(file, "r") as f:
+    with open(file_loc, "r") as f:
         content = json.load(f)
     
     assert group in content
@@ -167,19 +192,22 @@ def get_var_group(group, file="../data/var_group.json"):
     return content[group]
 
 
-def get_var_info(file="../data/variables.csv"):
+def get_var_info(file_loc="../data/variables.csv"):
     """
-    Usage:
-        1. Single variable: get_var_info("N1ALTCERT")
-        2. Batch variables: get_var_info(["N1ALTCERT", "N1COURSE"])
-
-    :param name: One or more variables for inquiry
-    :return: returns a pd.DataFrame associated with the variable or a
-        subset of pd.DataFrame corresponds to each variable in name.
-    """
-    assert isinstance(file, str)
+    Get variable information
+    Usage
+    1. Single variable: get_var_info("N1ALTCERT")
+    2. Batch variables: get_var_info(["N1ALTCERT", "N1COURSE"])
     
-    df = pd.read_csv(file, index_col=0)
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: A pd.DataFrame associated with the variable or a
+        subset of pd.DataFrame corresponds to each variable in name.
+    :rtype: pandas.DataFrame
+    """
+    assert isinstance(file_loc, str)
+    
+    df = pd.read_csv(file_loc, index_col=0)
     
     # Multiple variables
     return df
