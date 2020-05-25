@@ -153,23 +153,26 @@ app.layout = html.Div(
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
-                                             multi=True)]),
+                                             multi=True, value=['N1HIDEG'])]),
                         html.P(["Select score:",
-                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'))]),
+                                dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
+                                             value='X1SCIEFF'),]),
                         html.P(["Select plot style:",
                                 dcc.Dropdown(id='plot_selector',
                                              value=1,
                                              options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
-                        html.P("Tips:"),
-                        html.P("The color of each segment indicates the mean of the selected score"),
-                        html.P("The size of each segment represents the size of that student population"),
-                        html.P("Click on a category to zoom in"),
                     ],
                     className="pretty_container four columns",
                 ),
-                html.Div([dcc.Graph(id="sunburst_plot")],
+                html.Div([dcc.Graph(id="sunburst_plot"),
+                          html.P("Tips:"),
+                          html.P("The color of each segment indicates the mean of the selected score"),
+                          html.P("The size of each segment represents the size of that student population"),
+                          html.P("Click on a category to zoom in"),],
                          className="pretty_container four columns"),
-                html.Div([dcc.Graph(id="second_explore_plot")],
+                html.Div([dcc.Graph(id="second_explore_plot"),
+                          html.P("Tips:"),
+                          html.P("The x-axis is the first-selected categorical variable"),],
                          className="pretty_container four columns"),
             ],
             className="flex-display",
@@ -398,8 +401,9 @@ def get_box_plot(categorical, continuous):
     :param continuous: single continuous variable
     :return: `plotly` figure
     """
+    labels = vars_df.loc[categorical + [continuous], 'short'].to_dict()
     data = get_field_data((categorical[0], continuous), file_loc=student_data_file)
-    fig = px.box(data, x=categorical[0], y=continuous)
+    fig = px.box(data, x=categorical[0], y=continuous, labels=labels)
     return fig
 
 
@@ -410,8 +414,9 @@ def get_frequency_plot(categorical):
     :param categorical: list of categorical data fields
     :return: `plotly` figure
     """
+    labels = vars_df.loc[categorical, 'short'].to_dict()
     data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
-    fig = px.bar(data, x=categorical[0], y='count')
+    fig = px.bar(data, x=categorical[0], y='count', labels=labels)
     return fig
 
 
@@ -447,13 +452,11 @@ def get_sunburst_plot(color_var, fields):
     :return: `plotly` figure
     """
     data, color_var_mean = get_hierarchical_data(fields, color_var, file_loc=student_data_file)
-    # TODO: scale doesn't update when the color_var is changed
     fig = px.sunburst(
         data,
         path=fields,
         values='count',
         color='mean',
-        hover_data=fields,  # TODO: figure out what the best hover data is
         color_continuous_scale='Portland',
         color_continuous_midpoint=color_var_mean,
     )
