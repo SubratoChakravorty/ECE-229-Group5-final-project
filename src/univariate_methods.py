@@ -1,6 +1,7 @@
 from functools import lru_cache
 import json
 import math
+import os
 from typing import Union, Tuple
 
 import pandas as pd
@@ -144,6 +145,8 @@ def load_data_frame(file_loc: str) -> pd.DataFrame:
     :param file_loc: path to the csv
     :return: pandas dataframe
     """
+    assert os.path.isfile(file_loc)
+
     return pd.read_csv(file_loc)
 
 
