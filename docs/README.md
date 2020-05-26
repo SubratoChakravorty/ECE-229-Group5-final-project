@@ -28,7 +28,7 @@ def myfunc(arg1, arg2):
 sphinx-build -b html source build && make html
 ```
 
-    Ignore the warning
+Ignore the warning
 ```
 .../docs/source/modules.rst: WARNING: document isn't included in any toctree
 ```
