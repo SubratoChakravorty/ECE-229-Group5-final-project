@@ -7,7 +7,8 @@ See [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
 ```
 def myfunc(arg1, arg2):
     """
-    Facts about the myfunc. (Make sure to have a new line after the docstring and no separation between parameters and return value.)
+    Facts about the myfunc. (Make sure to have a new line after the
+    docstring and no separation between parameters and return value.)
 
     :param arg1: Argument #1 for myfunc.
     :type arg1: str
@@ -27,9 +28,9 @@ def myfunc(arg1, arg2):
 sphinx-build -b html source build && make html
 ```
 
-Ignore the warning
+    Ignore the warning
 ```
 .../docs/source/modules.rst: WARNING: document isn't included in any toctree
 ```
 
-3. Verify the changes in the compiled html files under `docs/build/html/`
+3. Verify the changes in the compiled html files under `docs/build/html/`. You can just open the browser to check it.
