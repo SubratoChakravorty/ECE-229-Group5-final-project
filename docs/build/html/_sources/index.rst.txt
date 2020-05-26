@@ -43,7 +43,9 @@ News
    :maxdepth: 3
    :caption: API:
 
-   
+   Models<src>
+   Test<src.test> 
+   UI<src.ui>
 
 
 Indices and tables

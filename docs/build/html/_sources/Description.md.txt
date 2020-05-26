@@ -11,13 +11,15 @@ This study employs public-use data from the High School Longitudinal Study of 20
 Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang @ UCSD
 
 
-  <!-- _________    _________  ___________
- /   _____/   /   _____/  \_   _____/
- \_____  \    \_____  \    |    __)_ 
- /        \   /        \   |        \
-/_______  /  /_______  /  /_______  /
-        \/           \/           \/  -->
+```python
+   _________    _________  ___________
+  /   _____/   /   _____/  \_   _____/
+  \_____  \    \_____  \    |    __)_ 
+  /        \   /        \   |        \
+  /_______  /  /_______  /  /_______  /
+          \/           \/           \/ 
 
+```
 
 
 
