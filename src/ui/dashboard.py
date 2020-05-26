@@ -180,6 +180,7 @@ app.layout = html.Div(
                            href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
                 ]),
                 html.H4(className='author', children="Author"),
+                html.P("Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang"),
 
                 html.Br()
             ],
