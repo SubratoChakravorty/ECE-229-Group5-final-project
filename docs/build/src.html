@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>src package &#8212; ECE-229-Group5-final-project 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.test.html">src.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.conftest">src.test.conftest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.test_backend">src.test.test_backend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.test_ui">src.test.test_ui module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.ui.html">src.ui package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.ui.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.ui.html#module-src.ui.dashboard">src.ui.dashboard module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.ui.html#module-src.ui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.clean_data">
+<span id="src-clean-data-module"></span><h2>src.clean_data module<a class="headerlink" href="#module-src.clean_data" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="src.clean_data.clean">
+<code class="sig-prename descclassname">src.clean_data.</code><code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">school_path</span><span class="o">=</span><span class="default_value">'../data/hsls_09_school_v1_0.csv'</span></em>, <em class="sig-param"><span class="n">student_path</span><span class="o">=</span><span class="default_value">'../data/hsls_16_student_v1_0.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.clean_data.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method preprocesses the data for both schools and students     and returns dataframe objects corresponding to each of these factors.</p>
+<p>Returns a list of the following:
+Dataframe object containing school variables.
+Dataframe object containing student variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>school_path</strong> (<em>str</em>) – Path to the school.csv file</p></li>
+<li><p><strong>student_path</strong> (<em>str</em>) – Path to the student.csv file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cleaned school and student data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of two pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.config">
+<span id="src-config-module"></span><h2>src.config module<a class="headerlink" href="#module-src.config" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.multivariate_methods">
+<span id="src-multivariate-methods-module"></span><h2>src.multivariate_methods module<a class="headerlink" href="#module-src.multivariate_methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="src.multivariate_methods.get_correlation_matrix">
+<code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">get_correlation_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes correlation matrix that captures correlation between features
+presented in the fields parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fields</strong> (<em>list</em>) – List of fields</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Correlation matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.univariate_methods">
+<span id="src-univariate-methods-module"></span><h2>src.univariate_methods module<a class="headerlink" href="#module-src.univariate_methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="src.univariate_methods.get_binned_data">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_binned_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.get_binned_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the count of continuous data count seperated by range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field_name</strong> (<em>str</em>) – Field name</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Midnumber of range and the count of data in different range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.get_counts">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_counts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.get_counts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns frequency counts of the input field from the dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</p></li>
+<li><p><strong>field_name</strong> (<em>str</em>) – The name of the field</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Frequency distribution</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.get_field_data">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_field_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Tuple<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.get_field_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input field data from the dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field_name</strong> (<em>str</em><em> or </em><em>list of str</em>) – Field name</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Input field data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.get_hierarchical_data">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_hierarchical_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">color_var</span><span class="o">=</span><span class="default_value">'X1SCIEFF'</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>pandas.core.frame.DataFrame<span class="p">, </span>float<span class="p">]</span><a class="headerlink" href="#src.univariate_methods.get_hierarchical_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataframe with mean and count of groups segregated using input fields</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fields</strong> (<em>list</em>) – List of fields</p></li>
+<li><p><strong>color_var</strong> (<em>str</em>) – continuous y variable</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe with info to build a sunburst plot</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.get_var_group">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_var_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/var_group.json'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.get_var_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of variables of a certain group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<em>str</em>) – Group of the variable to get</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of variables in the specific group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.get_var_info">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_var_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/variables.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.get_var_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get variable information
+Usage
+1. Single variable: get_var_info(“N1ALTCERT”)
+2. Batch variables: get_var_info([“N1ALTCERT”, “N1COURSE”])</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pd.DataFrame associated with the variable or a
+subset of pd.DataFrame corresponds to each variable in name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.load_data_frame">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">load_data_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#src.univariate_methods.load_data_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to store dataframes loaded from a csv.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.univariate_methods.return_fields">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">return_fields</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.univariate_methods.return_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the field values from the dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Key-value pair</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ECE-229-Group5-final-project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Daniel You.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/src.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
