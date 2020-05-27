@@ -141,10 +141,10 @@ app.layout = html.Div(
                         html.A(
                             html.Button("github", id="learn-more-button"),
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
-                        )
+                        ),   
                     ],
                     className="three-third column",
-                    id="button",
+                    id="github-button",
                 ),
             ],
             id="header",
@@ -359,6 +359,16 @@ app.layout = html.Div(
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
+        ),
+        html.Div(
+                    [
+                        html.A(
+                            html.Button("documentation", id="documentation-button"),
+                            href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
+                        ),
+                    ],
+                    className="two-half column",
+                    id="doc-button",
         ),
     ],
     id="mainContainer",
