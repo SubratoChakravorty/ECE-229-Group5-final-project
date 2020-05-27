@@ -138,7 +138,7 @@ def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
 
 @lru_cache(maxsize=10)
-def load_data_frame(file_loc: str) -> pd.DataFrame:
+def load_data_frame(file_loc="../data/student_data.csv") -> pd.DataFrame:
     """
     Used to store dataframes loaded from a csv.
 
