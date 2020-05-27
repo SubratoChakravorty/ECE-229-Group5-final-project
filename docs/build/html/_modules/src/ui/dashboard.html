@@ -17,32 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -80,11 +82,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Home:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../Description.html">Brief Description</a></li>
-</ul>
-<p class="caption"><span class="caption-text">API:</span></p>
+              <p class="caption"><span class="caption-text">API:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../src.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../src.test.html">Test</a></li>
@@ -155,7 +153,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Just run using `python dashboard.py`</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
@@ -164,11 +162,11 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="k">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 
-<span class="kn">from</span> <span class="nn">src.config</span> <span class="kn">import</span> <span class="n">variables_file</span><span class="p">,</span> <span class="n">student_data_file</span>
-<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="kn">import</span> <span class="n">get_hierarchical_data</span><span class="p">,</span> <span class="n">get_var_info</span><span class="p">,</span> <span class="n">get_field_data</span><span class="p">,</span> <span class="n">get_binned_data</span>
-<span class="kn">from</span> <span class="nn">src.multivariate_methods</span> <span class="kn">import</span> <span class="n">get_correlation_matrix</span>
+<span class="kn">from</span> <span class="nn">src.config</span> <span class="k">import</span> <span class="n">variables_file</span><span class="p">,</span> <span class="n">student_data_file</span>
+<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="k">import</span> <span class="n">get_hierarchical_data</span><span class="p">,</span> <span class="n">get_var_info</span><span class="p">,</span> <span class="n">get_field_data</span><span class="p">,</span> <span class="n">get_binned_data</span>
+<span class="kn">from</span> <span class="nn">src.multivariate_methods</span> <span class="k">import</span> <span class="n">get_correlation_matrix</span>
 
 <span class="c1"># # Style configuration</span>
 <span class="c1"># external_css = [&#39;https://codepen.io/chriddyp/pen/bWLwgP.css&#39;]</span>
@@ -206,7 +204,7 @@
 <span class="sd">    :param category: &#39;continuous&#39; or &#39;categorical&#39;</span>
 <span class="sd">    :return: a list of dicts with keys &#39;label&#39; and &#39;value&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">category</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">,</span> <span class="s1">&#39;categorical&#39;</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;category must be &#39;continuous&#39; or &#39;categorical&#39;, not </span><span class="si">{category}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">category</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">,</span> <span class="s1">&#39;categorical&#39;</span><span class="p">],</span> <span class="n">f</span><span class="s2">&quot;category must be &#39;continuous&#39; or &#39;categorical&#39;, not </span><span class="si">{category}</span><span class="s2">&quot;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vars_df</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">category</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
 
@@ -334,6 +332,7 @@
                            <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)&#39;</span><span class="p">)</span>
                 <span class="p">]),</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">H4</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="s2">&quot;Author&quot;</span><span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang&quot;</span><span class="p">),</span>
 
                 <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">()</span>
             <span class="p">],</span>
@@ -626,7 +625,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="n">get_empty_sunburst</span><span class="p">(</span><span class="s2">&quot;select a score&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{plot}</span><span class="s2"> is not a valid plot option&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{plot}</span><span class="s2"> is not a valid plot option&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
@@ -719,10 +718,10 @@
 
 <div class="viewcode-block" id="get_correlation_bar_plot"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.get_correlation_bar_plot">[docs]</a><span class="nd">@fig_formatter</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">get_correlation_bar_plot</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The x variable must be a list, not {type(x)}&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The y variable must be a string, not {type(x)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;The x variable must be a list, not {type(x)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;The y variable must be a string, not {type(x)}&quot;</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;elements of x must be strings, not {type(item)}&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;elements of x must be strings, not {type(item)}&quot;</span>
 
     <span class="n">series</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
     <span class="n">short_name_lookup</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -765,26 +764,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
