@@ -1,6 +1,7 @@
 from functools import lru_cache
 import json
 import math
+import os
 from typing import Union, Tuple
 
 import pandas as pd
@@ -158,7 +159,7 @@ def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
 
 @lru_cache(maxsize=10)
-def load_data_frame(file_loc: str) -> pd.DataFrame:
+def load_data_frame(file_loc="../data/student_data.csv") -> pd.DataFrame:
     """
     Used to store dataframes loaded from a csv.
 
@@ -167,6 +168,8 @@ def load_data_frame(file_loc: str) -> pd.DataFrame:
     :returns: Data
     :rtype: pandas.DataFrame
     """
+    assert os.path.isfile(file_loc)
+
     return pd.read_csv(file_loc)
 
 

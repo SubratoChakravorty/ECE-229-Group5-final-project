@@ -19,3 +19,4 @@ main.py
 /foo*
 .vscode/
 .coverage
+src/teste.py
