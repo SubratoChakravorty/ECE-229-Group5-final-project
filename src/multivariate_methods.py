@@ -9,8 +9,8 @@ import os
 np.random.seed(0)
 
 
-from univariate_methods import load_data_frame
-from univariate_methods import get_var_info
+from .univariate_methods import load_data_frame
+from .univariate_methods import get_var_info
 
 
 def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
