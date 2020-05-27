@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Methods &mdash; Science Self-Efficacy Analysis  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.univariate_methods.return_fields module" href="src.univariate_methods.return_fields.html" />
+    <link rel="prev" title="DeepCTR Models API" href="Models.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Science Self-Efficacy Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Home:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quick-Start.html">Quick-Start</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="Models.html">Models</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Backend Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#todtodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodoo">TODTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compile">compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fit">fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluate">evaluate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predict">predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#train-on-batch">train_on_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-on-batch">test_on_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predict-on-batch">predict_on_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fit-generator">fit_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluate-generator">evaluate_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predict-generator">predict_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-layer">get_layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.univariate_methods.return_fields.html">Return_fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.univariate_methods.get_counts.html">Get_counts</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Science Self-Efficacy Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="Models.html">DeepCTR Models API</a> &raquo;</li>
+        
+      <li>Methods</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Backend_Methods.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="methods">
+<h1>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="todtodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodoo">
+<h2>TODTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOO<a class="headerlink" href="#todtodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodotodoo" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="compile">
+<h2>compile<a class="headerlink" href="#compile" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weighted_metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_tensors</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configures the model for training.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>optimizer</strong>: String (name of optimizer) or optimizer instance. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/optimizers/">optimizers</a>.</li>
+<li><strong>loss</strong>: String (name of objective function) or objective function. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/losses">losses</a>. If the model has multiple outputs, you can use a different loss on each output by passing a dictionary or a list of losses. The loss value that will be minimized by the model will then be the sum of all individual losses.</li>
+<li><strong>metrics</strong>: List of metrics to be evaluated by the model during training and testing. Typically you will use <code class="docutils literal notranslate"><span class="pre">metrics=['accuracy']</span></code>. To specify different metrics for different outputs of a multi-output model, you could also pass a dictionary, such as <code class="docutils literal notranslate"><span class="pre">metrics={'output_a':</span> <span class="pre">'accuracy'}</span></code>.</li>
+<li><strong>loss_weights</strong>: Optional list or dictionary specifying scalar coefficients (Python floats) to weight the loss contributions of different model outputs. The loss value that will be minimized by the model will then be the weighted sum of all individual losses, weighted by the <code class="docutils literal notranslate"><span class="pre">loss_weights</span></code> coefficients. If a list, it is expected to have a 1:1 mapping to the model’s outputs. If a tensor, it is expected to map output names (strings) to scalar coefficients.</li>
+<li><strong>sample_weight_mode</strong>: If you need to do timestep-wise sample weighting (2D weights), set this to <code class="docutils literal notranslate"><span class="pre">&quot;temporal&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">None</span></code> defaults to sample-wise weights (1D). If the model has multiple outputs, you can use a different <code class="docutils literal notranslate"><span class="pre">sample_weight_mode</span></code> on each output by passing a dictionary or a list of modes.</li>
+<li><strong>weighted_metrics</strong>: List of metrics to be evaluated and weighted by sample_weight or class_weight during training and testing.</li>
+<li><strong>target_tensors</strong>: By default, Keras will create placeholders for the model’s target, which will be fed with the target data during training. If instead you would like to use your own target tensors (in turn, Keras will not expect external Numpy data for these targets at training time), you can specify them via the <code class="docutils literal notranslate"><span class="pre">target_tensors</span></code> argument. It can be a single tensor (for a single-output model), a list of tensors, or a dict mapping output names to target tensors.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case of invalid arguments for <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, <code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">metrics</span></code> or <code class="docutils literal notranslate"><span class="pre">sample_weight_mode</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="fit">
+<h2>fit<a class="headerlink" href="#fit" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Trains the model for a given number of epochs (iterations on a dataset).</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: Numpy array of training data (if the model has a single input), or list of Numpy arrays (if the model has multiple inputs). If input layers in the model are named, you can also pass a dictionary mapping input names to Numpy arrays. <code class="docutils literal notranslate"><span class="pre">x</span></code> can be <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) if feeding from framework-native tensors (e.g. TensorFlow data tensors).</li>
+<li><strong>y</strong>: Numpy array of target (label) data (if the model has a single output), or list of Numpy arrays (if the model has multiple outputs). If output layers in the model are named, you can also pass a dictionary mapping output names to Numpy arrays. <code class="docutils literal notranslate"><span class="pre">y</span></code> can be <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) if feeding from framework-native tensors (e.g. TensorFlow data tensors).</li>
+<li><strong>batch_size</strong>: Integer or <code class="docutils literal notranslate"><span class="pre">None</span></code>. Number of samples per gradient update. If unspecified, <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> will default to 32.</li>
+<li><strong>epochs</strong>: Integer. Number of epochs to train the model. An epoch is an iteration over the entire <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> data provided. Note that in conjunction with <code class="docutils literal notranslate"><span class="pre">initial_epoch</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code> is to be understood as “final epoch”. The model is not trained for a number of iterations given by <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, but merely until the epoch of index <code class="docutils literal notranslate"><span class="pre">epochs</span></code> is reached.</li>
+<li><strong>verbose</strong>: Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.</li>
+<li><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during training and validation (if ). See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</li>
+<li><strong>validation_split</strong>: Float between 0 and 1. Fraction of the training data to be used as validation data. The model will set apart this fraction of the training data, will not train on it, and will evaluate the loss and any model metrics on this data at the end of each epoch. The validation data is selected from the last samples in the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> data provided, before shuffling.</li>
+<li><strong>validation_data</strong>: tuple <code class="docutils literal notranslate"><span class="pre">(x_val,</span> <span class="pre">y_val)</span></code> or tuple <code class="docutils literal notranslate"><span class="pre">(x_val,</span> <span class="pre">y_val,</span> <span class="pre">val_sample_weights)</span></code> on which to evaluate the loss and any model metrics at the end of each epoch. The model will not be trained on this data. <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> will override <code class="docutils literal notranslate"><span class="pre">validation_split</span></code>.</li>
+<li><strong>shuffle</strong>: Boolean (whether to shuffle the training data before each epoch) or str (for ‘batch’). ‘batch’ is a special option for dealing with the limitations of HDF5 data; it shuffles in batch-sized chunks. Has no effect when <code class="docutils literal notranslate"><span class="pre">steps_per_epoch</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</li>
+<li><strong>class_weight</strong>: Optional dictionary mapping class indices (integers) to a weight (float) value, used for weighting the loss function (during training only). This can be useful to tell the model to “pay more attention” to samples from an under-represented class.</li>
+<li><strong>sample_weight</strong>: Optional Numpy array of weights for the training samples, used for weighting the loss function (during training only). You can either pass a flat (1D) Numpy array with the same length as the input samples (1:1 mapping between weights and samples), or in the case of temporal data, you can pass a 2D array with shape <code class="docutils literal notranslate"><span class="pre">(samples,</span> <span class="pre">sequence_length)</span></code>, to apply a different weight to every timestep of every sample. In this case you should make sure to specify <code class="docutils literal notranslate"><span class="pre">sample_weight_mode=&quot;temporal&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">compile()</span></code>.</li>
+<li><strong>initial_epoch</strong>: Integer. Epoch at which to start training (useful for resuming a previous training run).</li>
+<li><strong>steps_per_epoch</strong>: Integer or <code class="docutils literal notranslate"><span class="pre">None</span></code>. Total number of steps (batches of samples) before declaring one epoch finished and starting the next epoch. When training with input tensors such as TensorFlow data tensors, the default <code class="docutils literal notranslate"><span class="pre">None</span></code> is equal to the number of samples in your dataset divided by the batch size, or 1 if that cannot be determined.
+validation_steps: Only relevant if <code class="docutils literal notranslate"><span class="pre">steps_per_epoch</span></code> is specified. Total number of steps (batches of samples) to validate before stopping.</li>
+<li><strong>validation_freq</strong>: Only relevant if validation data is provided. Integer or list/tuple/set. If an integer, specifies how many training epochs to run before a new validation run is performed, e.g. <code class="docutils literal notranslate"><span class="pre">validation_freq=2</span></code> runs validation every 2 epochs. If a list, tuple, or set, specifies the epochs on which to run validation, e.g. <code class="docutils literal notranslate"><span class="pre">validation_freq=[1,</span> <span class="pre">2,</span> <span class="pre">10]</span></code> runs validation at the end of the 1st, 2nd, and 10th epochs.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>A <code class="docutils literal notranslate"><span class="pre">History</span></code> object. Its <code class="docutils literal notranslate"><span class="pre">History.history</span></code> attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>RuntimeError</strong>: If the model was never compiled.
+ValueError: In case of mismatch between the provided input data and what the model expects.</li>
+</ul>
+</div>
+<div class="section" id="evaluate">
+<h2>evaluate<a class="headerlink" href="#evaluate" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Returns the loss value &amp; metrics values for the model in test mode.
+Computation is done in batches.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: Numpy array of test data (if the model has a single input), or list of Numpy arrays (if the model has multiple inputs). If input layers in the model are named, you can also pass a dictionary mapping input names to Numpy arrays. <code class="docutils literal notranslate"><span class="pre">x</span></code> can be <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) if feeding from framework-native tensors (e.g. TensorFlow data tensors).</li>
+<li><strong>y</strong>: Numpy array of target (label) data (if the model has a single output), or list of Numpy arrays (if the model has multiple outputs). If output layers in the model are named, you can also pass a dictionary mapping output names to Numpy arrays. <code class="docutils literal notranslate"><span class="pre">y</span></code> can be <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) if feeding from framework-native tensors (e.g. TensorFlow data tensors).</li>
+<li><strong>batch_size</strong>: Integer or <code class="docutils literal notranslate"><span class="pre">None</span></code>. Number of samples per evaluation step. If unspecified, <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> will default to 32.</li>
+<li><strong>verbose</strong>: 0 or 1. Verbosity mode. 0 = silent, 1 = progress bar.</li>
+<li><strong>sample_weight</strong>: Optional Numpy array of weights for the test samples, used for weighting the loss function. You can either pass a flat (1D) Numpy array with the same length as the input samples (1:1 mapping between weights and samples), or in the case of temporal data, you can pass a 2D array with shape <code class="docutils literal notranslate"><span class="pre">(samples,</span> <span class="pre">sequence_length)</span></code>, to apply a different weight to every timestep of every sample. In this case you should make sure to specify <code class="docutils literal notranslate"><span class="pre">sample_weight_mode=&quot;temporal&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">compile()</span></code>.</li>
+<li><strong>steps</strong>: Integer or <code class="docutils literal notranslate"><span class="pre">None</span></code>. Total number of steps (batches of samples) before declaring the evaluation round finished. Ignored with the default value of <code class="docutils literal notranslate"><span class="pre">None</span></code>.</li>
+<li><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during evaluation. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Scalar test loss (if the model has a single output and no metrics) or list of scalars (if the model has multiple outputs and/or metrics). The attribute <code class="docutils literal notranslate"><span class="pre">model.metrics_names</span></code> will give you the display labels for the scalar outputs.</li>
+</ul>
+</div>
+<div class="section" id="predict">
+<h2>predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Generates output predictions for the input samples.</p>
+<p>Computation is done in batches.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: The input data, as a Numpy array (or list of Numpy arrays if the model has multiple inputs).
+batch_size: Integer. If unspecified, it will default to 32.</li>
+<li><strong>verbose</strong>: Verbosity mode, 0 or 1.</li>
+<li><strong>steps</strong>: Total number of steps (batches of samples) before declaring the prediction round finished. Ignored with the default value of None.</li>
+<li><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during prediction. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Numpy array(s) of predictions.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case of mismatch between the provided input data and the model’s expectations, or in case a stateful model receives a number of samples that is not a multiple of the batch size.</li>
+</ul>
+</div>
+<div class="section" id="train-on-batch">
+<h2>train_on_batch<a class="headerlink" href="#train-on-batch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_on_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Runs a single gradient update on a single batch of data.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: Numpy array of training data, or list of Numpy arrays if the model has multiple inputs. If all inputs in the model are named, you can also pass a dictionary mapping input names to Numpy arrays.</li>
+<li><strong>y</strong>: Numpy array of target data, or list of Numpy arrays if the model has multiple outputs. If all outputs in the model are named, you can also pass a dictionary mapping output names to Numpy arrays.</li>
+<li><strong>sample_weight</strong>: Optional array of the same length as x, containing weights to apply to the model’s loss for each sample. In the case of temporal data, you can pass a 2D array with shape (samples, sequence_length), to apply a different weight to every timestep of every sample. In this case you should make sure to specify sample_weight_mode=”temporal” in compile().</li>
+<li><strong>class_weight</strong>: Optional dictionary mapping class indices (integers) to a weight (float) to apply to the model’s loss for the samples from this class during training. This can be useful to tell the model to “pay more attention” to samples from an under-represented class.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Scalar training loss (if the model has a single output and no metrics) or list of scalars (if the model has multiple outputs and/or metrics). The attribute <code class="docutils literal notranslate"><span class="pre">model.metrics_names</span></code> will give you the display labels for the scalar outputs.</li>
+</ul>
+</div>
+<div class="section" id="test-on-batch">
+<h2>test_on_batch<a class="headerlink" href="#test-on-batch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_on_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Test the model on a single batch of samples.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: Numpy array of test data, or list of Numpy arrays if the model has multiple inputs. If all inputs in the model are named, you can also pass a dictionary mapping input names to Numpy arrays.</li>
+<li><strong>y</strong>: Numpy array of target data, or list of Numpy arrays if the model has multiple outputs. If all outputs in the model are named, you can also pass a dictionary mapping output names to Numpy arrays.</li>
+<li><strong>sample_weight</strong>: Optional array of the same length as x, containing weights to apply to the model’s loss for each sample. In the case of temporal data, you can pass a 2D array with shape (samples, sequence_length), to apply a different weight to every timestep of every sample. In this case you should make sure to specify <code class="docutils literal notranslate"><span class="pre">sample_weight_mode=&quot;temporal&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">compile()</span></code>.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Scalar test loss (if the model has a single output and no metrics) or list of scalars (if the model has multiple outputs and/or metrics). The attribute <code class="docutils literal notranslate"><span class="pre">model.metrics_names</span></code> will give you the display labels for the scalar outputs.</li>
+</ul>
+</div>
+<div class="section" id="predict-on-batch">
+<h2>predict_on_batch<a class="headerlink" href="#predict-on-batch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predict_on_batch</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Returns predictions for a single batch of samples.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>x</strong>: Input samples, as a Numpy array.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Numpy array(s) of predictions.</li>
+</ul>
+</div>
+<div class="section" id="fit-generator">
+<h2>fit_generator<a class="headerlink" href="#fit-generator" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_queue_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_multiprocessing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">initial_epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Trains the model on data generated batch-by-batch by a Python generator (or an instance of <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>).
+The generator is run in parallel to the model, for efficiency. For instance, this allows you to do real-time data augmentation on images on CPU in parallel to training your model on GPU.
+The use of <code class="docutils literal notranslate"><span class="pre">tf.keras.utils.Sequence</span></code> guarantees the ordering and guarantees the single use of every input per epoch when using <code class="docutils literal notranslate"><span class="pre">use_multiprocessing=True</span></code>.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><p class="first"><strong>generator</strong>: A generator or an instance of <code class="docutils literal notranslate"><span class="pre">Sequence</span></code> (<code class="docutils literal notranslate"><span class="pre">tf.keras.utils.Sequence</span></code>) object in order to avoid duplicate data when using multiprocessing. The output of the generator must be either</p>
+<p>a tuple <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">targets)</span></code> or
+a tuple <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">targets,</span> <span class="pre">sample_weights)</span></code>.<br />This tuple (a single output of the generator) makes a single batch. Therefore, all arrays in this tuple must have the same length (equal to the size of this batch). Different batches may have different sizes. For example, the last batch of the epoch is commonly smaller than the others, if the size of the dataset is not divisible by the batch size. The generator is expected to loop over its data indefinitely. An epoch finishes when <code class="docutils literal notranslate"><span class="pre">steps_per_epoch</span></code> batches have been seen by the model.</p>
+</li>
+<li><p class="first"><strong>steps_per_epoch</strong>: Integer. Total number of steps (batches of samples) to yield from <code class="docutils literal notranslate"><span class="pre">generator</span></code> before declaring one epoch finished and starting the next epoch. It should typically be equal to <code class="docutils literal notranslate"><span class="pre">ceil(num_samples</span> <span class="pre">/</span> <span class="pre">batch_size)</span></code> Optional for <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>: if unspecified, will use the <code class="docutils literal notranslate"><span class="pre">len(generator)</span></code> as a number of steps.</p>
+</li>
+<li><p class="first"><strong>epochs</strong>: Integer. Number of epochs to train the model. An epoch is an iteration over the entire data provided, as defined by <code class="docutils literal notranslate"><span class="pre">steps_per_epoch</span></code>. Note that in conjunction with <code class="docutils literal notranslate"><span class="pre">initial_epoch</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code> is to be understood as “final epoch”. The model is not trained for a number of iterations given by <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, but merely until the epoch of index <code class="docutils literal notranslate"><span class="pre">epochs</span></code> is reached.</p>
+</li>
+<li><p class="first"><strong>verbose</strong>: Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.</p>
+</li>
+<li><p class="first"><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during training. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</p>
+</li>
+<li><p class="first"><strong>validation_data</strong>: This can be either
+a generator or a <code class="docutils literal notranslate"><span class="pre">Sequence</span></code> object for the validation data
+tuple <code class="docutils literal notranslate"><span class="pre">(x_val,</span> <span class="pre">y_val)</span></code>
+tuple <code class="docutils literal notranslate"><span class="pre">(x_val,</span> <span class="pre">y_val,</span> <span class="pre">val_sample_weights)</span></code>
+on which to evaluate the loss and any model metrics at the end of each epoch. The model will not be trained on this data.</p>
+</li>
+<li><p class="first"><strong>validation_steps</strong>: Only relevant if <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> is a generator. Total number of steps (batches of samples) to yield from <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> generator before stopping at the end of every epoch. It should typically be equal to the number of samples of your validation dataset divided by the batch size. Optional for <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>: if unspecified, will use the <code class="docutils literal notranslate"><span class="pre">len(validation_data)</span></code> as a number of steps.</p>
+</li>
+<li><p class="first"><strong>validation_freq</strong>: Only relevant if validation data is provided. Integer or <code class="docutils literal notranslate"><span class="pre">collections.Container</span></code> instance (e.g. list, tuple, etc.). If an integer, specifies how many training epochs to run before a new validation run is performed, e.g. <code class="docutils literal notranslate"><span class="pre">validation_freq=2</span></code> runs validation every 2 epochs. If a Container, specifies the epochs on which to run validation, e.g. <code class="docutils literal notranslate"><span class="pre">validation_freq=[1,</span> <span class="pre">2,</span> <span class="pre">10]</span></code> runs validation at the end of the 1st, 2nd, and 10th epochs.</p>
+</li>
+<li><p class="first"><strong>class_weight</strong>: Optional dictionary mapping class indices (integers) to a weight (float) value, used for weighting the loss function (during training only). This can be useful to tell the model to “pay more attention” to samples from an under-represented class.</p>
+</li>
+<li><p class="first"><strong>max_queue_size</strong>: Integer. Maximum size for the generator queue. If unspecified, <code class="docutils literal notranslate"><span class="pre">max_queue_size</span></code> will default to 10.</p>
+</li>
+<li><p class="first"><strong>workers</strong>: Integer. Maximum number of processes to spin up when using process-based threading. If unspecified, <code class="docutils literal notranslate"><span class="pre">workers</span></code> will default to 1. If 0, will execute the generator on the main thread.</p>
+</li>
+<li><p class="first"><strong>use_multiprocessing</strong>: Boolean. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use process-based threading. If unspecified, <code class="docutils literal notranslate"><span class="pre">use_multiprocessing</span></code> will default to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Note that because this implementation relies on multiprocessing, you should not pass non-picklable arguments to the generator as they can’t be passed easily to children processes.</p>
+</li>
+<li><p class="first"><strong>shuffle</strong>: Boolean. Whether to shuffle the order of the batches at the beginning of each epoch. Only used with instances of <code class="docutils literal notranslate"><span class="pre">Sequence</span></code> (<code class="docutils literal notranslate"><span class="pre">tf.keras.utils.Sequence</span></code>). Has no effect when <code class="docutils literal notranslate"><span class="pre">steps_per_epoch</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+initial_epoch: Integer. Epoch at which to start training (useful for resuming a previous training run).</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>A <code class="docutils literal notranslate"><span class="pre">History</span></code> object. Its <code class="docutils literal notranslate"><span class="pre">History.history</span></code> attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case the generator yields data in an invalid format.</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_arrays_from_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="c1"># create numpy arrays of input data</span>
+                <span class="c1"># and labels, from each line in the file</span>
+                <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">process_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">({</span><span class="s1">&#39;input_1&#39;</span><span class="p">:</span> <span class="n">x1</span><span class="p">,</span> <span class="s1">&#39;input_2&#39;</span><span class="p">:</span> <span class="n">x2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generate_arrays_from_file</span><span class="p">(</span><span class="s1">&#39;/my_file.txt&#39;</span><span class="p">),</span>
+                    <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluate-generator">
+<h2>evaluate_generator<a class="headerlink" href="#evaluate-generator" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_queue_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_multiprocessing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Evaluates the model on a data generator.
+The generator should return the same kind of data as accepted by <code class="docutils literal notranslate"><span class="pre">test_on_batch</span></code>.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>generator</strong>: Generator yielding tuples (inputs, targets) or (inputs, targets, sample_weights) or an instance of Sequence (tf.keras.utils.Sequence) object in order to avoid duplicate data when using multiprocessing.</li>
+<li><strong>steps</strong>: Total number of steps (batches of samples) to yield from <code class="docutils literal notranslate"><span class="pre">generator</span></code> before stopping. Optional for <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>: if unspecified, will use the <code class="docutils literal notranslate"><span class="pre">len(generator)</span></code> as a number of steps.</li>
+<li><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during training. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</li>
+<li><strong>max_queue_size</strong>: maximum size for the generator queue</li>
+<li><strong>workers</strong>: Integer. Maximum number of processes to spin up when using process based threading. If unspecified, <code class="docutils literal notranslate"><span class="pre">workers</span></code> will default to 1. If 0, will execute the generator on the main thread.</li>
+<li><strong>use_multiprocessing</strong>: if True, use process based threading. Note that because this implementation relies on multiprocessing, you should not pass non picklable arguments to the generator as they can’t be passed easily to children processes.</li>
+<li><strong>verbose</strong>: verbosity mode, 0 or 1.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Scalar test loss (if the model has a single output and no metrics) or list of scalars (if the model has multiple outputs and/or metrics). The attribute <code class="docutils literal notranslate"><span class="pre">model.metrics_names</span></code> will give you the display labels for the scalar outputs.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case the generator yields data in an invalid format.</li>
+</ul>
+</div>
+<div class="section" id="predict-generator">
+<h2>predict_generator<a class="headerlink" href="#predict-generator" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predict_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_queue_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_multiprocessing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Generates predictions for the input samples from a data generator.
+The generator should return the same kind of data as accepted by <code class="docutils literal notranslate"><span class="pre">predict_on_batch</span></code>.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>generator</strong>: Generator yielding batches of input samples or an instance of Sequence (<code class="docutils literal notranslate"><span class="pre">tf.keras.utils.Sequence</span></code>) object in order to avoid duplicate data when using multiprocessing.</li>
+<li><strong>steps</strong>: Total number of steps (batches of samples) to yield from <code class="docutils literal notranslate"><span class="pre">generator</span></code> before stopping. Optional for <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>: if unspecified, will use the <code class="docutils literal notranslate"><span class="pre">len(generator)</span></code> as a number of steps.</li>
+<li><strong>callbacks</strong>: List of <code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.Callback</span></code> instances. List of callbacks to apply during training. See <a class="reference external" href="https://www.tensorflow.org/versions/r1.12/api_docs/python/tf/keras/callbacks">callbacks</a>.</li>
+<li><strong>max_queue_size</strong>: Maximum size for the generator queue.</li>
+<li><strong>workers</strong>: Integer. Maximum number of processes to spin up when using process based threading. If unspecified, <code class="docutils literal notranslate"><span class="pre">workers</span></code> will default to 1. If 0, will execute the generator on the main thread.</li>
+<li><strong>use_multiprocessing</strong>: If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use process based threading. Note that because this implementation relies on multiprocessing, you should not pass non picklable arguments to the generator as they can’t be passed easily to children processes.</li>
+<li><strong>verbose</strong>: verbosity mode, 0 or 1.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>Numpy array(s) of predictions.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case the generator yields data in an invalid format.</li>
+</ul>
+</div>
+<div class="section" id="get-layer">
+<h2>get_layer<a class="headerlink" href="#get-layer" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Retrieves a layer based on either its name (unique) or index.
+If <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">index</span></code> are both provided, <code class="docutils literal notranslate"><span class="pre">index</span></code> will take precedence.
+Indices are based on order of horizontal graph traversal (bottom-up).</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><strong>name</strong>: String, name of layer.</li>
+<li><strong>index</strong>: Integer, index of layer.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul class="simple">
+<li>A layer instance.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul class="simple">
+<li><strong>ValueError</strong>: In case of invalid layer name or index.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="src.univariate_methods.return_fields.html" class="btn btn-neutral float-right" title="src.univariate_methods.return_fields module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Models.html" class="btn btn-neutral" title="DeepCTR Models API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
