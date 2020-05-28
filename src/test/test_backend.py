@@ -53,7 +53,7 @@ class TestDataFetching(unittest.TestCase):
         field = "X1SCIEFF"
         result = um.get_stats(field, Config.student_data_file)
 
-        assert isinstance(result, tuple)
+        assert isinstance(result, tuple) and len(result) == 3
         assert isinstance(sum(result), float)
 
 

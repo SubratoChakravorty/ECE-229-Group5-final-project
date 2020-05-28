@@ -229,7 +229,6 @@ def get_stats(field, file_loc):
     """
     assert isinstance(field, str) and isinstance(file_loc, str)
 
-
     df = pd.read_csv(file_loc)
 
     assert field in df.columns
