@@ -256,3 +256,32 @@ def get_stats(field, file_loc="../data/student_data.csv", median=True):
         mid = df[field].mean()
 
     return minm, mid, maxm
+
+
+def get_categories(field, file_loc) -> Tuple[int, dict]:
+    '''
+    'returns the most common category as int and dictionary with mapping from integers to categories.
+    :param field: categorical field
+    :type str
+    :param file_loc: path to the dataset
+    :type str
+    :return: returns a tuple with an int and dictionary
+    :type tuple
+    '''
+
+    assert isinstance(field, str), f'field must be of type str, and not {type(field)}'
+    assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'
+
+    df = load_data_frame(file_loc)
+    var_info = get_var_info()
+    assert field in var_info.index, 'Invalid field name'
+    assert var_info.loc[field]['type'] == 'categorical', 'field column must have categorical data and not' \
+                                                         ' continuous/numerical data'
+
+    categories = df[field].value_counts().index
+    mapp = dict()
+    for id, val in enumerate(categories):
+        mapp[id+1] = val
+
+    return 1, mapp
+
