@@ -28,9 +28,7 @@ N1GEN,Teacher's gender,Science teacher's sex,categorical
 N1TERMS,Important science terms,Important science terms/facts n1skills science process/inquiry skills,continuous
 SCH_CONTROL,School control,School control,categorical
 SCH_LOCALE,School locale,School locale (urbanicity),categorical
-X1RACE,Student's race,Student's race,categorical
 X1GEN,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
-X1TSRACE,Teacher's race,Science teacher's race,categorical
 COST_PERCEPTION, Perceived cost, Perceived costs of trying to succeed in STEM, continuous
 TCH_PRCVD_ATT, Perceived teacher's affirming attitude, Level for the perceived affirming attitude, continuous
