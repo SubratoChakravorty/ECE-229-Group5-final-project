@@ -11,8 +11,9 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
+from flask_caching import Cache
 
-from src.config import variables_file, student_data_file
+from src.config import variables_file, student_data_file, cache_dir
 from src.multivariate_methods import get_correlation_matrix, MLmodel
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
@@ -109,6 +110,7 @@ def get_slider(field) -> List:
                 max=maximum,
                 value=median,
                 step=0.1,
+                updatemode='drag',
                 marks={minimum: f'{minimum: .1f}',
                        median: f'{median: .1f}',
                        maximum: f'{maximum: .1f}'},
@@ -140,9 +142,17 @@ def get_slider(field) -> List:
     return div
 
 
+# Initialize app and cache
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
                 external_stylesheets=[dbc.themes.BOOTSTRAP],
                 suppress_callback_exceptions=True)
+CACHE_CONFIG = {
+    # try 'filesystem' if you don't want to setup redis
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': cache_dir,
+}
+cache = Cache()
+cache.init_app(app.server, config=CACHE_CONFIG)
 
 # Create app layout
 app.layout = html.Div(
@@ -763,10 +773,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     n_points = 20
 
     # train model
-    model = MLmodel(student_data_file)
-    fields = set(exog)
-    fields.add(x_var)
-    accuracy, _ = model.train_model(y=endog, fields=list(fields))
+    model = train_model(endog, exog, x_var)
 
     # create x_var range
     x_min, _, x_max = get_stats(x_var)
@@ -784,6 +791,15 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     y = model.predict_model(input_data)
 
     return px.line(x=x_range, y=y)
+
+
+@cache.memoize()
+def train_model(endog, exog, x_var):
+    model = MLmodel(student_data_file)
+    fields = set(exog)
+    fields.add(x_var)
+    accuracy, _ = model.train_model(y=endog, fields=list(fields))
+    return model
 
 
 if __name__ == '__main__':
