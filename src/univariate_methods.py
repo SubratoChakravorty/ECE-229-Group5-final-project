@@ -21,22 +21,35 @@ def return_fields(file_loc="../data/student_data.csv"):
 
     df = pd.read_csv(file_loc)
 
-    val_details = {'STU_ID':'Student ID', 'X1RACE': 'Student Race', 'X1SEX': 'Student Sex', 'X1SES':'Socioeconomic status',
-           'X1SCIEFF':'Student Science Self-efficacy', 'N1COURSE': 'Science Course', 'X1SCIID': 'Scale of student\'s science identity',
-           'X1SCIUTI':'Scale of student\'s science utility', 'X1SCIINT': 'Scale of student\'s interest in fall 2009 science course',
-           'S1TEFRNDS': 'Time/effort in math/science means not enough time with friends', 'S1TEACTIV':'Time/effort in math/science means not enough time \
-            for extracurriculars', 'S1TEPOPULAR':'Time/effort in math/science means 9th grader won\'t be popular', 'S1TEMAKEFUN':'Time/effort in math/science\
-             means people will make fun of 9th grader','X1CONTROL':'School Control', 'X1LOCALE': 'School Locale (Urbanicity)',
-            'N1SEX': 'Science Teacher’s Sex', 'X1TSRACE': 'Science Teacher’s Race', 'X1TSCERT': 'Science teacher\'s science teaching certification',
-           'N1HIDEG':'Science teacher\'s highest degree', 'N1SCIJOB': 'Science teacher held science-related prior to becoming a teacher',
-           'N1ALTCERT': 'Science teacher entered profession through alternative certification program', 'N1SCIYRS912': 'Years science teacher has taught high school science',
-           'N1GROUP': 'Science teacher has students work in small groups', 'N1INTEREST': 'increasing students\' interest in science',
-           'N1CONCEPTS':'teaching basic science concepts', 'N1TERMS': 'important science terms/facts N1SKILLS science process/inquiry skills',
-            'S1STCHVALUES': '‘9th grader\'s fall 2009 science teacher values/listens to students\' ideas', 'S1STCHRESPCT': '9th grader\'s fall 2009 science\
+    val_details = {'STU_ID': 'Student ID', 'X1RACE': 'Student Race', 'X1SEX': 'Student Sex',
+                   'X1SES': 'Socioeconomic status',
+                   'X1SCIEFF': 'Student Science Self-efficacy', 'N1COURSE': 'Science Course',
+                   'X1SCIID': 'Scale of student\'s science identity',
+                   'X1SCIUTI': 'Scale of student\'s science utility',
+                   'X1SCIINT': 'Scale of student\'s interest in fall 2009 science course',
+                   'S1TEFRNDS': 'Time/effort in math/science means not enough time with friends', 'S1TEACTIV': 'Time/effort in math/science means not enough time \
+            for extracurriculars', 'S1TEPOPULAR': 'Time/effort in math/science means 9th grader won\'t be popular',
+                   'S1TEMAKEFUN': 'Time/effort in math/science\
+             means people will make fun of 9th grader', 'X1CONTROL': 'School Control',
+                   'X1LOCALE': 'School Locale (Urbanicity)',
+                   'N1SEX': 'Science Teacher’s Sex', 'X1TSRACE': 'Science Teacher’s Race',
+                   'X1TSCERT': 'Science teacher\'s science teaching certification',
+                   'N1HIDEG': 'Science teacher\'s highest degree',
+                   'N1SCIJOB': 'Science teacher held science-related prior to becoming a teacher',
+                   'N1ALTCERT': 'Science teacher entered profession through alternative certification program',
+                   'N1SCIYRS912': 'Years science teacher has taught high school science',
+                   'N1GROUP': 'Science teacher has students work in small groups',
+                   'N1INTEREST': 'increasing students\' interest in science',
+                   'N1CONCEPTS': 'teaching basic science concepts',
+                   'N1TERMS': 'important science terms/facts N1SKILLS science process/inquiry skills',
+                   'S1STCHVALUES': '‘9th grader\'s fall 2009 science teacher values/listens to students\' ideas',
+                   'S1STCHRESPCT': '9th grader\'s fall 2009 science\
             teacher treats students with respect', 'S1STCHFAIR': '9th grader\'s fall 2009 science teacher treats every\
-            student fairly', 'S1STCHCONF': '‘9th grader\'s fall 09 science teacher thinks all students can be successful',
-           'S1STCHMISTKE': '9th grader\'s fall 09 science teacher think mistakes OK if students learn', 'X3TGPAENG': 'English GPA',
-           'X3TGPAMAT' : 'Mathematics GPA', 'X3TGPASCI': 'Science GPA'}
+            student fairly',
+                   'S1STCHCONF': '‘9th grader\'s fall 09 science teacher thinks all students can be successful',
+                   'S1STCHMISTKE': '9th grader\'s fall 09 science teacher think mistakes OK if students learn',
+                   'X3TGPAENG': 'English GPA',
+                   'X3TGPAMAT': 'Mathematics GPA', 'X3TGPASCI': 'Science GPA'}
 
     res = dict()
     for k, v in val_details.items():
@@ -94,6 +107,7 @@ def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student
 
     return field_data
 
+
 def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"):
     '''
     Returns the count of continuous data count seperated by range
@@ -114,14 +128,14 @@ def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"
     field_data = df[field_name]
     Range = max(field_data) - min(field_data)
     bins_num = math.ceil(Range / width)
-    bins = list(range(bins_num)) #* int(width)
+    bins = list(range(bins_num))  # * int(width)
     for i in range(len(bins)):
         bins[i] *= width
 
     cut = pd.cut(field_data, bins)
-    cut_res = pd.value_counts(cut)  
+    cut_res = pd.value_counts(cut)
     res = {}
-    res["range"] = list(map(lambda x:x.mid,cut_res.index))
+    res["range"] = list(map(lambda x: x.mid, cut_res.index))
     res["count"] = list(cut_res)
     return res
 
@@ -189,9 +203,9 @@ def get_var_group(group, file_loc="../data/var_group.json"):
 
     with open(file_loc, "r") as f:
         content = json.load(f)
-    
+
     assert group in content
-    
+
     return content[group]
 
 
@@ -209,8 +223,36 @@ def get_var_info(file_loc="../data/variables.csv"):
     :rtype: pandas.DataFrame
     """
     assert isinstance(file_loc, str)
-    
+
     df = pd.read_csv(file_loc, index_col=0)
-    
+
     # Multiple variables
     return df
+
+
+def get_stats(field, file_loc="../data/student_data.csv", median=True):
+    '''
+    returns min,median(mean) and max of a numerical field
+    :param median: bool, returns median as the middle value if True, else mean
+    :param field: str, variable name
+    :param file_loc: str, path to the dataset
+    :return: tuple, (min, median (mean), max)
+    '''
+    assert isinstance(field, str), f'field must be of type str, and not {type(field)}'
+    assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'
+
+    df = load_data_frame(file_loc)
+    var_info = get_var_info()
+    assert field in var_info.index, 'Invalid field name'
+    assert var_info.loc[field]['type'] == 'continuous', 'field column must have continuous/numerical data and not' \
+                                                        ' categorical data'
+
+    minm = df[field].min()
+    maxm = df[field].max()
+
+    if median:
+        mid = df[field].median()
+    else:
+        mid = df[field].mean()
+
+    return minm, mid, maxm
