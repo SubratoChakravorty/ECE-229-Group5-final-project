@@ -6,6 +6,8 @@ from typing import Union, Tuple
 
 import pandas as pd
 
+from src.config import variables_file
+
 
 def return_fields(file_loc="../data/student_data.csv"):
     '''
@@ -275,7 +277,7 @@ def get_categories(field, file_loc) -> Tuple[int, dict]:
     assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'
 
     df = load_data_frame(file_loc)
-    var_info = get_var_info()
+    var_info = get_var_info(variables_file)
     assert field in var_info.index, 'Invalid field name'
     assert var_info.loc[field]['type'] == 'categorical', 'field column must have categorical data and not' \
                                                          ' continuous/numerical data'
