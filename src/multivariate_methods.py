@@ -47,12 +47,12 @@ class MLmodel:
         self.cat_cols = None
         self.cont_cols = None
 
-    def train_model(self, y, fields, num_trees=100, test_split=0):
+    def train_model(self, y, fields, regressor=None, test_split=0):
         '''
         train a machine learning model with y as dependent variable and variables in fields parameter as independent variables
+        :param regressor: sklearn regressor object, if None default RandomForestRegressor is used
         :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else
         model trained on complete data and training accuracy along with -1 in place of test accuracy returned.
-        :param num_trees: number of estimators in the random forest model
         :param y: string, dependent variable, should be numerical/continuous
         :param fields: list,  list of independent variables, can be numerical or categorical
         :return: returns a tuple with training accuracy and test accuracy if test_split > 0 else a tuple with training accuracy
@@ -61,7 +61,6 @@ class MLmodel:
         assert isinstance(fields, list)
         assert all([(isinstance(field, str) and field in self.var_info.index) for field in fields])
         assert y in self.var_info.index
-        assert isinstance(num_trees, int) and num_trees > 0
         assert 0 <= test_split <= 1
 
         df_sub = self.df[fields + [y]]
@@ -92,9 +91,10 @@ class MLmodel:
         # Now we have a full prediction pipeline.
         from sklearn.ensemble import RandomForestRegressor
         from sklearn.model_selection import train_test_split
-
+        if regressor is None:
+            regressor = RandomForestRegressor()
         self.clf = Pipeline(steps=[('preprocessor', preprocessor),
-                                   ('classifier', RandomForestRegressor(n_estimators=num_trees))])
+                                   ('classifier', regressor)])
 
         if test_split > 0:
             X_train, X_test, y_train, y_test = train_test_split(df_sub, Y, test_size=0.2)
@@ -115,7 +115,8 @@ class MLmodel:
         '''
 
         assert isinstance(input_data, dict)
-        assert all([field in self.fields for field in input_data.keys()]) and len(self.fields) == len(input_data.keys())
+        assert all([field in self.fields for field in input_data.keys()])
+        assert len(self.fields) == len(input_data.keys())
 
         if self.trained:
             test_data = pd.DataFrame()
@@ -127,3 +128,6 @@ class MLmodel:
             return self.clf.predict(test_data)
         else:
             raise Exception("Model not trained")
+
+
+
