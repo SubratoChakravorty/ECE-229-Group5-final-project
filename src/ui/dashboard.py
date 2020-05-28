@@ -2,6 +2,7 @@
 Just run using `python dashboard.py`
 """
 from typing import List
+import math
 
 import dash
 import dash_core_components as dcc
@@ -13,12 +14,10 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
-from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
 from src.multivariate_methods import get_correlation_matrix
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
+    get_categories
 
-# # Style configuration
-# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app.css.append_css({"external_url":external_css})
 
 # color for frontend
 colors = {
@@ -46,14 +45,19 @@ report_text = """
                                         """
 
 
-def populate_dropdown(category: str) -> List[dict]:
+def populate_dropdown(category: str = None) -> List[dict]:
     """
-    Generate a list of dictionaries to use to populate the dropdown menues
-    :param category: 'continuous' or 'categorical'
+    Generate a list of dictionaries to use to populate the dropdown menus
+
+    :param category: 'continuous' or 'categorical'. If `None` select all variables.
     :return: a list of dicts with keys 'label' and 'value'
     """
-    assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
-    df = vars_df.loc[vars_df['type'] == category, 'short']
+    if category is not None:
+        assert category in ['continuous',
+                            'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
+        df = vars_df.loc[vars_df['type'] == category, 'short']
+    else:
+        df = vars_df['short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
@@ -70,7 +74,9 @@ def fig_formatter(**kw):
                               paper_bgcolor='rgba(0,0,0,0)',
                               plot_bgcolor='rgba(0,0,0,0)')
             return fig
+
         return wrapped
+
     return wrap
 
 
@@ -95,6 +101,10 @@ def make_correlation_heatmap():
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
                 external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+# # Style configuration
+# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# app.css.append_css({"external_url": external_css})
 
 # Create app layout
 app.layout = html.Div(
@@ -141,7 +151,7 @@ app.layout = html.Div(
                         html.A(
                             html.Button("github", id="learn-more-button"),
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
-                        ),   
+                        ),
                     ],
                     className="three-third column",
                     id="github-button",
@@ -190,6 +200,7 @@ app.layout = html.Div(
 
         # ##############################################< TAG2 PART >############################################
 
+        # Explore
         html.Div(
             [
                 html.Div(
@@ -226,6 +237,7 @@ app.layout = html.Div(
 
         # ################################################< TAG3 PART >#############################################
 
+        # Histogram
         html.Div(
             [
                 html.Div(
@@ -321,9 +333,74 @@ app.layout = html.Div(
                     className="pretty_container six columns"
                 ),
                 html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
-                         className="pretty_container six columns",),
+                         className="pretty_container six columns", ),
             ],
             className="flex-display",
+        ),
+
+        # ################################################< TAG3 PART >#############################################
+
+        # ML Model
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Predictor"),
+                        html.P(
+                            [
+                                "Select variables:",
+                                dcc.Dropdown(
+                                    id="ml_independent_var_selector",
+                                    options=populate_dropdown(),
+                                    value=['X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1SES', 'X3TGPAENG', 'X3TGPAMAT'],
+                                    multi=True
+                                ),
+                                "Select value to predict:",
+                                dcc.Dropdown(
+                                    id="ml_dependent_var_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
+                                ),
+                            ]
+                        ),
+                        html.P(id='ml_sliders'),
+                    ],
+                    className="pretty_container four columns",
+                    id="ml_controls",
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    [html.H6(id="ml_max_value"), html.P("Max Value")],
+                                    className="mini_container",
+                                ),
+                                html.Div(
+                                    [html.H6(id="ml_min_value"), html.P("Min Value")],
+                                    className="mini_container",
+                                ),
+                                html.Div(
+                                    [html.H6(id="ml_mean_value"), html.P("Mean Value")],
+                                    className="mini_container",
+                                ),
+                                html.Div(
+                                    [html.H6(id="ml_median_value"), html.P("Median Value")],
+                                    className="mini_container",
+                                ),
+                            ],
+                            className="container-display",
+                        ),
+                        html.Div(
+                            [dcc.Graph(id="ml_prediction_plot")],
+                            className="pretty_container",
+                        ),
+                    ],
+                    className="eight columns",
+                ),
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         ######################################################< TAG4 PART >##################################################
@@ -361,14 +438,14 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
         html.Div(
-                    [
-                        html.A(
-                            html.Button("documentation", id="documentation-button"),
-                            href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
-                        ),
-                    ],
-                    className="two-half column",
-                    id="doc-button",
+            [
+                html.A(
+                    html.Button("documentation", id="documentation-button"),
+                    href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
+                ),
+            ],
+            className="two-half column",
+            id="doc-button",
         ),
     ],
     id="mainContainer",
@@ -589,6 +666,36 @@ def get_correlation_bar_plot(x: List[str], y: str):
         x=series.index,
         y=y,
     )
+
+
+@app.callback(Output('ml_sliders', 'children'),
+              [Input('ml_independent_var_selector', 'value')])
+def make_ml_slider(fields):
+    return [f for f in fields]
+
+
+def get_slider(field) -> dcc.Slider:
+    if vars_df.loc[field, 'type'] == 'continuous':
+        minimum, maximum, median = get_stats(field, student_data_file)
+        slider = dcc.Slider(
+            id=field + '_slider',
+            min=minimum,
+            max=maximum,
+            value=median,
+            marks={'min': minimum, 'median': median, 'max': maximum},
+        )
+    elif vars_df.loc[field, 'type'] == 'categorical':
+        mode, category_lookup = get_categories(field, student_data_file)
+        slider = dcc.Slider(
+            id=field + '_slider',
+            min=1,
+            max=len(category_lookup) + 1,
+            value=mode,
+            marks=category_lookup,
+        )
+    else:
+        raise ValueError(f"field {field} is invalid")
+    return slider
 
 
 if __name__ == '__main__':
