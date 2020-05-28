@@ -157,6 +157,7 @@
 <span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -176,22 +177,35 @@
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
 
-    <span class="n">val_details</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;STU_ID&#39;</span><span class="p">:</span><span class="s1">&#39;Student ID&#39;</span><span class="p">,</span> <span class="s1">&#39;X1RACE&#39;</span><span class="p">:</span> <span class="s1">&#39;Student Race&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SEX&#39;</span><span class="p">:</span> <span class="s1">&#39;Student Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SES&#39;</span><span class="p">:</span><span class="s1">&#39;Socioeconomic status&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">:</span><span class="s1">&#39;Student Science Self-efficacy&#39;</span><span class="p">,</span> <span class="s1">&#39;N1COURSE&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Course&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIID&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s science identity&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">:</span><span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s science utility&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIINT&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s interest in fall 2009 science course&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;S1TEFRNDS&#39;</span><span class="p">:</span> <span class="s1">&#39;Time/effort in math/science means not enough time with friends&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEACTIV&#39;</span><span class="p">:</span><span class="s1">&#39;Time/effort in math/science means not enough time </span><span class="se">\</span>
-<span class="s1">            for extracurriculars&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEPOPULAR&#39;</span><span class="p">:</span><span class="s1">&#39;Time/effort in math/science means 9th grader won</span><span class="se">\&#39;</span><span class="s1">t be popular&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEMAKEFUN&#39;</span><span class="p">:</span><span class="s1">&#39;Time/effort in math/science</span><span class="se">\</span>
-<span class="s1">             means people will make fun of 9th grader&#39;</span><span class="p">,</span><span class="s1">&#39;X1CONTROL&#39;</span><span class="p">:</span><span class="s1">&#39;School Control&#39;</span><span class="p">,</span> <span class="s1">&#39;X1LOCALE&#39;</span><span class="p">:</span> <span class="s1">&#39;School Locale (Urbanicity)&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;N1SEX&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Teacher’s Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;X1TSRACE&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Teacher’s Race&#39;</span><span class="p">,</span> <span class="s1">&#39;X1TSCERT&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher</span><span class="se">\&#39;</span><span class="s1">s science teaching certification&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;N1HIDEG&#39;</span><span class="p">:</span><span class="s1">&#39;Science teacher</span><span class="se">\&#39;</span><span class="s1">s highest degree&#39;</span><span class="p">,</span> <span class="s1">&#39;N1SCIJOB&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher held science-related prior to becoming a teacher&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;N1ALTCERT&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher entered profession through alternative certification program&#39;</span><span class="p">,</span> <span class="s1">&#39;N1SCIYRS912&#39;</span><span class="p">:</span> <span class="s1">&#39;Years science teacher has taught high school science&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;N1GROUP&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher has students work in small groups&#39;</span><span class="p">,</span> <span class="s1">&#39;N1INTEREST&#39;</span><span class="p">:</span> <span class="s1">&#39;increasing students</span><span class="se">\&#39;</span><span class="s1"> interest in science&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;N1CONCEPTS&#39;</span><span class="p">:</span><span class="s1">&#39;teaching basic science concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;N1TERMS&#39;</span><span class="p">:</span> <span class="s1">&#39;important science terms/facts N1SKILLS science process/inquiry skills&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;S1STCHVALUES&#39;</span><span class="p">:</span> <span class="s1">&#39;‘9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 2009 science teacher values/listens to students</span><span class="se">\&#39;</span><span class="s1"> ideas&#39;</span><span class="p">,</span> <span class="s1">&#39;S1STCHRESPCT&#39;</span><span class="p">:</span> <span class="s1">&#39;9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 2009 science</span><span class="se">\</span>
+    <span class="n">val_details</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;STU_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;Student ID&#39;</span><span class="p">,</span> <span class="s1">&#39;X1RACE&#39;</span><span class="p">:</span> <span class="s1">&#39;Student Race&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SEX&#39;</span><span class="p">:</span> <span class="s1">&#39;Student Sex&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1SES&#39;</span><span class="p">:</span> <span class="s1">&#39;Socioeconomic status&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">:</span> <span class="s1">&#39;Student Science Self-efficacy&#39;</span><span class="p">,</span> <span class="s1">&#39;N1COURSE&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Course&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1SCIID&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s science identity&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s science utility&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1SCIINT&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale of student</span><span class="se">\&#39;</span><span class="s1">s interest in fall 2009 science course&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1TEFRNDS&#39;</span><span class="p">:</span> <span class="s1">&#39;Time/effort in math/science means not enough time with friends&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEACTIV&#39;</span><span class="p">:</span> <span class="s1">&#39;Time/effort in math/science means not enough time </span><span class="se">\</span>
+<span class="s1">            for extracurriculars&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEPOPULAR&#39;</span><span class="p">:</span> <span class="s1">&#39;Time/effort in math/science means 9th grader won</span><span class="se">\&#39;</span><span class="s1">t be popular&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1TEMAKEFUN&#39;</span><span class="p">:</span> <span class="s1">&#39;Time/effort in math/science</span><span class="se">\</span>
+<span class="s1">             means people will make fun of 9th grader&#39;</span><span class="p">,</span> <span class="s1">&#39;X1CONTROL&#39;</span><span class="p">:</span> <span class="s1">&#39;School Control&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1LOCALE&#39;</span><span class="p">:</span> <span class="s1">&#39;School Locale (Urbanicity)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1SEX&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Teacher’s Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;X1TSRACE&#39;</span><span class="p">:</span> <span class="s1">&#39;Science Teacher’s Race&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X1TSCERT&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher</span><span class="se">\&#39;</span><span class="s1">s science teaching certification&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1HIDEG&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher</span><span class="se">\&#39;</span><span class="s1">s highest degree&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1SCIJOB&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher held science-related prior to becoming a teacher&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1ALTCERT&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher entered profession through alternative certification program&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1SCIYRS912&#39;</span><span class="p">:</span> <span class="s1">&#39;Years science teacher has taught high school science&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1GROUP&#39;</span><span class="p">:</span> <span class="s1">&#39;Science teacher has students work in small groups&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1INTEREST&#39;</span><span class="p">:</span> <span class="s1">&#39;increasing students</span><span class="se">\&#39;</span><span class="s1"> interest in science&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1CONCEPTS&#39;</span><span class="p">:</span> <span class="s1">&#39;teaching basic science concepts&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;N1TERMS&#39;</span><span class="p">:</span> <span class="s1">&#39;important science terms/facts N1SKILLS science process/inquiry skills&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1STCHVALUES&#39;</span><span class="p">:</span> <span class="s1">&#39;‘9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 2009 science teacher values/listens to students</span><span class="se">\&#39;</span><span class="s1"> ideas&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1STCHRESPCT&#39;</span><span class="p">:</span> <span class="s1">&#39;9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 2009 science</span><span class="se">\</span>
 <span class="s1">            teacher treats students with respect&#39;</span><span class="p">,</span> <span class="s1">&#39;S1STCHFAIR&#39;</span><span class="p">:</span> <span class="s1">&#39;9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 2009 science teacher treats every</span><span class="se">\</span>
-<span class="s1">            student fairly&#39;</span><span class="p">,</span> <span class="s1">&#39;S1STCHCONF&#39;</span><span class="p">:</span> <span class="s1">&#39;‘9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 09 science teacher thinks all students can be successful&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;S1STCHMISTKE&#39;</span><span class="p">:</span> <span class="s1">&#39;9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 09 science teacher think mistakes OK if students learn&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPAENG&#39;</span><span class="p">:</span> <span class="s1">&#39;English GPA&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;X3TGPAMAT&#39;</span> <span class="p">:</span> <span class="s1">&#39;Mathematics GPA&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPASCI&#39;</span><span class="p">:</span> <span class="s1">&#39;Science GPA&#39;</span><span class="p">}</span>
+<span class="s1">            student fairly&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1STCHCONF&#39;</span><span class="p">:</span> <span class="s1">&#39;‘9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 09 science teacher thinks all students can be successful&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;S1STCHMISTKE&#39;</span><span class="p">:</span> <span class="s1">&#39;9th grader</span><span class="se">\&#39;</span><span class="s1">s fall 09 science teacher think mistakes OK if students learn&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X3TGPAENG&#39;</span><span class="p">:</span> <span class="s1">&#39;English GPA&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;X3TGPAMAT&#39;</span><span class="p">:</span> <span class="s1">&#39;Mathematics GPA&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPASCI&#39;</span><span class="p">:</span> <span class="s1">&#39;Science GPA&#39;</span><span class="p">}</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val_details</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -249,6 +263,7 @@
 
     <span class="k">return</span> <span class="n">field_data</span></div>
 
+
 <div class="viewcode-block" id="get_binned_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_binned_data">[docs]</a><span class="k">def</span> <span class="nf">get_binned_data</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the count of continuous data count seperated by range</span>
@@ -269,14 +284,14 @@
     <span class="n">field_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
     <span class="n">Range</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">field_data</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">field_data</span><span class="p">)</span>
     <span class="n">bins_num</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">Range</span> <span class="o">/</span> <span class="n">width</span><span class="p">)</span>
-    <span class="n">bins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">bins_num</span><span class="p">))</span> <span class="c1">#* int(width)</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">bins_num</span><span class="p">))</span>  <span class="c1"># * int(width)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)):</span>
         <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">width</span>
 
     <span class="n">cut</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">field_data</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
-    <span class="n">cut_res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">cut</span><span class="p">)</span>  
+    <span class="n">cut_res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">cut</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">mid</span><span class="p">,</span><span class="n">cut_res</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">mid</span><span class="p">,</span> <span class="n">cut_res</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
     <span class="n">res</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cut_res</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">res</span></div>
 
@@ -314,7 +329,7 @@
 
 
 <div class="viewcode-block" id="load_data_frame"><a class="viewcode-back" href="../../src.html#src.univariate_methods.load_data_frame">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Used to store dataframes loaded from a csv.</span>
 
@@ -323,6 +338,8 @@
 <span class="sd">    :returns: Data</span>
 <span class="sd">    :rtype: pandas.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span></div>
 
 
@@ -342,9 +359,9 @@
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    
+
     <span class="k">assert</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">content</span>
-    
+
     <span class="k">return</span> <span class="n">content</span><span class="p">[</span><span class="n">group</span><span class="p">]</span></div>
 
 
@@ -362,11 +379,41 @@
 <span class="sd">    :rtype: pandas.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-    
+
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    
+
     <span class="c1"># Multiple variables</span>
     <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="get_stats"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_stats">[docs]</a><span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns min,median(mean) and max of a numerical field</span>
+
+<span class="sd">    :param median: Returns median as the middle value if True, else mean</span>
+<span class="sd">    :type median: bool</span>
+<span class="sd">    :param field: variable name</span>
+<span class="sd">    :type field: str</span>
+<span class="sd">    :param file_loc: Path to the dataset</span>
+<span class="sd">    :type file_loc: str</span>
+<span class="sd">    :returns: tuple(min, max, median (mean))</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;field must be of type str, and not {type(field)}&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;file_loc must be of type str, and not {type(file_loc)}&#39;</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="n">minm</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">maxm</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">median</span><span class="p">:</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">minm</span><span class="p">,</span> <span class="n">maxm</span><span class="p">,</span> <span class="n">mid</span></div>
 </pre></div>
 
            </div>

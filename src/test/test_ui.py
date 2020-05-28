@@ -1,5 +1,6 @@
 import re
 
+import pytest
 import pandas as pd
 
 import src.config
@@ -66,6 +67,7 @@ def test_ui006_report(dash_duo):
     dash_duo.wait_for_element('#report', timeout=5)
 
 
+@pytest.mark.skip
 def test_ui007_toggle_modal(dash_duo):
     dash_duo.start_server(app)
     dash_duo.multiple_click("#open-xl", clicks=1)

@@ -227,6 +227,34 @@ Dataframe object containing student variables.</p>
 </div>
 <div class="section" id="module-src.multivariate_methods">
 <span id="src-multivariate-methods-module"></span><h2>src.multivariate_methods module<a class="headerlink" href="#module-src.multivariate_methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="src.multivariate_methods.MLmodel">
+<em class="property">class </em><code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">MLmodel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="src.multivariate_methods.MLmodel.predict_model">
+<code class="sig-name descname">predict_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.predict_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.predict_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns model’s prediction for the input_data
+:param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,
+depending upon the number of samples
+:return: returns a 1-d numpy array with predicted y value for each sample</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.multivariate_methods.MLmodel.train_model">
+<code class="sig-name descname">train_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">num_trees</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">test_split</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.train_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>train a machine learning model with y as dependent variable and variables in fields parameter as independent variables
+:param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else
+model trained on complete data and training accuracy along with -1 in place of test accuracy returned.
+:param num_trees: number of estimators in the random forest model
+:param y: string, dependent variable, should be numerical/continuous
+:param fields: list,  list of independent variables, can be numerical or categorical
+:return: returns a tuple with training accuracy and test accuracy if test_split &gt; 0 else a tuple with training accuracy
+and -1 in place of test accuracy.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt id="src.multivariate_methods.get_correlation_matrix">
 <code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">get_correlation_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_correlation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
@@ -333,6 +361,27 @@ presented in the fields parameter</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="src.univariate_methods.get_stats">
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em>, <em class="sig-param"><span class="n">median</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns min,median(mean) and max of a numerical field</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>median</strong> (<em>bool</em>) – Returns median as the middle value if True, else mean</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – variable name</p></li>
+<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple(min, max, median (mean))</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="src.univariate_methods.get_var_group">
 <code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_var_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/var_group.json'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_var_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_var_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of variables of a certain group</p>
@@ -375,7 +424,7 @@ subset of pd.DataFrame corresponds to each variable in name.</p>
 
 <dl class="py function">
 <dt id="src.univariate_methods.load_data_frame">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">load_data_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/src/univariate_methods.html#load_data_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.load_data_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">load_data_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'../data/student_data.csv'</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/src/univariate_methods.html#load_data_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.load_data_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to store dataframes loaded from a csv.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
