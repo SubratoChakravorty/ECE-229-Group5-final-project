@@ -2,7 +2,6 @@
 Just run using `python dashboard.py`
 """
 from typing import List
-import math
 
 import dash
 import dash_core_components as dcc
@@ -96,6 +95,50 @@ def make_correlation_heatmap():
     )
     fig.layout.xaxis.tickangle = 45
     return fig
+
+
+def get_slider(field) -> List:
+    field_name = vars_df.loc[field, 'short']
+    if vars_df.loc[field, 'type'] == 'continuous':
+        minimum, median, maximum = tuple(round(v, 1) for v in get_stats(field, student_data_file))
+        div = html.Div([
+            field_name,
+            dcc.Slider(
+                id=field + '_slider',
+                min=minimum,
+                max=maximum,
+                value=median,
+                step=0.1,
+                marks={minimum: f'{minimum: .1f}',
+                       median: f'{median: .1f}',
+                       maximum: f'{maximum: .1f}'},
+                tooltip=dict(always_visible=True, placement='bottom')
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    elif vars_df.loc[field, 'type'] == 'categorical':
+        mode, category_lookup = get_categories(field, student_data_file)
+        div = html.Div([
+            html.P(children=[field_name], id=field + '_slider_state'),
+            dcc.Slider(
+                id=field + '_slider',
+                min=1,
+                max=len(category_lookup),
+                value=mode,
+                step=1,
+                included=False,
+                updatemode='drag',
+                marks={k: v[:3] if isinstance(v, str) else str(v) for k, v in category_lookup.items()}
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    else:
+        raise ValueError(f"field {field} is invalid")
+    return div
 
 
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
@@ -357,10 +400,15 @@ app.layout = html.Div(
                                     options=populate_dropdown('continuous'),
                                     value='X1SCIEFF'
                                 ),
+                                "Select x-axis:",
+                                dcc.Dropdown(
+                                    id="ml_x_axis_selector",
+                                    options=populate_dropdown(),
+                                    value='X3TGPAMAT'
+                                ),
                             ]
                         ),
-                        html.P(id='ml_sliders'),
-                        html.Div(id='ml_hidden_div', style={'display': 'none'}),
+                        html.Div([get_slider(field) for field in vars_df.index], id='ml_sliders'),
                     ],
                     className="pretty_container four columns",
                     id="ml_controls",
@@ -667,12 +715,15 @@ def get_correlation_bar_plot(x: List[str], y: str):
 
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
+              [State('ml_sliders', 'children')],
               prevent_initial_call=False)
-def make_ml_slider(fields: List):
-    children = []
-    for f in fields:
-        children.extend(get_slider(f))
-    return children
+def show_ml_sliders(fields: List, state: List):
+    for n, f in enumerate(vars_df.index):
+        if f in fields:
+            state[n]['props']['style'] = None
+        else:
+            state[n]['props']['style'] = dict(display='none')
+    return state
 
 
 def assign_slider_text_update_callback(field: str):
@@ -690,41 +741,15 @@ for field in vars_df.loc[vars_df['type'] == 'categorical'].index:
     assign_slider_text_update_callback(field)
 
 
-def get_slider(field) -> List:
-    field_name = vars_df.loc[field, 'short']
-    if vars_df.loc[field, 'type'] == 'continuous':
-        minimum, median, maximum = get_stats(field, student_data_file)
-        div = [
-            field_name,
-            dcc.Slider(
-                id=field + '_slider',
-                min=minimum,
-                max=maximum,
-                value=median,
-                step=(maximum - minimum) / 10,
-                marks={minimum: {'label': 'min'},
-                       median: {'label': 'med'},
-                       maximum: {'label': 'max'}},
-            ),
-        ]
-    elif vars_df.loc[field, 'type'] == 'categorical':
-        mode, category_lookup = get_categories(field, student_data_file)
-        div = [
-            html.P(children=[field_name], id=field + '_slider_state'),
-            dcc.Slider(
-                id=field + '_slider',
-                min=1,
-                max=len(category_lookup),
-                value=mode,
-                step=1,
-                included=False,
-                updatemode='drag',
-                marks={k: v[:3] for k, v in category_lookup.items()}
-            ),
-        ]
-    else:
-        raise ValueError(f"field {field} is invalid")
-    return div
+# slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
+#
+#
+# @app.callback(Output('ml_prediction_plot', 'figure'),
+#               [Input('ml_independent_var_selector', 'value'),
+#                Input('ml_dependent_var_selector', 'value'),
+#                Input('ml_x_axis_selector', 'value')] + slider_inputs)
+# def make_prediction_plot():
+#     pass
 
 
 if __name__ == '__main__':
