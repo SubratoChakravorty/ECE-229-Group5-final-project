@@ -35,7 +35,7 @@ class TestDataFetching(unittest.TestCase):
     def test_get_hierarchical_data(self):
         fields = ["X1SEX", "X1RACE", "X1SES"]
         f, mean = um.get_hierarchical_data(fields=fields,
-                                     file_loc=Config.student_data_file)
+                                           tfile_loc=Config.student_data_file)
 
         assert isinstance(f, pd.DataFrame)
         assert isinstance(float(mean), float)

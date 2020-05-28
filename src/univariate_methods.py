@@ -5,9 +5,10 @@ import os
 from typing import Union, Tuple
 
 import pandas as pd
+import src.config as config
 
 
-def return_fields(file_loc="../data/student_data.csv"):
+def return_fields(file_loc=config.student_data_file):
     '''
     Returns the field values from the dataset
 
@@ -59,7 +60,7 @@ def return_fields(file_loc="../data/student_data.csv"):
     return res
 
 
-def get_counts(field_name='', file_loc="../data/student_data.csv"):
+def get_counts(field_name='', file_loc=config.student_data_file):
     '''
     Returns frequency counts of the input field from the dataframe
 
@@ -82,7 +83,7 @@ def get_counts(field_name='', file_loc="../data/student_data.csv"):
 
 
 @lru_cache(maxsize=20)
-def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student_data.csv"):
+def get_field_data(field_name: Union[str, Tuple] = '', file_loc=config.student_data_file):
     '''
     Returns the input field data from the dataframe
 
@@ -108,10 +109,11 @@ def get_field_data(field_name: Union[str, Tuple] = '', file_loc="../data/student
     return field_data
 
 
-def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"):
+def get_binned_data(field_name='', width=10, file_loc=config.student_data_file):
     '''
     Returns the count of continuous data count seperated by range
 
+    :param width:
     :param field_name: Field name
     :type field_name: str
     :param file_loc: Path to the dataset
@@ -140,7 +142,7 @@ def get_binned_data(field_name='', width=10, file_loc="../data/student_data.csv"
     return res
 
 
-def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/student_data.csv") \
+def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc=config.student_data_file) \
         -> Tuple[pd.DataFrame, float]:
     '''
     Returns a dataframe with mean and count of groups segregated using input fields
@@ -173,7 +175,7 @@ def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc="../data/studen
 
 
 @lru_cache(maxsize=10)
-def load_data_frame(file_loc="../data/student_data.csv") -> pd.DataFrame:
+def load_data_frame(file_loc=config.student_data_file) -> pd.DataFrame:
     """
     Used to store dataframes loaded from a csv.
 
@@ -187,7 +189,7 @@ def load_data_frame(file_loc="../data/student_data.csv") -> pd.DataFrame:
     return pd.read_csv(file_loc)
 
 
-def get_var_group(group, file_loc="../data/var_group.json"):
+def get_var_group(group, file_loc=config.vargroup_file):
     """
     Return a list of variables of a certain group
     
@@ -209,7 +211,7 @@ def get_var_group(group, file_loc="../data/var_group.json"):
     return content[group]
 
 
-def get_var_info(file_loc="../data/variables.csv"):
+def get_var_info(file_loc=config.variables_file):
     """
     Get variable information
     Usage
@@ -230,7 +232,7 @@ def get_var_info(file_loc="../data/variables.csv"):
     return df
 
 
-def get_stats(field, file_loc="../data/student_data.csv", median=True):
+def get_stats(field, file_loc=config.student_data_file, median=True):
     '''
     Returns min,median(mean) and max of a numerical field
 
@@ -260,7 +262,7 @@ def get_stats(field, file_loc="../data/student_data.csv", median=True):
     return minm, mid, maxm
 
 
-def get_categories(field, file_loc) -> Tuple[int, dict]:
+def get_categories(field, file_loc=config.student_data_file) -> Tuple[int, dict]:
     '''
     'returns the most common category as int and dictionary with mapping from integers to categories.
     :param field: categorical field

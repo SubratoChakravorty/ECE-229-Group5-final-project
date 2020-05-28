@@ -1,3 +1,6 @@
+from .univariate_methods import load_data_frame
+from .univariate_methods import get_var_info
+import src.config as config
 import pandas as pd
 import numpy as np
 from sklearn.compose import ColumnTransformer
@@ -5,15 +8,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-import os
 np.random.seed(0)
 
 
-from .univariate_methods import load_data_frame
-from .univariate_methods import get_var_info
-
-
-def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
+def get_correlation_matrix(fields, file_loc=config.student_data_file):
     '''
     Computes correlation matrix that captures correlation between features
     presented in the fields parameter
@@ -39,7 +37,7 @@ def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
 
 class MLmodel:
 
-    def __init__(self, file_loc="../data/student_data.csv"):
+    def __init__(self, file_loc=config.student_data_file):
 
         self.clf = None
         self.fields = None
@@ -96,13 +94,13 @@ class MLmodel:
         from sklearn.model_selection import train_test_split
 
         self.clf = Pipeline(steps=[('preprocessor', preprocessor),
-                              ('classifier', RandomForestRegressor(n_estimators=num_trees))])
+                                   ('classifier', RandomForestRegressor(n_estimators=num_trees))])
 
         if test_split > 0:
             X_train, X_test, y_train, y_test = train_test_split(df_sub, Y, test_size=0.2)
             self.clf.fit(X_train, y_train)
             self.trained = True
-            return self.clf.score(X_train,y_train), self.clf.score(X_test, y_test)
+            return self.clf.score(X_train, y_train), self.clf.score(X_test, y_test)
         else:
             self.clf.fit(df_sub, Y)
             self.trained = True
@@ -129,4 +127,3 @@ class MLmodel:
             return self.clf.predict(test_data)
         else:
             raise Exception("Model not trained")
-
