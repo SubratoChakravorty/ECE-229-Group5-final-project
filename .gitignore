@@ -7,8 +7,6 @@ sandbox/
 /data/hsls_09_school_v1_0.csv
 /data/hsls_16_student_v1_0.csv
 *.bat
-Makefile
-conf.py
 index.rst
 main.py
 *.ipynb
@@ -20,3 +18,5 @@ main.py
 .vscode/
 .coverage
 src/teste.py
+*DS_Store*
+*.pyc
