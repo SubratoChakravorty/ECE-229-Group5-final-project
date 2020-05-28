@@ -232,11 +232,16 @@ def get_var_info(file_loc="../data/variables.csv"):
 
 def get_stats(field, file_loc="../data/student_data.csv", median=True):
     '''
-    returns min,median(mean) and max of a numerical field
-    :param median: bool, returns median as the middle value if True, else mean
-    :param field: str, variable name
-    :param file_loc: str, path to the dataset
-    :return: tuple, (min, median (mean), max)
+    Returns min,median(mean) and max of a numerical field
+
+    :param median: Returns median as the middle value if True, else mean
+    :type median: bool
+    :param field: variable name
+    :type field: str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: (min, median (mean), max)
+    :rtype: tuple
     '''
     assert isinstance(field, str), f'field must be of type str, and not {type(field)}'
     assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'

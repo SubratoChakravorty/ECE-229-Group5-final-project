@@ -49,6 +49,13 @@ class TestDataFetching(unittest.TestCase):
         result = um.get_var_info(Config.variables_file)
         assert isinstance(result, pd.DataFrame)
 
+    def test_get_stats(self):
+        field = "X1SCIEFF"
+        result = um.get_stats(field, Config.student_data_file)
+
+        assert isinstance(result, tuple) and len(result) == 3
+        assert isinstance(sum(result), float)
+
 
 if __name__ == '__main__':
     unittest.main()
