@@ -360,6 +360,7 @@ app.layout = html.Div(
                             ]
                         ),
                         html.P(id='ml_sliders'),
+                        html.Div(id='ml_hidden_div', style={'display': 'none'}),
                     ],
                     className="pretty_container four columns",
                     id="ml_controls",
@@ -674,6 +675,21 @@ def make_ml_slider(fields: List):
     return children
 
 
+def assign_slider_text_update_callback(field: str):
+    _, category_lookup = get_categories(field, student_data_file)
+
+    def slider_text_update(value: int):
+        return [f"{vars_df.loc[field, 'short']} - {category_lookup[value]}"]
+
+    app.callback(output=Output(field + '_slider_state', 'children'),
+                 inputs=[Input(field + '_slider', 'value')],
+                 prevent_initial_call=False)(slider_text_update)
+
+
+for field in vars_df.loc[vars_df['type'] == 'categorical'].index:
+    assign_slider_text_update_callback(field)
+
+
 def get_slider(field) -> List:
     field_name = vars_df.loc[field, 'short']
     if vars_df.loc[field, 'type'] == 'continuous':
@@ -685,8 +701,10 @@ def get_slider(field) -> List:
                 min=minimum,
                 max=maximum,
                 value=median,
-                step=None,
-                marks={minimum: 'min', median: 'med', maximum: 'max'},
+                step=(maximum - minimum) / 10,
+                marks={minimum: {'label': 'min'},
+                       median: {'label': 'med'},
+                       maximum: {'label': 'max'}},
             ),
         ]
     elif vars_df.loc[field, 'type'] == 'categorical':
@@ -704,19 +722,10 @@ def get_slider(field) -> List:
                 marks={k: v[:3] for k, v in category_lookup.items()}
             ),
         ]
-        create_slider_text_update_callback(field, category_lookup)
     else:
         raise ValueError(f"field {field} is invalid")
     return div
 
 
-def create_slider_text_update_callback(field: str, category_lookup):
-    def slider_text_update(value: int):
-        return [f"{vars_df.loc[field, 'short']} - {category_lookup[value]}"]
-
-    app.callback(output=Output(field + '_slider_state', 'children'),
-                 inputs=[Input(field + '_slider', 'value')], )(slider_text_update)
-
-
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, dev_tools_hot_reload=False)
