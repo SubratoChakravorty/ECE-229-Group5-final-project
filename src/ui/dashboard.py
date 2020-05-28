@@ -8,13 +8,15 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
+from functools import partial
 
 from src.config import variables_file, student_data_file
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
-from src.multivariate_methods import get_correlation_matrix
+from src.multivariate_methods import get_correlation_matrix, get_feature_importance
 
 # # Style configuration
 # external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -326,7 +328,29 @@ app.layout = html.Div(
             className="flex-display",
         ),
 
-        ######################################################< TAG4 PART >##################################################
+        # ################################################< TAG4 PART >#############################################
+
+        # Correllations
+        html.Div(
+            [
+                html.Div([
+                    html.H1("How Important?"),
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN','S1TEACTIV','S1STCHCONF',
+                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI']),
+                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="importance_bar")
+                        ]),
+                    ],
+                ),
+            ],
+            className="pretty_container",
+        ),
+
+        ######################################################< TAG5 PART >##################################################
 
         html.Div(
             [
@@ -590,6 +614,34 @@ def get_correlation_bar_plot(x: List[str], y: str):
         y=y,
     )
 
+@app.callback(Output('importance_bar', 'figure'),
+              [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
+def make_importance_bar_plot(x: List[str], y: str):
+    if not x:
+        fig = get_empty_sunburst("Select an x variable")
+    elif not y:
+        fig = get_empty_sunburst("Select a y variable")
+    else:
+        fig = get_importance_bar_plot(x, y)
+    return fig
+
+
+@fig_formatter()
+def get_importance_bar_plot(x: List[str], y: str):
+    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
+    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
+    for item in x:
+        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
+    importance = list(map(partial(get_feature_importance, field2=y),x))
+    series = pd.Series(importance, index=x,name=y)
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    series = series.rename(index=short_name_lookup)
+    return px.bar(
+        series,
+        x=series.index,
+        y=y,
+        color=y,
+    )
 
 if __name__ == '__main__':
     app.run_server(debug=True)
