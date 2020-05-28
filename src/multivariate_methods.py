@@ -15,10 +15,22 @@ from univariate_methods import get_var_info
 
 def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     '''
+<<<<<<< HEAD
     computes correlation matrix that captures correlation between features preesent in the fields parameter
     :param fields: list, list of fields names
     :param file_loc: string, path to the csv data file
     :return: pd.DataFrame, correlation matrix
+=======
+    Computes correlation matrix that captures correlation between features
+    presented in the fields parameter
+
+    :param fields: List of fields
+    :type fields: list
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: Correlation matrix.
+    :rtype: pandas.DataFrame
+>>>>>>> a5263e38e894711252f54dd0dc21321b832c25f1
     '''
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(file_loc, str), f"file_loc must be a string, not {type(file_loc)}"

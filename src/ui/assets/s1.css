@@ -601,6 +601,11 @@ there.
     padding: 0 10px !important;
     font-size: 12px !important;
   }
+  #documentation-button {
+    margin-top: 0px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+  }
   #button {
     display: flex;
     justify-content: center;
