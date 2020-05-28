@@ -155,8 +155,18 @@
             
   <h1>Source code for src.multivariate_methods</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="k">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="k">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
 
 <span class="kn">from</span> <span class="nn">.univariate_methods</span> <span class="k">import</span> <span class="n">load_data_frame</span>
+<span class="kn">from</span> <span class="nn">.univariate_methods</span> <span class="k">import</span> <span class="n">get_var_info</span>
 
 
 <div class="viewcode-block" id="get_correlation_matrix"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_correlation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_correlation_matrix</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
@@ -183,8 +193,99 @@
     <span class="k">return</span> <span class="n">corrmat</span></div>
 
 
+<div class="viewcode-block" id="MLmodel"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel">[docs]</a><span class="k">class</span> <span class="nc">MLmodel</span><span class="p">:</span>
 
-<span class="c1"># print(get_correlation_matrix([&#39;X1SCIEFF&#39;,&#39;X1SES&#39;,&#39;X1SCIUTI&#39;,&#39;COST_PERCEPTION&#39;,&#39;TCH_PRCVD_ATT&#39;]))</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span> <span class="o">=</span> <span class="n">get_var_info</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_cols</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cont_cols</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MLmodel.train_model"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel.train_model">[docs]</a>    <span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">num_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">test_split</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        train a machine learning model with y as dependent variable and variables in fields parameter as independent variables</span>
+<span class="sd">        :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else</span>
+<span class="sd">        model trained on complete data and training accuracy along with -1 in place of test accuracy returned.</span>
+<span class="sd">        :param num_trees: number of estimators in the random forest model</span>
+<span class="sd">        :param y: string, dependent variable, should be numerical/continuous</span>
+<span class="sd">        :param fields: list,  list of independent variables, can be numerical or categorical</span>
+<span class="sd">        :return: returns a tuple with training accuracy and test accuracy if test_split &gt; 0 else a tuple with training accuracy</span>
+<span class="sd">        and -1 in place of test accuracy.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">index</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_trees</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">num_trees</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">test_split</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+
+        <span class="n">df_sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">fields</span> <span class="o">+</span> <span class="p">[</span><span class="n">y</span><span class="p">]]</span>
+        <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>
+        <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="n">fields</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;categorical&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cont_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">]</span>
+        <span class="c1"># print(f&#39;Cat: {self.cat_cols} and cont: {self.cont_cols}&#39;)</span>
+
+        <span class="n">numeric_transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;imputer&#39;</span><span class="p">,</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">())])</span>
+
+        <span class="n">categorical_transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;imputer&#39;</span><span class="p">,</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;missing&#39;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;onehot&#39;</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">))])</span>
+
+        <span class="n">preprocessor</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+            <span class="n">transformers</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="n">numeric_transformer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cont_cols</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="n">categorical_transformer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_cols</span><span class="p">)])</span>
+
+        <span class="c1"># Append classifier to preprocessing pipeline.</span>
+        <span class="c1"># Now we have a full prediction pipeline.</span>
+        <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestRegressor</span>
+        <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;preprocessor&#39;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span>
+                              <span class="p">(</span><span class="s1">&#39;classifier&#39;</span><span class="p">,</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">num_trees</span><span class="p">))])</span>
+
+        <span class="k">if</span> <span class="n">test_split</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="MLmodel.predict_model"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel.predict_model">[docs]</a>    <span class="k">def</span> <span class="nf">predict_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        returns model&#39;s prediction for the input_data</span>
+<span class="sd">        :param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,</span>
+<span class="sd">        depending upon the number of samples</span>
+<span class="sd">        :return: returns a 1-d numpy array with predicted y value for each sample</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">input_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trained</span><span class="p">:</span>
+            <span class="n">test_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+                    <span class="n">test_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">test_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_data</span><span class="p">[</span><span class="n">field</span><span class="p">]]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Model not trained&quot;</span><span class="p">)</span></div></div>
+
 </pre></div>
 
            </div>

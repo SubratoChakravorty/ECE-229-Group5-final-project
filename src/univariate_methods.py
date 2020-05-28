@@ -240,17 +240,14 @@ def get_stats(field, file_loc="../data/student_data.csv", median=True):
     :type field: str
     :param file_loc: Path to the dataset
     :type file_loc: str
-    :returns: (min, median (mean), max)
+    :returns: tuple(min, max, median (mean))
     :rtype: tuple
     '''
     assert isinstance(field, str), f'field must be of type str, and not {type(field)}'
     assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'
 
     df = load_data_frame(file_loc)
-    var_info = get_var_info()
-    assert field in var_info.index, 'Invalid field name'
-    assert var_info.loc[field]['type'] == 'continuous', 'field column must have continuous/numerical data and not' \
-                                                        ' categorical data'
+    assert field in df.columns
 
     minm = df[field].min()
     maxm = df[field].max()
