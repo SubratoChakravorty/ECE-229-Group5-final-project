@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
 from src.config import variables_file, student_data_file
-from src.multivariate_methods import get_correlation_matrix
+from src.multivariate_methods import get_correlation_matrix, MLmodel
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
 
@@ -112,7 +112,6 @@ def get_slider(field) -> List:
                 marks={minimum: f'{minimum: .1f}',
                        median: f'{median: .1f}',
                        maximum: f'{maximum: .1f}'},
-                tooltip=dict(always_visible=True, placement='bottom')
             ),
         ],
             style={'display': 'none'},
@@ -718,6 +717,12 @@ def get_correlation_bar_plot(x: List[str], y: str):
               [State('ml_sliders', 'children')],
               prevent_initial_call=False)
 def show_ml_sliders(fields: List, state: List):
+    """
+    Show the sliders that were selected using the multiple dropdown. Hide the others.
+    :param fields: List of fields
+    :param state: children of the ml_sliders <P>
+    :return: updated state
+    """
     for n, f in enumerate(vars_df.index):
         if f in fields:
             state[n]['props']['style'] = None
@@ -726,7 +731,13 @@ def show_ml_sliders(fields: List, state: List):
     return state
 
 
-def assign_slider_text_update_callback(field: str):
+def assign_slider_text_update_callback(field: str) -> None:
+    """
+    Register a callback on the text above categorical sliders. It will then update that text according to the current
+    selection.
+
+    :param field: the categorical data field
+    """
     _, category_lookup = get_categories(field, student_data_file)
 
     def slider_text_update(value: int):
@@ -741,15 +752,38 @@ for field in vars_df.loc[vars_df['type'] == 'categorical'].index:
     assign_slider_text_update_callback(field)
 
 
-# slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
-#
-#
-# @app.callback(Output('ml_prediction_plot', 'figure'),
-#               [Input('ml_independent_var_selector', 'value'),
-#                Input('ml_dependent_var_selector', 'value'),
-#                Input('ml_x_axis_selector', 'value')] + slider_inputs)
-# def make_prediction_plot():
-#     pass
+slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
+
+
+@app.callback(Output('ml_prediction_plot', 'figure'),
+              [Input('ml_independent_var_selector', 'value'),
+               Input('ml_dependent_var_selector', 'value'),
+               Input('ml_x_axis_selector', 'value')] + slider_inputs)
+def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: float):
+    n_points = 20
+
+    # train model
+    model = MLmodel(student_data_file)
+    fields = set(exog)
+    fields.add(x_var)
+    accuracy, _ = model.train_model(y=endog, fields=list(fields))
+
+    # create x_var range
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+
+    # create input data
+    indices = [n for n, x in enumerate(vars_df.index) if x in exog]
+    scalar_values = [slider_values[i] for i in indices]
+    scalar_values = np.array([get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v for v, field in zip(scalar_values, exog)])
+    scalar_values = np.tile(scalar_values, (n_points, 1)).T
+    input_data = dict(zip(exog, scalar_values))
+    input_data[x_var] = x_range
+
+    # predict
+    y = model.predict_model(input_data)
+
+    return px.line(x=x_range, y=y)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ from typing import Union, Tuple
 
 import pandas as pd
 
-from src.config import variables_file
+from src.config import variables_file, student_data_file
 
 
 def return_fields(file_loc="../data/student_data.csv"):
@@ -211,7 +211,7 @@ def get_var_group(group, file_loc="../data/var_group.json"):
     return content[group]
 
 
-def get_var_info(file_loc="../data/variables.csv"):
+def get_var_info(file_loc=variables_file):
     """
     Get variable information
     Usage
@@ -232,7 +232,7 @@ def get_var_info(file_loc="../data/variables.csv"):
     return df
 
 
-def get_stats(field, file_loc="../data/student_data.csv", median=True):
+def get_stats(field, file_loc=student_data_file, median=True):
     '''
     Returns min,median(mean) and max of a numerical field
 
@@ -262,7 +262,7 @@ def get_stats(field, file_loc="../data/student_data.csv", median=True):
     return minm, mid, maxm
 
 
-def get_categories(field, file_loc) -> Tuple[int, dict]:
+def get_categories(field, file_loc=student_data_file) -> Tuple[int, dict]:
     '''
     'returns the most common category as int and dictionary with mapping from integers to categories.
     :param field: categorical field
