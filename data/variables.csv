@@ -32,5 +32,5 @@ X1RACE,Student's race,Student's race,categorical
 X1GEN,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
 X1TSRACE,Teacher's race,Science teacher's race,categorical
-COST_PERCEPTION, Perceived cost, Perceived costs of trying to succeed in STEM, continuous
-TCH_PRCVD_ATT, Perceived teacher's affirming attitude, Level for the perceived affirming attitude, continuous
+COST_PERCEPTION, Perceived cost, Perceived costs of trying to succeed in STEM,continuous
+TCH_PRCVD_ATT, Perceived teacher's affirming attitude, Level for the perceived affirming attitude,continuous
