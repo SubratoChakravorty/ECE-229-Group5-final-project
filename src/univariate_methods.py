@@ -214,3 +214,24 @@ def get_var_info(file_loc="../data/variables.csv"):
     
     # Multiple variables
     return df
+
+
+def get_stats(field, file_loc):
+    """
+    Return the statistics of the column for the given data.
+
+    :param field: The column of interest
+    :type field: str
+    :param file_loc: Path to the dataset
+    :type file_loc: str
+    :returns: (min, max, median)
+    :rtype: tuple(float)
+    """
+    assert isinstance(field, str) and isinstance(file_loc, str)
+
+
+    df = pd.read_csv(file_loc)
+
+    assert field in df.columns
+
+    return df[field].min(), df[field].max(), df[field].median()
