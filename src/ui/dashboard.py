@@ -1,6 +1,7 @@
 """
 Just run using `python dashboard.py`
 """
+from functools import partial
 from typing import List
 
 import dash
@@ -12,15 +13,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
-from functools import partial
+from flask_caching import Cache
 
-from src.config import variables_file, student_data_file
-from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
-from src.multivariate_methods import get_correlation_matrix, get_feature_importance
-
-# # Style configuration
-# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app.css.append_css({"external_url":external_css})
+from src.config import variables_file, student_data_file, cache_dir
+from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
+    get_categories
 
 # color for frontend
 colors = {
@@ -48,14 +46,19 @@ report_text = """
                                         """
 
 
-def populate_dropdown(category: str) -> List[dict]:
+def populate_dropdown(category: str = None) -> List[dict]:
     """
-    Generate a list of dictionaries to use to populate the dropdown menues
-    :param category: 'continuous' or 'categorical'
+    Generate a list of dictionaries to use to populate the dropdown menus
+
+    :param category: 'continuous' or 'categorical'. If `None` select all variables.
     :return: a list of dicts with keys 'label' and 'value'
     """
-    assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
-    df = vars_df.loc[vars_df['type'] == category, 'short']
+    if category is not None:
+        assert category in ['continuous',
+                            'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
+        df = vars_df.loc[vars_df['type'] == category, 'short']
+    else:
+        df = vars_df['short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
@@ -72,7 +75,9 @@ def fig_formatter(**kw):
                               paper_bgcolor='rgba(0,0,0,0)',
                               plot_bgcolor='rgba(0,0,0,0)')
             return fig
+
         return wrapped
+
     return wrap
 
 
@@ -95,8 +100,60 @@ def make_correlation_heatmap():
     return fig
 
 
+def get_slider(field) -> List:
+    field_name = vars_df.loc[field, 'short']
+    if vars_df.loc[field, 'type'] == 'continuous':
+        minimum, median, maximum = tuple(round(v, 1) for v in get_stats(field, student_data_file))
+        div = html.Div([
+            html.P(children=[field_name], id=field + '_slider_state'),
+            dcc.Slider(
+                id=field + '_slider',
+                min=minimum,
+                max=maximum,
+                value=median,
+                step=0.1,
+                updatemode='drag',
+                marks={minimum: f'{minimum: .1f}',
+                       median: f'{median: .1f}',
+                       maximum: f'{maximum: .1f}'},
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    elif vars_df.loc[field, 'type'] == 'categorical':
+        mode, category_lookup = get_categories(field, student_data_file)
+        div = html.Div([
+            html.P(children=[field_name], id=field + '_slider_state'),
+            dcc.Slider(
+                id=field + '_slider',
+                min=1,
+                max=len(category_lookup),
+                value=mode,
+                step=1,
+                included=False,
+                updatemode='drag',
+                marks={k: v[:3] if isinstance(v, str) else str(v) for k, v in category_lookup.items()}
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    else:
+        raise ValueError(f"field {field} is invalid")
+    return div
+
+
+# Initialize app and cache
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-                external_stylesheets=[dbc.themes.BOOTSTRAP])
+                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                suppress_callback_exceptions=True)
+CACHE_CONFIG = {
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': cache_dir,
+}
+cache = Cache()
+cache.init_app(app.server, config=CACHE_CONFIG)
 
 # Create app layout
 app.layout = html.Div(
@@ -143,7 +200,7 @@ app.layout = html.Div(
                         html.A(
                             html.Button("github", id="learn-more-button"),
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
-                        ),   
+                        ),
                     ],
                     className="three-third column",
                     id="github-button",
@@ -192,6 +249,7 @@ app.layout = html.Div(
 
         # ##############################################< TAG2 PART >############################################
 
+        # Explore
         html.Div(
             [
                 html.Div(
@@ -228,6 +286,7 @@ app.layout = html.Div(
 
         # ################################################< TAG3 PART >#############################################
 
+        # Histogram
         html.Div(
             [
                 html.Div(
@@ -323,9 +382,54 @@ app.layout = html.Div(
                     className="pretty_container six columns"
                 ),
                 html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
-                         className="pretty_container six columns",),
+                         className="pretty_container six columns", ),
             ],
             className="flex-display",
+        ),
+
+        # ################################################< TAG3 PART >#############################################
+
+        # ML Model
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Predictor"),
+                        html.P(
+                            [
+                                "Select variables:",
+                                dcc.Dropdown(
+                                    id="ml_independent_var_selector",
+                                    options=populate_dropdown(),
+                                    value=['X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1SES', 'X3TGPAENG', 'N1HIDEG'],
+                                    multi=True
+                                ),
+                                "Select value to predict:",
+                                dcc.Dropdown(
+                                    id="ml_dependent_var_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
+                                ),
+                                "Select x-axis:",
+                                dcc.Dropdown(
+                                    id="ml_x_axis_selector",
+                                    options=populate_dropdown(),
+                                    value='X3TGPAMAT'
+                                ),
+                            ]
+                        ),
+                        html.Div([get_slider(field) for field in vars_df.index], id='ml_sliders'),
+                    ],
+                    className="pretty_container four columns",
+                    id="ml_controls",
+                ),
+                html.Div(
+                    [dcc.Graph(id="ml_prediction_plot")],
+                    className="pretty_container eight columns",
+                ),
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
         # ################################################< TAG4 PART >#############################################
@@ -385,14 +489,14 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
         html.Div(
-                    [
-                        html.A(
-                            html.Button("documentation", id="documentation-button"),
-                            href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
-                        ),
-                    ],
-                    className="two-half column",
-                    id="doc-button",
+            [
+                html.A(
+                    html.Button("documentation", id="documentation-button"),
+                    href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
+                ),
+            ],
+            className="two-half column",
+            id="doc-button",
         ),
     ],
     id="mainContainer",
@@ -643,5 +747,90 @@ def get_importance_bar_plot(x: List[str], y: str):
         color=y,
     )
 
+@app.callback(Output('ml_sliders', 'children'),
+              [Input('ml_independent_var_selector', 'value')],
+              [State('ml_sliders', 'children')],
+              prevent_initial_call=False)
+def show_ml_sliders(fields: List, state: List):
+    """
+    Show the sliders that were selected using the multiple dropdown. Hide the others.
+    :param fields: List of fields
+    :param state: children of the ml_sliders <P>
+    :return: updated state
+    """
+    for n, f in enumerate(vars_df.index):
+        if f in fields:
+            state[n]['props']['style'] = None
+        else:
+            state[n]['props']['style'] = dict(display='none')
+    return state
+
+
+def assign_slider_text_update_callback(field: str) -> None:
+    """
+    Register a callback on the text above categorical sliders. It will then update that text according to the current
+    selection.
+
+    :param field: the categorical data field
+    """
+    if vars_df.loc[field, 'type'] == 'categorical':
+        _, category_lookup = get_categories(field, student_data_file)
+
+        def slider_text_update(value: int):
+            return [f"{vars_df.loc[field, 'short']} | {category_lookup[value]}"]
+    else:
+        def slider_text_update(value: float):
+            return [f"{vars_df.loc[field, 'short']} | {value:.1f}"]
+
+    app.callback(output=Output(field + '_slider_state', 'children'),
+                 inputs=[Input(field + '_slider', 'value')],
+                 prevent_initial_call=False)(slider_text_update)
+
+
+for field in vars_df.index:
+    assign_slider_text_update_callback(field)
+
+
+slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
+
+
+@app.callback(Output('ml_prediction_plot', 'figure'),
+              [Input('ml_independent_var_selector', 'value'),
+               Input('ml_dependent_var_selector', 'value'),
+               Input('ml_x_axis_selector', 'value')] + slider_inputs)
+def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: float):
+    n_points = 20
+
+    # train model
+    model = train_model(endog, exog, x_var)
+
+    # create x_var range
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+
+    # create input data
+    indices = [n for n, x in enumerate(vars_df.index) if x in exog]
+    scalar_values = [slider_values[i] for i in indices]
+    scalar_values = np.array([get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v for v, field in zip(scalar_values, exog)])
+    scalar_values = np.tile(scalar_values, (n_points, 1)).T
+    input_data = dict(zip(exog, scalar_values))
+    input_data[x_var] = x_range
+
+    # predict
+    y = model.predict_model(input_data)
+
+    return px.line(x=x_range, y=y,
+                   labels=dict(x=vars_df.loc[x_var, 'short'], y=vars_df.loc[endog, 'short']))
+
+
+@cache.memoize()
+def train_model(endog, exog, x_var):
+    model = MLmodel(student_data_file)
+    fields = set(exog)
+    fields.add(x_var)
+    accuracy, _ = model.train_model(y=endog, fields=list(fields))
+    return model
+
+
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, dev_tools_hot_reload=False)

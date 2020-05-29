@@ -30,5 +30,5 @@ SCH_CONTROL,School control,School control,categorical
 SCH_LOCALE,School locale,School locale (urbanicity),categorical
 X1GEN,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
-COST_PERCEPTION, Perceived cost, Perceived costs of trying to succeed in STEM, continuous
-TCH_PRCVD_ATT, Perceived teacher's affirming attitude, Level for the perceived affirming attitude, continuous
+COST_PERCEPTION,Perceived cost,Perceived costs of trying to succeed in STEM,continuous
+TCH_PRCVD_ATT,Perceived teacher's affirming attitude,Level for the perceived affirming attitude,continuous

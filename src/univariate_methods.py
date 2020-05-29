@@ -262,6 +262,7 @@ def get_stats(field, file_loc=config.student_data_file, median=True):
     return minm, mid, maxm
 
 
+
 def get_categories(field, file_loc=config.student_data_file) -> Tuple[int, dict]:
     '''
     'returns the most common category as int and dictionary with mapping from integers to categories.
@@ -277,7 +278,7 @@ def get_categories(field, file_loc=config.student_data_file) -> Tuple[int, dict]
     assert isinstance(file_loc, str), f'file_loc must be of type str, and not {type(file_loc)}'
 
     df = load_data_frame(file_loc)
-    var_info = get_var_info()
+    var_info = get_var_info(config.variables_file)
     assert field in var_info.index, 'Invalid field name'
     assert var_info.loc[field]['type'] == 'categorical', 'field column must have categorical data and not' \
                                                          ' continuous/numerical data'

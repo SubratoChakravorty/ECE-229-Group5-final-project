@@ -8,6 +8,7 @@ dependencies:
   - pytest==5.4.2
   - selenium>=3
   - scikit-learn>=0.22
+  - flask-caching>=1.7
   - pip
   - pip:
     - dash[testing]
