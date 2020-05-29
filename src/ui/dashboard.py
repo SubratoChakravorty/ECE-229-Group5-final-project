@@ -2,7 +2,7 @@
 Just run using `python dashboard.py`
 """
 from functools import partial
-from typing import List, Union
+from typing import List, Union, Dict, Tuple
 
 import dash
 import dash_bootstrap_components as dbc
@@ -342,18 +342,20 @@ app.layout = html.Div(
                                              options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
-                    id="explore part"
+                    id="explore-part"
                 ),
                 html.Div([dcc.Graph(id="sunburst_plot"),
                           html.P("Tips:"),
                           html.P("The color of each segment indicates the mean of the selected score"),
                           html.P("The size of each segment represents the size of that student population"),
                           html.P("Click on a category to zoom in"), ],
-                         className="pretty_container four columns",id="sunburst plot"),
+                         className="pretty_container four columns",
+                         id="sunburst-div"),
                 html.Div([dcc.Graph(id="second_explore_plot"),
                           html.P("Tips:"),
                           html.P("The x-axis is the first-selected categorical variable"), ],
-                         className="pretty_container four columns",id="sunburst bar chart"),
+                         className="pretty_container four columns",
+                         id="sunburst-bar-chart"),
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
@@ -724,7 +726,6 @@ def get_importance_bar_plot(x: List[str], y: str):
               [Input('ml_independent_var_selector', 'value')],
               [State('ml_sliders', 'children')],
               prevent_initial_call=False)
-
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
@@ -760,13 +761,14 @@ def assign_slider_text_update_callback(field: str) -> None:
                  inputs=[Input(field + '_slider', 'value')],
                  prevent_initial_call=False)(slider_text_update)
 
+
 for field in vars_df.index:
     assign_slider_text_update_callback(field)
 
 slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
 
 
-@app.callback([Output('ml_prediction_plot','figure'),Output('ml_prediction_plot2','figure')],
+@app.callback([Output('ml_prediction_plot', 'figure'), Output('ml_prediction_plot2', 'figure')],
               [Input('ml_independent_var_selector', 'value'),
                Input('ml_dependent_var_selector', 'value'),
                Input('ml_x_axis_selector', 'value')] + slider_inputs)
@@ -782,7 +784,6 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     """
     n_points = 20
 
-    n_points = 20
     # train model
     model = train_model(endog, exog, x_var)
 
@@ -791,16 +792,32 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     x_range = np.linspace(x_min, x_max, n_points)
 
     # create input data
-    value_dict = {x: slider_values[n] for n, x in enumerate(vars_df.index) if x in exog}
+    input_data = generate_model_input(x_range, exog, slider_values, x_var, n_points)
+
+    # predict
+    y = model.predict_model(input_data)
+    plt = get_line_plot(x_range, y, x_var, endog)
+    return plt, plt
+
+
+def generate_model_input(x_range: np.ndarray, exog: List[str], x_values: Tuple[float], x_var: str, n_points: int) -> \
+        Dict[str, Union[np.ndarray, List]]:
+    """
+    Produce a dictionary to be passed to the model for prediction
+    :param x_range: The values of x_var
+    :param exog: The field to predict
+    :param x_values: The slider values
+    :param x_var: The continuous exogenous variable
+    :param n_points: The number of points of the exogenous variable to use
+    :return: {field: [v1, ..., vn]}
+    """
+    value_dict = {x: x_values[n] for n, x in enumerate(vars_df.index) if x in exog}
     value_dict = convert_category_number_to_str(value_dict)
     exog, scalar_values = tuple(zip(*[(k, v) for k, v in value_dict.items()]))
     scalar_values = np.tile(np.array(scalar_values), (n_points, 1)).T
     input_data = dict(zip(exog, scalar_values))
     input_data[x_var] = x_range
-
-    # predict
-    y = model.predict_model(input_data)
-    return get_line_plot(x_range, y, x_var, endog),get_line_plot(x_range, y, x_var, endog)
+    return input_data
 
 
 def convert_category_number_to_str(d: dict):
@@ -877,18 +894,13 @@ def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
     """
     n_points = 20
     report = ""
-    x_min, _, x_max = get_stats(x_var)
-    x_range = np.linspace(x_min, x_max, n_points)
+
     # create x_var range
     x_min, _, x_max = get_stats(x_var)
     x_range = np.linspace(x_min, x_max, n_points)
+
     # create input data
-    indices = [n for n, x in enumerate(vars_df.index) if x in exog]
-    scalar_values = [slider_values[i] for i in indices]
-    scalar_values = np.array([get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v for v, field in zip(scalar_values, exog)])
-    scalar_values = np.tile(scalar_values, (n_points, 1)).T
-    input_data = dict(zip(exog, scalar_values))
-    input_data[x_var] = x_range
+    input_data = generate_model_input(x_range, exog, slider_values, x_var, n_points)
     look_up = vars_df['short'].to_dict()
     del input_data[x_var]
     for key in input_data:

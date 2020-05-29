@@ -81,4 +81,4 @@ def test_ui007_toggle_modal(dash_duo):
 
 def test_ui011_prediction_plot(dash_duo):
     dash_duo.start_server(app)
-    dash_duo.wait_for_contains_text('#ml_prediction_plot', "Science self-efficacy", timeout=5)
+    dash_duo.wait_for_contains_text('#ml_prediction_plot', "Science self-efficacy", timeout=10)
