@@ -237,7 +237,7 @@ app.layout = html.Div(
                     
                     #### 3. Explore
                     
-                    The data from this study is not perfect. This section allows you to explore some of the patterns
+                    Gain a better understanding of the data. This section allows you to explore some of the patterns
                     you see in greater detail, and to better understand the data behind the predictions.
                     
                     ### Dataset
