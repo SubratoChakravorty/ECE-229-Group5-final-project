@@ -5,6 +5,7 @@ from functools import partial
 from typing import List, Union
 
 import dash
+import dash_table
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -31,6 +32,7 @@ plot_lookup = {0: 'box plot',
 
 # Populate fields from data
 vars_df = get_var_info(variables_file)
+vars_df['code'] = vars_df.index
 
 report_text = """
  __   __    _______    _______    ______  
@@ -157,7 +159,7 @@ cache.init_app(app.server, config=CACHE_CONFIG)
 # Create app layout
 app.layout = html.Div(
     [
-        ######################################################< TOP PART >##################################################
+        # Title
         dcc.Store(id="aggregate_data"),
         # empty Div to trigger javascript file for graph resizing
         html.Div(id="output-clientside"),
@@ -212,8 +214,7 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"},
         ),
 
-        ######################################################< TAG1 PART >##################################################
-
+        # Introduction
         html.Div(
             [
                 dcc.Markdown(
@@ -254,9 +255,7 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
-        # ################################################< TAG3 PART >#############################################
-
-        # Correllations
+        # Correlations
         html.Div(
             [
                 html.Div([
@@ -281,8 +280,6 @@ app.layout = html.Div(
             ],
             className="flex-display",
         ),
-
-        # ################################################< TAG3 PART >#############################################
 
         # ML Model
         html.Div(
@@ -327,8 +324,6 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
-        # ##############################################< TAG2 PART >############################################
-
         # Explore
         html.Div(
             [
@@ -363,8 +358,6 @@ app.layout = html.Div(
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
-
-        # ################################################< TAG3 PART >#############################################
 
         # Histogram
         html.Div(
@@ -441,8 +434,23 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
-        ######################################################< TAG5 PART >##################################################
+        # Variable reference table
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Variables Reference"),
+                        dbc.Table.from_dataframe(vars_df, striped=True, bordered=True, hover=True)
+                    ],
+                    id='var-table',
+                    className="pretty_container four column",
+                )
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
 
+        # Report
         html.Div(
             [
                 html.Div(
@@ -475,6 +483,8 @@ app.layout = html.Div(
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
+
+        # Documentation link
         html.Div(
             [
                 html.A(
