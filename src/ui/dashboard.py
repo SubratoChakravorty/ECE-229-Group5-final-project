@@ -181,12 +181,14 @@ app.layout = html.Div(
                     [
                         html.Div(
                             [
-                                html.H3(
-                                    "Analysis of Ninth Grader’s Science Self Efficacy",
+                                html.H1(
+                                    "Boosting Interest in STEM",
                                     style={"margin-bottom": "0px"},
                                 ),
                                 html.H5(
-                                    "ECE229 - Team 5", style={"margin-top": "0px"}
+                                    """ECE229 - Team 5: Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, 
+                                    Heqian Lu, Kai Wang""",
+                                    style={"margin-top": "0px"}
                                 ),
                             ]
                         )
@@ -214,33 +216,39 @@ app.layout = html.Div(
 
         html.Div(
             [
-                html.H4(className='how', children="How to use this dashboard"),
+                dcc.Markdown(
+                    """
+                    ### How to use this dashboard
+                    
+                    #### 1. Correlations
+                    
+                    Understand what drives an interest in science. Look at the bright yellow and dark blue squares 
+                    in the correlation heatmap. Those indicate factors that are strongly correlated with each other. 
+                    Explore these in more detail using the selection menus. Use this understanding to choose variables
+                    that you think will be important in determining whether a student will continue in STEM. Test
+                    these variables in the next section.
+                    
+                    #### 2. Predictor
+                    
+                    This is an opportunity to create a "student" and see how various factors impact their interest
+                    in STEM. Choose the measurable you are looking to predict, choose the student's variables, then
+                    experiment to what factors might boost an interest in STEM.
+                    
+                    #### 3. Explore
+                    
+                    The data from this study is not perfect. This section allows you to explore some of the patterns
+                    you see in greater detail, and to better understand the data behind the predictions.
+                    
+                    ### Dataset
+                    This study employs public-use data from the 
+                    [High School Longitudinal Study of 2009 (HSLS:09)](https://nces.ed.gov/surveys/hsls09/). 
+                    The goal of the study is to understand the factors that lead students to choose science, technology, 
+                    engineering, and mathematics courses, majors, and careers.
 
-                html.P('1. Explore'
-                       'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
-                html.P(
-                    '2. Inspect'
-                    'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
-                html.P(
-                    '3. Insights'
-                    'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-
-                html.H4(className='Dataset', children="Dataset"),
-                html.P(
-                    'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
-                    'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
-                    'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-
-                html.P("Dataset can be downloaded by clicking: "),
-                html.Div([
-                    'Reference: ',
-                    html.A('Dataset',
-                           href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
-                ]),
-                html.H4(className='author', children="Author"),
-                html.P("Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang"),
-
-                html.Br()
+                    The dataset can be downloaded 
+                    [here](https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip).
+                    """
+                )
             ],
             className="pretty_container",
             style={"margin-bottom": "25px"}
