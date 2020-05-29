@@ -34,16 +34,14 @@ plot_lookup = {0: 'box plot',
 vars_df = get_var_info(variables_file)
 vars_df['code'] = vars_df.index
 
-report_text = """
- __   __    _______    _______    ______  
-|  | |  |  |       |  |       |  |      | 
-|  | |  |  |       |  |  _____|  |  _    |
-|  |_|  |  |       |  | |_____   | | |   |
-|       |  |      _|  |_____  |  | |_|   |
-|       |  |     |_    _____| |  |       |
-|_______|  |_______|  |_______|  |______| 
-
-    Report
+UCSD_text = """
+     _______.        _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  
+    /       |       /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ 
+   |   (----`      |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----'      |   (----`   |  .--.  |
+    \   \           \   \       |   __|        |   _  <    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |
+.----)   |      .----)   |      |  |____       |  |_)  |     |  |           |  `--'  |    |  `----.   .----)   |      |  '--'  |
+|_______/       |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ 
+                                                                                                                                
 
                                         """
 
@@ -343,17 +341,18 @@ app.layout = html.Div(
                                              options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
+                    id="explore part"
                 ),
                 html.Div([dcc.Graph(id="sunburst_plot"),
                           html.P("Tips:"),
                           html.P("The color of each segment indicates the mean of the selected score"),
                           html.P("The size of each segment represents the size of that student population"),
                           html.P("Click on a category to zoom in"), ],
-                         className="pretty_container four columns"),
+                         className="pretty_container four columns",id="sunburst plot"),
                 html.Div([dcc.Graph(id="second_explore_plot"),
                           html.P("Tips:"),
                           html.P("The x-axis is the first-selected categorical variable"), ],
-                         className="pretty_container four columns"),
+                         className="pretty_container four columns",id="sunburst bar chart"),
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
@@ -461,13 +460,14 @@ app.layout = html.Div(
                             [
                                 dbc.ModalHeader("Report"),
                                 dbc.ModalBody(
-                                    html.Pre(
-                                        report_text
-                                    ),
-                                    id="Report_body"
+                                    [
+                                        html.Pre(UCSD_text,id="Report_body"),
+                                        html.H2("This is your profile"),
+                                        html.Pre(id="report_text"),
+                                        dcc.Graph(id="ml_prediction_plot2")
+                                    ]
                                 ),
                                 dbc.ModalFooter([
-                                    dbc.Button("Save", id="save-xl", className="ml-auto"),  # todo: save
                                     dbc.Button("Close", id="close-xl", className="ml-auto"), ]
                                 ),
                             ],
@@ -504,10 +504,10 @@ app.layout = html.Div(
 # Report modal
 @app.callback(
     Output("modal-xl", "is_open"),
-    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
+    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks")],
     [State("modal-xl", "is_open")],
 )
-def toggle_modal(n1, n2, n3, is_open):
+def toggle_modal(n1, n2, is_open):
     if n1 or n2:
         return not is_open
     return is_open
@@ -720,7 +720,8 @@ def get_importance_bar_plot(x: List[str], y: str):
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
               [State('ml_sliders', 'children')],
-              prevent_initial_call=False)
+              )
+
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
@@ -753,9 +754,7 @@ def assign_slider_text_update_callback(field: str) -> None:
             return [f"{vars_df.loc[field, 'short']} | {value:.1f}"]
 
     app.callback(output=Output(field + '_slider_state', 'children'),
-                 inputs=[Input(field + '_slider', 'value')],
-                 prevent_initial_call=False)(slider_text_update)
-
+                 inputs=[Input(field + '_slider', 'value')])(slider_text_update)
 
 for field in vars_df.index:
     assign_slider_text_update_callback(field)
@@ -764,7 +763,7 @@ for field in vars_df.index:
 slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
 
 
-@app.callback(Output('ml_prediction_plot', 'figure'),
+@app.callback([Output('ml_prediction_plot','figure'),Output('ml_prediction_plot2','figure')],
               [Input('ml_independent_var_selector', 'value'),
                Input('ml_dependent_var_selector', 'value'),
                Input('ml_x_axis_selector', 'value')] + slider_inputs)
@@ -780,6 +779,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     """
     n_points = 20
 
+    n_points = 20
     # train model
     model = train_model(endog, exog, x_var)
 
@@ -797,7 +797,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
 
     # predict
     y = model.predict_model(input_data)
-    return get_line_plot(x_range, y, x_var, endog)
+    return get_line_plot(x_range, y, x_var, endog),get_line_plot(x_range, y, x_var, endog)
 
 
 @fig_formatter(t=30)
@@ -811,8 +811,66 @@ def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var:
     :param endog: endogenous (dependent) variable name
     :return: plotly figure
     """
-    return px.line(x=x, y=y,
-                   labels=dict(x=vars_df.loc[x_var, 'short'], y=vars_df.loc[endog, 'short']))
+    return px.line(x=x, y=y,labels=dict(x=vars_df.loc[x_var, 'short']))
+
+def add_frame(text):
+    """
+    Add frame to raw text.
+
+    :param text: raw report text
+    :return: report text with frame
+    """
+    raw_text = text.split("*")
+    framed_text = ""
+    width, hight = max(map(lambda x:len(x),raw_text)),len(raw_text)
+    framed_text += "-"*(width+2)
+    framed_text += "\n"
+    for t in raw_text:
+        if not t:
+            continue
+        framed_text += "|"
+        framed_text += t
+        framed_text += " "*(width-len(t))
+        framed_text += "|\n" 
+    framed_text += "-"*(width+2)
+    framed_text += "\n"
+    return framed_text
+
+@app.callback(Output('report_text', 'children'),
+              [Input('ml_independent_var_selector', 'value'),
+               Input('ml_dependent_var_selector', 'value'),
+               Input('ml_x_axis_selector', 'value')] + slider_inputs)
+def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
+    """
+    Generate report text.
+
+    :param exog: List of fields
+    :param endog: y variable
+    :param x_var: variable of x-axis
+    :param slider_values: values of all sliders in exog fields
+    :return: report text
+    """
+    n_points = 20
+    report = ""
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+    # create x_var range
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+    # create input data
+    indices = [n for n, x in enumerate(vars_df.index) if x in exog]
+    scalar_values = [slider_values[i] for i in indices]
+    scalar_values = np.array([get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v for v, field in zip(scalar_values, exog)])
+    scalar_values = np.tile(scalar_values, (n_points, 1)).T
+    input_data = dict(zip(exog, scalar_values))
+    input_data[x_var] = x_range
+    look_up = vars_df['short'].to_dict()
+    del input_data[x_var]
+    for key in input_data:
+        report += "*"
+        report = report + str(look_up[key]) + ": " + str(input_data[key][0])
+    report = add_frame(report)
+    return report
 
 
 @cache.memoize()
