@@ -75,7 +75,6 @@ def test_ui007_toggle_modal(dash_duo):
     dash_duo.wait_for_element("#close-xl", timeout=5)
     dash_duo.multiple_click("#close-xl", clicks=1)
 
-
     dash_duo.wait_for_element("#save-xl", timeout=5)
     dash_duo.multiple_click("#save-xl", clicks=1)
 
@@ -83,3 +82,8 @@ def test_ui007_toggle_modal(dash_duo):
 def test_ui010_correlation_plot(dash_duo):
     dash_duo.start_server(app)
     dash_duo.wait_for_contains_text('#correlation_bar', "X1SCIEFF", timeout=5)
+
+
+def test_ui011_prediction_plot(dash_duo):
+    dash_duo.start_server(app)
+    dash_duo.wait_for_contains_text('#ml_prediction_plot', "Science self-efficacy", timeout=5)
