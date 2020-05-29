@@ -247,6 +247,97 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
+        # ################################################< TAG3 PART >#############################################
+
+        # Correllations
+        html.Div(
+            [
+                html.Div([
+                    html.H1("Correlation"),
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
+                                            'S1TEFRNDS', 'X1SCIINT']),
+                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="correlation_bar")
+                    ]),
+                ],
+                    className="pretty_container six columns"
+                ),
+                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
+                         className="pretty_container six columns", ),
+            ],
+            className="flex-display",
+        ),
+
+        # ################################################< TAG4 PART >#############################################
+
+        # Correllations2
+        html.Div(
+            [
+                html.Div([
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN','S1TEACTIV','S1STCHCONF',
+                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI']),
+                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="importance_bar")
+                        ]),
+                    ],
+                ),
+            ],
+            className="pretty_container",
+        ),
+
+        # ################################################< TAG3 PART >#############################################
+
+        # ML Model
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Predictor"),
+                        html.P(
+                            [
+                                "Select variables:",
+                                dcc.Dropdown(
+                                    id="ml_independent_var_selector",
+                                    options=populate_dropdown(),
+                                    value=['X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1SES', 'X3TGPAENG', 'N1HIDEG'],
+                                    multi=True
+                                ),
+                                "Select value to predict:",
+                                dcc.Dropdown(
+                                    id="ml_dependent_var_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
+                                ),
+                                "Select x-axis:",
+                                dcc.Dropdown(
+                                    id="ml_x_axis_selector",
+                                    options=populate_dropdown(),
+                                    value='X3TGPAMAT'
+                                ),
+                            ]
+                        ),
+                        html.Div([get_slider(field) for field in vars_df.index], id='ml_sliders'),
+                    ],
+                    className="pretty_container four columns",
+                    id="ml_controls",
+                ),
+                html.Div(
+                    [dcc.Graph(id="ml_prediction_plot")],
+                    className="pretty_container eight columns",
+                ),
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
+
         # ##############################################< TAG2 PART >############################################
 
         # Explore
@@ -360,98 +451,6 @@ app.layout = html.Div(
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
-        ),
-
-        # ################################################< TAG3 PART >#############################################
-
-        # Correllations
-        html.Div(
-            [
-                html.Div([
-                    html.H1("Correlation"),
-                    html.P([
-                        "Select x-axis:",
-                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
-                                            'S1TEFRNDS', 'X1SCIINT']),
-                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
-                                     value='X1SCIEFF'),
-                        dcc.Graph(id="correlation_bar")
-                    ]),
-                ],
-                    className="pretty_container six columns"
-                ),
-                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
-                         className="pretty_container six columns", ),
-            ],
-            className="flex-display",
-        ),
-
-        # ################################################< TAG3 PART >#############################################
-
-        # ML Model
-        html.Div(
-            [
-                html.Div(
-                    [
-                        html.H1("Predictor"),
-                        html.P(
-                            [
-                                "Select variables:",
-                                dcc.Dropdown(
-                                    id="ml_independent_var_selector",
-                                    options=populate_dropdown(),
-                                    value=['X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1SES', 'X3TGPAENG', 'N1HIDEG'],
-                                    multi=True
-                                ),
-                                "Select value to predict:",
-                                dcc.Dropdown(
-                                    id="ml_dependent_var_selector",
-                                    options=populate_dropdown('continuous'),
-                                    value='X1SCIEFF'
-                                ),
-                                "Select x-axis:",
-                                dcc.Dropdown(
-                                    id="ml_x_axis_selector",
-                                    options=populate_dropdown(),
-                                    value='X3TGPAMAT'
-                                ),
-                            ]
-                        ),
-                        html.Div([get_slider(field) for field in vars_df.index], id='ml_sliders'),
-                    ],
-                    className="pretty_container four columns",
-                    id="ml_controls",
-                ),
-                html.Div(
-                    [dcc.Graph(id="ml_prediction_plot")],
-                    className="pretty_container eight columns",
-                ),
-            ],
-            className="flex-display",
-            style={"margin-bottom": "25px"}
-        ),
-
-        # ################################################< TAG4 PART >#############################################
-
-        # Correllations
-        html.Div(
-            [
-                html.Div([
-                    html.H1("How Important?"),
-                    html.P([
-                        "Select x-axis:",
-                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN','S1TEACTIV','S1STCHCONF',
-                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI']),
-                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
-                                     value='X1SCIEFF'),
-                        dcc.Graph(id="importance_bar")
-                        ]),
-                    ],
-                ),
-            ],
-            className="pretty_container",
         ),
 
         ######################################################< TAG5 PART >##################################################
