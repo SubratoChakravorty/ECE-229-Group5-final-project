@@ -1,6 +1,7 @@
 """
 Just run using `python dashboard.py`
 """
+from functools import partial
 from typing import List
 
 import dash
@@ -8,13 +9,14 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 from flask_caching import Cache
 
 from src.config import variables_file, student_data_file, cache_dir
-from src.multivariate_methods import get_correlation_matrix, MLmodel
+from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
 
@@ -422,41 +424,37 @@ app.layout = html.Div(
                     id="ml_controls",
                 ),
                 html.Div(
-                    [
-                        html.Div(
-                            [
-                                html.Div(
-                                    [html.H6(id="ml_max_value"), html.P("Max Value")],
-                                    className="mini_container",
-                                ),
-                                html.Div(
-                                    [html.H6(id="ml_min_value"), html.P("Min Value")],
-                                    className="mini_container",
-                                ),
-                                html.Div(
-                                    [html.H6(id="ml_mean_value"), html.P("Mean Value")],
-                                    className="mini_container",
-                                ),
-                                html.Div(
-                                    [html.H6(id="ml_median_value"), html.P("Median Value")],
-                                    className="mini_container",
-                                ),
-                            ],
-                            className="container-display",
-                        ),
-                        html.Div(
-                            [dcc.Graph(id="ml_prediction_plot")],
-                            className="pretty_container",
-                        ),
-                    ],
-                    className="eight columns",
+                    [dcc.Graph(id="ml_prediction_plot")],
+                    className="pretty_container eight columns",
                 ),
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
 
-        ######################################################< TAG4 PART >##################################################
+        # ################################################< TAG4 PART >#############################################
+
+        # Correllations
+        html.Div(
+            [
+                html.Div([
+                    html.H1("How Important?"),
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN','S1TEACTIV','S1STCHCONF',
+                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI']),
+                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="importance_bar")
+                        ]),
+                    ],
+                ),
+            ],
+            className="pretty_container",
+        ),
+
+        ######################################################< TAG5 PART >##################################################
 
         html.Div(
             [
@@ -720,6 +718,34 @@ def get_correlation_bar_plot(x: List[str], y: str):
         y=y,
     )
 
+@app.callback(Output('importance_bar', 'figure'),
+              [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
+def make_importance_bar_plot(x: List[str], y: str):
+    if not x:
+        fig = get_empty_sunburst("Select an x variable")
+    elif not y:
+        fig = get_empty_sunburst("Select a y variable")
+    else:
+        fig = get_importance_bar_plot(x, y)
+    return fig
+
+
+@fig_formatter()
+def get_importance_bar_plot(x: List[str], y: str):
+    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
+    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
+    for item in x:
+        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
+    importance = list(map(partial(get_feature_importance, field2=y),x))
+    series = pd.Series(importance, index=x,name=y)
+    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
+    series = series.rename(index=short_name_lookup)
+    return px.bar(
+        series,
+        x=series.index,
+        y=y,
+        color=y,
+    )
 
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
