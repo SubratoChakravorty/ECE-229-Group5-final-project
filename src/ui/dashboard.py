@@ -2,7 +2,7 @@
 Just run using `python dashboard.py`
 """
 from functools import partial
-from typing import List
+from typing import List, Union
 
 import dash
 import dash_core_components as dcc
@@ -85,7 +85,7 @@ correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'cont
                                             student_data_file)
 
 
-@fig_formatter()
+@fig_formatter(t=30)
 def make_correlation_heatmap():
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     df = correlation_matrix.rename(columns=short_name_lookup)
@@ -259,8 +259,12 @@ app.layout = html.Div(
         # Correllations
         html.Div(
             [
-                html.H1("Correlation"),
-                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],),
+                html.Div([
+                    html.H1("Correlation"),
+                    html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
+                ],
+                    className="pretty_container six columns"
+                ),
                 html.Div([
                     html.P([
                         "Select x-axis:",
@@ -270,11 +274,12 @@ app.layout = html.Div(
                         dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
                                      value='X1SCIEFF'),
                         dcc.Graph(id="importance_bar")
-                        ]),
-                    ],
+                    ]),
+                ],
+                    className="pretty_container six columns"
                 ),
             ],
-            className="pretty_container",
+            className="flex-display",
         ),
 
         # ################################################< TAG3 PART >#############################################
@@ -754,6 +759,15 @@ slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
                Input('ml_dependent_var_selector', 'value'),
                Input('ml_x_axis_selector', 'value')] + slider_inputs)
 def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: float):
+    """
+    Callback to generate the prediction plot
+
+    :param exog: exogenous (independent) variable names as a list
+    :param endog: endogenous (dependent) variable name
+    :param x_var: another exogenous variable to be used as the plot's x-axis
+    :param slider_values: tuple of the values of the sliders, including the hidden ones
+    :return: plotly figure
+    """
     n_points = 20
 
     # train model
@@ -773,17 +787,38 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
 
     # predict
     y = model.predict_model(input_data)
+    return get_line_plot(x_range, y, x_var, endog)
 
-    return px.line(x=x_range, y=y,
+
+@fig_formatter(t=30)
+def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var: str, endog: str):
+    """
+    Generate a line plot
+
+    :param x: numpy array or list of x-values
+    :param y: numpy array or list of y-values
+    :param x_var: name of x-variable
+    :param endog: endogenous (dependent) variable name
+    :return: plotly figure
+    """
+    return px.line(x=x, y=y,
                    labels=dict(x=vars_df.loc[x_var, 'short'], y=vars_df.loc[endog, 'short']))
 
 
 @cache.memoize()
-def train_model(endog, exog, x_var):
+def train_model(endog: str, exog: List[str], x_var: str):
+    """
+    Train predictive model based on the chosen variables
+
+    :param endog: endogenous (dependent) variable name
+    :param exog: exogenous (independent) variable names as a list
+    :param x_var: another exogenous variable that will be used as the x-axis in the plot
+    :return:
+    """
     model = MLmodel(student_data_file)
     fields = set(exog)
     fields.add(x_var)
-    accuracy, _ = model.train_model(y=endog, fields=list(fields))
+    model.train_model(y=endog, fields=list(fields))
     return model
 
 
