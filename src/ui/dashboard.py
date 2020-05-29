@@ -5,9 +5,8 @@ from functools import partial
 from typing import List, Union
 
 import dash
-import dash_table
-import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
 import pandas as pd
@@ -33,6 +32,7 @@ plot_lookup = {0: 'box plot',
 # Populate fields from data
 vars_df = get_var_info(variables_file)
 vars_df['code'] = vars_df.index
+self_efficacy_predictors = ['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SES', 'X1GEN']
 
 report_text = """
  __   __    _______    _______    ______  
@@ -115,7 +115,7 @@ def get_slider(field) -> List:
                 step=0.1,
                 updatemode='drag',
                 marks={minimum: f'{minimum: .1f}',
-                       median: f'{median: .1f}',
+                       median : f'{median: .1f}',
                        maximum: f'{maximum: .1f}'},
             ),
         ],
@@ -151,7 +151,7 @@ app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=devi
                 suppress_callback_exceptions=True)
 CACHE_CONFIG = {
     'CACHE_TYPE': 'filesystem',
-    'CACHE_DIR': cache_dir,
+    'CACHE_DIR' : cache_dir,
 }
 cache = Cache()
 cache.init_app(app.server, config=CACHE_CONFIG)
@@ -268,8 +268,9 @@ app.layout = html.Div(
                     html.P([
                         "Select x-axis:",
                         dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN','S1TEACTIV','S1STCHCONF',
-                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI']),
+                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN', 'S1TEACTIV', 'S1STCHCONF',
+                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT',
+                                            'X3TGPASCI']),
                         dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
                                      value='X1SCIEFF'),
                         dcc.Graph(id="importance_bar")
@@ -293,7 +294,7 @@ app.layout = html.Div(
                                 dcc.Dropdown(
                                     id="ml_independent_var_selector",
                                     options=populate_dropdown(),
-                                    value=['X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1SES', 'X3TGPAENG', 'N1HIDEG'],
+                                    value=['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1GEN'],
                                     multi=True
                                 ),
                                 "Select value to predict:",
@@ -305,8 +306,8 @@ app.layout = html.Div(
                                 "Select x-axis:",
                                 dcc.Dropdown(
                                     id="ml_x_axis_selector",
-                                    options=populate_dropdown(),
-                                    value='X3TGPAMAT'
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SES'
                                 ),
                             ]
                         ),
@@ -333,7 +334,7 @@ app.layout = html.Div(
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
-                                             multi=True, value=['N1HIDEG'])]),
+                                             multi=True, value=['SCH_LOCALE', 'N1HIDEG', 'SCIJOB'])]),
                         html.P(["Select score:",
                                 dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
                                              value='X1SCIEFF'), ]),
@@ -706,8 +707,8 @@ def get_importance_bar_plot(x: List[str], y: str):
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-    importance = list(map(partial(get_feature_importance, field2=y),x))
-    series = pd.Series(importance, index=x,name=y)
+    importance = list(map(partial(get_feature_importance, field2=y), x))
+    series = pd.Series(importance, index=x, name=y)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)
     return px.bar(
@@ -762,7 +763,6 @@ def assign_slider_text_update_callback(field: str) -> None:
 for field in vars_df.index:
     assign_slider_text_update_callback(field)
 
-
 slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
 
 
@@ -790,16 +790,28 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     x_range = np.linspace(x_min, x_max, n_points)
 
     # create input data
-    indices = [n for n, x in enumerate(vars_df.index) if x in exog]
-    scalar_values = [slider_values[i] for i in indices]
-    scalar_values = np.array([get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v for v, field in zip(scalar_values, exog)])
-    scalar_values = np.tile(scalar_values, (n_points, 1)).T
+    value_dict = {x: slider_values[n] for n, x in enumerate(vars_df.index) if x in exog}
+    value_dict = convert_category_number_to_str(value_dict)
+    exog, scalar_values = tuple(zip(*[(k, v) for k, v in value_dict.items()]))
+    scalar_values = np.tile(np.array(scalar_values), (n_points, 1)).T
     input_data = dict(zip(exog, scalar_values))
     input_data[x_var] = x_range
 
     # predict
     y = model.predict_model(input_data)
     return get_line_plot(x_range, y, x_var, endog)
+
+
+def convert_category_number_to_str(d: dict):
+    """
+    Given a dictionary of the form {field: value} convert values to their string representations if the field is
+    categorical
+
+    :param d: {field: value}
+    :return: dictionary of the same form as the input
+    """
+    return {field: get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v
+            for field, v in d.items()}
 
 
 @fig_formatter(t=100)
