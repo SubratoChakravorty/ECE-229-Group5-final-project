@@ -1,5 +1,5 @@
 name,short,long,type
-COURSE_TYPE,Science course,Science course,categorical
+COURSE_TYPE,Science course,Type of science course taken,categorical
 N1SCIYRS912,Experience in science teaching,Years science teacher has taught high school science,continuous
 S1STCHFAIR,Fair teachers,9th grader's fall 2009 science teacher treats every student fairly,continuous
 S1STCHMISTKE,Teacher's tolerance for mistake,9th grader's fall 09 science teacher think mistakes are ok if students learn,continuous
@@ -14,9 +14,9 @@ X1SCIID,Science identity,Scale of student's science identity,continuous
 X1SCIINT,Science interest,Scale of student's interest in fall 2009 science course,continuous
 X1SCIUTI,Science utility,Scale of student's science utility,continuous
 X1SES,Socioeconomic status,Socioeconomic status,continuous
-X3TGPAENG,English gpa,English gpa,continuous
-X3TGPAMAT,Math gpa,Mathematics gpa,continuous
-X3TGPASCI,Science gpa,Science gpa,continuous
+X3TGPAENG,English GPA,English GPA,continuous
+X3TGPAMAT,Math GPA,Mathematics GPA,continuous
+X3TGPASCI,Science GPA,Science GPA,continuous
 S1STCHCONF,Teacher's confidence,9th grader's fall 09 science teacher thinks all students can be successful,continuous
 ALTCERT,Alternative certification,Science teacher entered profession through alternative certification program,categorical
 N1CONCEPTS,Basic concepts,Teaching basic science concepts,continuous
@@ -31,4 +31,4 @@ SCH_LOCALE,School locale,School locale (urbanicity),categorical
 X1GEN,Student gender,Student sex,categorical
 X1TSCERT,Teacher's science certification,Science teacher's science teaching certification,categorical
 COST_PERCEPTION,Perceived cost,Perceived costs of trying to succeed in STEM,continuous
-TCH_PRCVD_ATT,Perceived teacher's affirming attitude,Level for the perceived affirming attitude,continuous
+TCH_PRCVD_ATT,Teacher's affirming attitude,The teacher's perceived level of affirming attitude,continuous
