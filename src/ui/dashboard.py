@@ -103,7 +103,7 @@ def get_slider(field) -> List:
     if vars_df.loc[field, 'type'] == 'continuous':
         minimum, median, maximum = tuple(round(v, 1) for v in get_stats(field, student_data_file))
         div = html.Div([
-            field_name,
+            html.P(children=[field_name], id=field + '_slider_state'),
             dcc.Slider(
                 id=field + '_slider',
                 min=minimum,
@@ -147,7 +147,6 @@ app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=devi
                 external_stylesheets=[dbc.themes.BOOTSTRAP],
                 suppress_callback_exceptions=True)
 CACHE_CONFIG = {
-    # try 'filesystem' if you don't want to setup redis
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': cache_dir,
 }
@@ -748,17 +747,21 @@ def assign_slider_text_update_callback(field: str) -> None:
 
     :param field: the categorical data field
     """
-    _, category_lookup = get_categories(field, student_data_file)
+    if vars_df.loc[field, 'type'] == 'categorical':
+        _, category_lookup = get_categories(field, student_data_file)
 
-    def slider_text_update(value: int):
-        return [f"{vars_df.loc[field, 'short']} - {category_lookup[value]}"]
+        def slider_text_update(value: int):
+            return [f"{vars_df.loc[field, 'short']} | {category_lookup[value]}"]
+    else:
+        def slider_text_update(value: float):
+            return [f"{vars_df.loc[field, 'short']} | {value:.1f}"]
 
     app.callback(output=Output(field + '_slider_state', 'children'),
                  inputs=[Input(field + '_slider', 'value')],
                  prevent_initial_call=False)(slider_text_update)
 
 
-for field in vars_df.loc[vars_df['type'] == 'categorical'].index:
+for field in vars_df.index:
     assign_slider_text_update_callback(field)
 
 
@@ -790,7 +793,8 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     # predict
     y = model.predict_model(input_data)
 
-    return px.line(x=x_range, y=y)
+    return px.line(x=x_range, y=y,
+                   labels=dict(x=vars_df.loc[x_var, 'short'], y=vars_df.loc[endog, 'short']))
 
 
 @cache.memoize()
