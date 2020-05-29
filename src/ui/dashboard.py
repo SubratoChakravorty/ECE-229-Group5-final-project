@@ -1,24 +1,24 @@
 """
 Just run using `python dashboard.py`
 """
-from typing import List
+from functools import partial
+from typing import List, Union, Dict, Tuple
 
 import dash
-import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
+from flask_caching import Cache
 
-from src.config import variables_file, student_data_file
-from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data
-from src.multivariate_methods import get_correlation_matrix
-
-# # Style configuration
-# external_css = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app.css.append_css({"external_url":external_css})
+from src.config import variables_file, student_data_file, cache_dir
+from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
+from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
+    get_categories
 
 # color for frontend
 colors = {
@@ -31,29 +31,34 @@ plot_lookup = {0: 'box plot',
 
 # Populate fields from data
 vars_df = get_var_info(variables_file)
+vars_df['code'] = vars_df.index
+self_efficacy_predictors = ['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SES', 'X1GEN']
 
-report_text = """
- __   __    _______    _______    ______  
-|  | |  |  |       |  |       |  |      | 
-|  | |  |  |       |  |  _____|  |  _    |
-|  |_|  |  |       |  | |_____   | | |   |
-|       |  |      _|  |_____  |  | |_|   |
-|       |  |     |_    _____| |  |       |
-|_______|  |_______|  |_______|  |______| 
-
-    Report
+UCSD_text = """
+     _______.        _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  
+    /       |       /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ 
+   |   (----`      |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----'      |   (----`   |  .--.  |
+    \   \           \   \       |   __|        |   _  <    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |
+.----)   |      .----)   |      |  |____       |  |_)  |     |  |           |  `--'  |    |  `----.   .----)   |      |  '--'  |
+|_______/       |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ 
+                                                                                                                                
 
                                         """
 
 
-def populate_dropdown(category: str) -> List[dict]:
+def populate_dropdown(category: str = None) -> List[dict]:
     """
-    Generate a list of dictionaries to use to populate the dropdown menues
-    :param category: 'continuous' or 'categorical'
+    Generate a list of dictionaries to use to populate the dropdown menus
+
+    :param category: 'continuous' or 'categorical'. If `None` select all variables.
     :return: a list of dicts with keys 'label' and 'value'
     """
-    assert category in ['continuous', 'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
-    df = vars_df.loc[vars_df['type'] == category, 'short']
+    if category is not None:
+        assert category in ['continuous',
+                            'categorical'], f"category must be 'continuous' or 'categorical', not {category}"
+        df = vars_df.loc[vars_df['type'] == category, 'short']
+    else:
+        df = vars_df['short']
     return [dict(label=v, value=k) for k, v in df.to_dict().items()]
 
 
@@ -70,7 +75,9 @@ def fig_formatter(**kw):
                               paper_bgcolor='rgba(0,0,0,0)',
                               plot_bgcolor='rgba(0,0,0,0)')
             return fig
+
         return wrapped
+
     return wrap
 
 
@@ -78,7 +85,7 @@ correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'cont
                                             student_data_file)
 
 
-@fig_formatter()
+@fig_formatter(t=30)
 def make_correlation_heatmap():
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     df = correlation_matrix.rename(columns=short_name_lookup)
@@ -89,17 +96,68 @@ def make_correlation_heatmap():
         x=df.index,
         y=df.columns,
     )
-    fig.layout.xaxis.tickangle = 45
     return fig
 
 
+def get_slider(field) -> List:
+    field_name = vars_df.loc[field, 'short']
+    if vars_df.loc[field, 'type'] == 'continuous':
+        minimum, median, maximum = tuple(round(v, 1) for v in get_stats(field, student_data_file))
+        div = html.Div([
+            html.P(children=[field_name], id=field + '_slider_state'),
+            dcc.Slider(
+                id=field + '_slider',
+                min=minimum,
+                max=maximum,
+                value=median,
+                step=0.1,
+                updatemode='drag',
+                marks={minimum: f'{minimum: .1f}',
+                       median : f'{median: .1f}',
+                       maximum: f'{maximum: .1f}'},
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    elif vars_df.loc[field, 'type'] == 'categorical':
+        mode, category_lookup = get_categories(field, student_data_file)
+        div = html.Div([
+            html.P(children=[field_name], id=field + '_slider_state'),
+            dcc.Slider(
+                id=field + '_slider',
+                min=1,
+                max=len(category_lookup),
+                value=mode,
+                step=1,
+                included=False,
+                updatemode='drag',
+                marks={k: v[:3] if isinstance(v, str) else str(v) for k, v in category_lookup.items()}
+            ),
+        ],
+            style={'display': 'none'},
+            id=field + '_slider_div',
+        )
+    else:
+        raise ValueError(f"field {field} is invalid")
+    return div
+
+
+# Initialize app and cache
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-                external_stylesheets=[dbc.themes.BOOTSTRAP])
+                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                suppress_callback_exceptions=True)
+CACHE_CONFIG = {
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR' : cache_dir,
+}
+cache = Cache()
+cache.init_app(app.server, config=CACHE_CONFIG)
 
 # Create app layout
 app.layout = html.Div(
     [
-        ######################################################< TOP PART >##################################################
+        # Title
         dcc.Store(id="aggregate_data"),
         # empty Div to trigger javascript file for graph resizing
         html.Div(id="output-clientside"),
@@ -123,12 +181,14 @@ app.layout = html.Div(
                     [
                         html.Div(
                             [
-                                html.H3(
-                                    "Analysis of Ninth Grader’s Science Self Efficacy",
+                                html.H1(
+                                    "Boosting Interest in STEM",
                                     style={"margin-bottom": "0px"},
                                 ),
                                 html.H5(
-                                    "ECE229 - Team 5", style={"margin-top": "0px"}
+                                    """ECE229 - Team 5: Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, 
+                                    Heqian Lu, Kai Wang""",
+                                    style={"margin-top": "0px"}
                                 ),
                             ]
                         )
@@ -141,7 +201,7 @@ app.layout = html.Div(
                         html.A(
                             html.Button("github", id="learn-more-button"),
                             href="https://github.com/SubratoChakravorty/ECE-229-Group5-final-project",
-                        ),   
+                        ),
                     ],
                     className="three-third column",
                     id="github-button",
@@ -152,44 +212,118 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"},
         ),
 
-        ######################################################< TAG1 PART >##################################################
-
+        # Introduction
         html.Div(
             [
-                html.H4(className='how', children="How to use this dashboard"),
+                dcc.Markdown(
+                    """
+                    ### How to use this dashboard
+                    
+                    #### 1. Correlations
+                    
+                    Understand what drives an interest in science. Look at the bright yellow and dark blue squares 
+                    in the correlation heatmap. Those indicate factors that are strongly correlated with each other. 
+                    Explore these in more detail using the selection menus. Use this understanding to choose variables
+                    that you think will be important in determining whether a student will continue in STEM. Test
+                    these variables in the next section.
+                    
+                    #### 2. Predictor
+                    
+                    This is an opportunity to create a "student" and see how various factors impact their interest
+                    in STEM. Choose the measurable you are looking to predict, choose the student's variables, then
+                    experiment to what factors might boost an interest in STEM.
+                    
+                    #### 3. Explore
+                    
+                    Gain a better understanding of the data. This section allows you to explore some of the patterns
+                    you see in greater detail, and to better understand the data behind the predictions.
+                    
+                    ### Dataset
+                    This study employs public-use data from the 
+                    [High School Longitudinal Study of 2009 (HSLS:09)](https://nces.ed.gov/surveys/hsls09/). 
+                    The goal of the study is to understand the factors that lead students to choose science, technology, 
+                    engineering, and mathematics courses, majors, and careers.
 
-                html.P('1. Explore'
-                       'In this section, feel free to explore the distribution of data. We provide pie chart, xx chart, ...etc.'),
-                html.P(
-                    '2. Inspect'
-                    'We provide univariate analysis in this part. You can find how single variable affects your self-efficiency.'),
-                html.P(
-                    '3. Insights'
-                    'Multivariate statistical analysis can be found here, which helps you to gain insights on the data and provides advice for yourself.'),
-
-                html.H4(className='Dataset', children="Dataset"),
-                html.P(
-                    'This study employs public-use data from the High School Longitudinal Study of 2009 (HSLS:09). One important difference'
-                    'between HSLS:09 and previous studies is its focus on STEM education; one specific goal of the study is to gain an '
-                    'understanding of the factors that lead students to choose science, technology, engineering, and mathematics courses, majors, and careers.'),
-
-                html.P("Dataset can be downloaded by clicking: "),
-                html.Div([
-                    'Reference: ',
-                    html.A('Dataset',
-                           href='https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip)')
-                ]),
-                html.H4(className='author', children="Author"),
-                html.P("Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang"),
-
-                html.Br()
+                    The dataset can be downloaded 
+                    [here](https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip).
+                    """
+                )
             ],
             className="pretty_container",
             style={"margin-bottom": "25px"}
         ),
 
-        # ##############################################< TAG2 PART >############################################
+        # Correlations
+        html.Div(
+            [
+                html.Div([
+                    html.H1("Correlation"),
+                    html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
+                ],
+                    className="pretty_container six columns"
+                ),
+                html.Div([
+                    html.P([
+                        "Select x-axis:",
+                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN', 'S1TEACTIV', 'S1STCHCONF',
+                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT',
+                                            'X3TGPASCI']),
+                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                     value='X1SCIEFF'),
+                        dcc.Graph(id="importance_bar")
+                    ]),
+                ],
+                    className="pretty_container six columns"
+                ),
+            ],
+            className="flex-display",
+        ),
 
+        # ML Model
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.H1("Predictor"),
+                        html.P(
+                            [
+                                "Select variables:",
+                                dcc.Dropdown(
+                                    id="ml_independent_var_selector",
+                                    options=populate_dropdown(),
+                                    value=['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1GEN'],
+                                    multi=True
+                                ),
+                                "Select value to predict:",
+                                dcc.Dropdown(
+                                    id="ml_dependent_var_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SCIEFF'
+                                ),
+                                "Select x-axis:",
+                                dcc.Dropdown(
+                                    id="ml_x_axis_selector",
+                                    options=populate_dropdown('continuous'),
+                                    value='X1SES'
+                                ),
+                            ]
+                        ),
+                        html.Div([get_slider(field) for field in vars_df.index], id='ml_sliders'),
+                    ],
+                    className="pretty_container four columns",
+                    id="ml_controls",
+                ),
+                html.Div(
+                    [dcc.Graph(id="ml_prediction_plot")],
+                    className="pretty_container eight columns",
+                ),
+            ],
+            className="flex-display",
+            style={"margin-bottom": "25px"}
+        ),
+
+        # Explore
         html.Div(
             [
                 html.Div(
@@ -198,7 +332,7 @@ app.layout = html.Div(
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
-                                             multi=True, value=['N1HIDEG'])]),
+                                             multi=True, value=['SCH_LOCALE', 'N1HIDEG', 'SCIJOB'])]),
                         html.P(["Select score:",
                                 dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
                                              value='X1SCIEFF'), ]),
@@ -208,29 +342,30 @@ app.layout = html.Div(
                                              options=[dict(label=v, value=k) for k, v in plot_lookup.items()])]),
                     ],
                     className="pretty_container four columns",
+                    id="explore-part"
                 ),
                 html.Div([dcc.Graph(id="sunburst_plot"),
                           html.P("Tips:"),
                           html.P("The color of each segment indicates the mean of the selected score"),
                           html.P("The size of each segment represents the size of that student population"),
                           html.P("Click on a category to zoom in"), ],
-                         className="pretty_container four columns"),
+                         className="pretty_container four columns",
+                         id="sunburst-div"),
                 html.Div([dcc.Graph(id="second_explore_plot"),
                           html.P("Tips:"),
                           html.P("The x-axis is the first-selected categorical variable"), ],
-                         className="pretty_container four columns"),
+                         className="pretty_container four columns",
+                         id="sunburst-bar-chart"),
             ],
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
 
-        # ################################################< TAG3 PART >#############################################
-
+        # Histogram
         html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Univariate Analysis"),
                         html.P(
                             [
                                 "Select a continuous variable:",
@@ -301,33 +436,23 @@ app.layout = html.Div(
             style={"margin-bottom": "25px"}
         ),
 
-        # ################################################< TAG3 PART >#############################################
-
-        # Correllations
+        # Variable reference table
         html.Div(
             [
-                html.Div([
-                    html.H1("Correlation"),
-                    html.P([
-                        "Select x-axis:",
-                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
-                                            'S1TEFRNDS', 'X1SCIINT']),
-                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
-                                     value='X1SCIEFF'),
-                        dcc.Graph(id="correlation_bar")
-                    ]),
-                ],
-                    className="pretty_container six columns"
-                ),
-                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
-                         className="pretty_container six columns",),
+                html.Div(
+                    [
+                        html.H1("Variables Reference"),
+                        dbc.Table.from_dataframe(vars_df, striped=True, bordered=True, hover=True)
+                    ],
+                    id='var-table',
+                    className="pretty_container four column",
+                )
             ],
             className="flex-display",
+            style={"margin-bottom": "25px"}
         ),
 
-        ######################################################< TAG4 PART >##################################################
-
+        # Report
         html.Div(
             [
                 html.Div(
@@ -338,13 +463,14 @@ app.layout = html.Div(
                             [
                                 dbc.ModalHeader("Report"),
                                 dbc.ModalBody(
-                                    html.Pre(
-                                        report_text
-                                    ),
-                                    id="Report_body"
+                                    [
+                                        html.Pre(UCSD_text,id="Report_body"),
+                                        html.H2("This is your profile"),
+                                        html.Pre(id="report_text"),
+                                        dcc.Graph(id="ml_prediction_plot2")
+                                    ]
                                 ),
                                 dbc.ModalFooter([
-                                    dbc.Button("Save", id="save-xl", className="ml-auto"),  # todo: save
                                     dbc.Button("Close", id="close-xl", className="ml-auto"), ]
                                 ),
                             ],
@@ -360,15 +486,17 @@ app.layout = html.Div(
             className="flex-display",
             style={"margin-bottom": "25px"}
         ),
+
+        # Documentation link
         html.Div(
-                    [
-                        html.A(
-                            html.Button("documentation", id="documentation-button"),
-                            href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
-                        ),
-                    ],
-                    className="two-half column",
-                    id="doc-button",
+            [
+                html.A(
+                    html.Button("documentation", id="documentation-button"),
+                    href="http://ecetestdoc.com.s3-website-us-west-2.amazonaws.com",
+                ),
+            ],
+            className="two-half column",
+            id="doc-button",
         ),
     ],
     id="mainContainer",
@@ -379,10 +507,10 @@ app.layout = html.Div(
 # Report modal
 @app.callback(
     Output("modal-xl", "is_open"),
-    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks"), Input("save-xl", "n_clicks")],
+    [Input("open-xl", "n_clicks"), Input("close-xl", "n_clicks")],
     [State("modal-xl", "is_open")],
 )
-def toggle_modal(n1, n2, n3, is_open):
+def toggle_modal(n1, n2, is_open):
     if n1 or n2:
         return not is_open
     return is_open
@@ -460,6 +588,7 @@ def get_empty_sunburst(text: str):
     )
 
 
+# todo: check out "subcategory axes"
 @app.callback(Output('second_explore_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
@@ -562,34 +691,241 @@ def get_sunburst_plot(color_var, fields):
     return fig
 
 
-@app.callback(Output('correlation_bar', 'figure'),
-              [Input('corr_x_selector', 'value'), Input('corr_y_selector', 'value')])
-def make_correlation_bar_plot(x: List[str], y: str):
+@app.callback(Output('importance_bar', 'figure'),
+              [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
+def make_importance_bar_plot(x: List[str], y: str):
     if not x:
         fig = get_empty_sunburst("Select an x variable")
     elif not y:
         fig = get_empty_sunburst("Select a y variable")
     else:
-        fig = get_correlation_bar_plot(x, y)
+        fig = get_importance_bar_plot(x, y)
     return fig
 
 
 @fig_formatter()
-def get_correlation_bar_plot(x: List[str], y: str):
+def get_importance_bar_plot(x: List[str], y: str):
     assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-
-    series = correlation_matrix.loc[x, y]
+    importance = list(map(partial(get_feature_importance, field2=y), x))
+    series = pd.Series(importance, index=x, name=y)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)
     return px.bar(
         series,
         x=series.index,
         y=y,
+        color=y,
+        labels=dict(x='')
     )
 
 
+@app.callback(Output('ml_sliders', 'children'),
+              [Input('ml_independent_var_selector', 'value')],
+              [State('ml_sliders', 'children')],
+              prevent_initial_call=False)
+def show_ml_sliders(fields: List, state: List):
+    """
+    Show the sliders that were selected using the multiple dropdown. Hide the others.
+    :param fields: List of fields
+    :param state: children of the ml_sliders <P>
+    :return: updated state
+    """
+    for n, f in enumerate(vars_df.index):
+        if f in fields:
+            state[n]['props']['style'] = None
+        else:
+            state[n]['props']['style'] = dict(display='none')
+    return state
+
+
+def assign_slider_text_update_callback(field: str) -> None:
+    """
+    Register a callback on the text above categorical sliders. It will then update that text according to the current
+    selection.
+
+    :param field: the categorical data field
+    """
+    if vars_df.loc[field, 'type'] == 'categorical':
+        _, category_lookup = get_categories(field, student_data_file)
+
+        def slider_text_update(value: int):
+            return [f"{vars_df.loc[field, 'short']} | {category_lookup[value]}"]
+    else:
+        def slider_text_update(value: float):
+            return [f"{vars_df.loc[field, 'short']} | {value:.1f}"]
+
+    app.callback(output=Output(field + '_slider_state', 'children'),
+                 inputs=[Input(field + '_slider', 'value')],
+                 prevent_initial_call=False)(slider_text_update)
+
+
+for field in vars_df.index:
+    assign_slider_text_update_callback(field)
+
+slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
+
+
+@app.callback([Output('ml_prediction_plot', 'figure'), Output('ml_prediction_plot2', 'figure')],
+              [Input('ml_independent_var_selector', 'value'),
+               Input('ml_dependent_var_selector', 'value'),
+               Input('ml_x_axis_selector', 'value')] + slider_inputs)
+def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: float):
+    """
+    Callback to generate the prediction plot
+
+    :param exog: exogenous (independent) variable names as a list
+    :param endog: endogenous (dependent) variable name
+    :param x_var: another exogenous variable to be used as the plot's x-axis
+    :param slider_values: tuple of the values of the sliders, including the hidden ones
+    :return: plotly figure
+    """
+    n_points = 20
+
+    # train model
+    model = train_model(endog, exog, x_var)
+
+    # create x_var range
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+
+    # create input data
+    input_data = generate_model_input(x_range, exog, slider_values, x_var, n_points)
+
+    # predict
+    y = model.predict_model(input_data)
+    plt = get_line_plot(x_range, y, x_var, endog)
+    return plt, plt
+
+
+def generate_model_input(x_range: np.ndarray, exog: List[str], x_values: Tuple[float], x_var: str, n_points: int) -> \
+        Dict[str, Union[np.ndarray, List]]:
+    """
+    Produce a dictionary to be passed to the model for prediction
+    :param x_range: The values of x_var
+    :param exog: The field to predict
+    :param x_values: The slider values
+    :param x_var: The continuous exogenous variable
+    :param n_points: The number of points of the exogenous variable to use
+    :return: {field: [v1, ..., vn]}
+    """
+    value_dict = {x: x_values[n] for n, x in enumerate(vars_df.index) if x in exog}
+    value_dict = convert_category_number_to_str(value_dict)
+    exog, scalar_values = tuple(zip(*[(k, v) for k, v in value_dict.items()]))
+    scalar_values = np.tile(np.array(scalar_values), (n_points, 1)).T
+    input_data = dict(zip(exog, scalar_values))
+    input_data[x_var] = x_range
+    return input_data
+
+
+def convert_category_number_to_str(d: dict):
+    """
+    Given a dictionary of the form {field: value} convert values to their string representations if the field is
+    categorical
+
+    :param d: {field: value}
+    :return: dictionary of the same form as the input
+    """
+    return {field: get_categories(field)[1][v] if field in vars_df.loc[vars_df['type'] == 'categorical'].index else v
+            for field, v in d.items()}
+
+
+@fig_formatter(t=100)
+def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var: str, endog: str):
+    """
+    Generate a line plot
+
+    :param x: numpy array or list of x-values
+    :param y: numpy array or list of y-values
+    :param x_var: name of x-variable
+    :param endog: endogenous (dependent) variable name
+    :return: plotly figure
+    """
+    y_min, _, y_max = get_stats(endog)
+    return go.Figure(go.Scatter(
+        x=x, y=y,
+        mode='lines',
+        line=dict(smoothing=.5,
+                  shape='spline'),
+    ),
+        layout=dict(xaxis_title=vars_df.loc[x_var, 'short'],
+                    yaxis_title=vars_df.loc[endog, 'short'],
+                    yaxis_range=[y_min, y_max]),
+    )
+
+def add_frame(text):
+    """
+    Add frame to raw text.
+
+    :param text: raw report text
+    :return: report text with frame
+    """
+    raw_text = text.split("*")
+    framed_text = ""
+    width, hight = max(map(lambda x:len(x),raw_text)),len(raw_text)
+    framed_text += "-"*(width+2)
+    framed_text += "\n"
+    for t in raw_text:
+        if not t:
+            continue
+        framed_text += "|"
+        framed_text += t
+        framed_text += " "*(width-len(t))
+        framed_text += "|\n" 
+    framed_text += "-"*(width+2)
+    framed_text += "\n"
+    return framed_text
+
+@app.callback(Output('report_text', 'children'),
+              [Input('ml_independent_var_selector', 'value'),
+               Input('ml_dependent_var_selector', 'value'),
+               Input('ml_x_axis_selector', 'value')] + slider_inputs)
+def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
+    """
+    Generate report text.
+
+    :param exog: List of fields
+    :param endog: y variable
+    :param x_var: variable of x-axis
+    :param slider_values: values of all sliders in exog fields
+    :return: report text
+    """
+    n_points = 20
+    report = ""
+
+    # create x_var range
+    x_min, _, x_max = get_stats(x_var)
+    x_range = np.linspace(x_min, x_max, n_points)
+
+    # create input data
+    input_data = generate_model_input(x_range, exog, slider_values, x_var, n_points)
+    look_up = vars_df['short'].to_dict()
+    del input_data[x_var]
+    for key in input_data:
+        report += "*"
+        report = report + str(look_up[key]) + ": " + str(input_data[key][0])
+    report = add_frame(report)
+    return report
+
+
+@cache.memoize()
+def train_model(endog: str, exog: List[str], x_var: str):
+    """
+    Train predictive model based on the chosen variables
+
+    :param endog: endogenous (dependent) variable name
+    :param exog: exogenous (independent) variable names as a list
+    :param x_var: another exogenous variable that will be used as the x-axis in the plot
+    :return:
+    """
+    model = MLmodel(student_data_file)
+    fields = set(exog)
+    fields.add(x_var)
+    model.train_model(y=endog, fields=list(fields))
+    return model
+
+
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, dev_tools_hot_reload=False)

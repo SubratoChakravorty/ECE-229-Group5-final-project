@@ -20,3 +20,4 @@ main.py
 src/teste.py
 *DS_Store*
 *.pyc
+cache/

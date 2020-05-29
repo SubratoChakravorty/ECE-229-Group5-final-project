@@ -7,11 +7,44 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from scipy import stats
 
 np.random.seed(0)
 
+from .univariate_methods import load_data_frame
+from .univariate_methods import get_var_info
 
-def get_correlation_matrix(fields, file_loc=config.student_data_file):
+def get_feature_importance(field1,field2,file_loc="../../data/student_data.csv"):
+    """
+    This function describes how important a particular feature(variable our user choose) is to predict y value(outcome our user expect to see)
+    
+    :parameter x: two variable fields in our variables list, categorical type(gender or location) and numerical type(scale of something)
+    :parameter y: a dependent y field(outcome our user expect to see)
+    :return: For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation coefficient between a field and y
+    """
+    
+    df = load_data_frame(file_loc)
+    df = df.dropna()
+    x = df[field1]
+    y = df[field2]
+
+    # if x is numerical(continuous) field, we return the pearson correlation between a field and y
+    # for the pearson correlation between a field and y, their size must be the same 
+    if x.dtypes == 'float64' or 'int64':
+        return stats.pearsonr(x, y)[0] # correlation coefficient
+    else:
+    # if x is categorical field, we return the statistical test results:
+    # if x filed has 2 options like sex, we do the T-test(which is included by the ANOVA anlysis)
+    # if x has more options like number of science courses, we do the ANOVA anlysis
+        result = pd.concat([x,y],axis=1)
+        df1 = [x for _, x in result.groupby(result[result.columns[0]])]
+        data = []
+        for i in range(1,len(df1)):
+            data.append(df1[i][df1[i].columns[1]])
+        return stats.f_oneway(*data)[1]
+    return 'wrong data input'
+
+def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     '''
     Computes correlation matrix that captures correlation between features
     presented in the fields parameter

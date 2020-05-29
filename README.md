@@ -1,6 +1,6 @@
 # ECE-229-Group5-final-project
 Tool to analyze the High School Longitudinal Study of 2009 (HSLS:09) dataset
-## Authors: Subrato Chakravorty, Ian Pegg
+## Authors: Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang
 
 ## Installation
 
@@ -9,6 +9,9 @@ A conda environment is recommended, otherwise Node.js must be installed separate
 Top-level dependencies:
 - dash
 - pandas
+- scikit-learn
+- flask-caching
+- dash_bootstrap_components
 
 ## Testing
 
