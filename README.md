@@ -9,6 +9,9 @@ A conda environment is recommended, otherwise Node.js must be installed separate
 Top-level dependencies:
 - dash
 - pandas
+- scikit-learn
+- flask-caching
+- dash_bootstrap_components
 
 ## Testing
 
