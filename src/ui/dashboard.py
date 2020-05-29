@@ -585,6 +585,7 @@ def get_empty_sunburst(text: str):
     )
 
 
+# todo: check out "subcategory axes"
 @app.callback(Output('second_explore_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])
@@ -714,6 +715,7 @@ def get_importance_bar_plot(x: List[str], y: str):
         x=series.index,
         y=y,
         color=y,
+        labels=dict(x='')
     )
 
 
@@ -800,7 +802,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     return get_line_plot(x_range, y, x_var, endog)
 
 
-@fig_formatter(t=30)
+@fig_formatter(t=100)
 def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var: str, endog: str):
     """
     Generate a line plot
@@ -811,8 +813,17 @@ def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var:
     :param endog: endogenous (dependent) variable name
     :return: plotly figure
     """
-    return px.line(x=x, y=y,
-                   labels=dict(x=vars_df.loc[x_var, 'short'], y=vars_df.loc[endog, 'short']))
+    y_min, _, y_max = get_stats(endog)
+    return go.Figure(go.Scatter(
+        x=x, y=y,
+        mode='lines',
+        line=dict(smoothing=.5,
+                  shape='spline'),
+    ),
+        layout=dict(xaxis_title=vars_df.loc[x_var, 'short'],
+                    yaxis_title=vars_df.loc[endog, 'short'],
+                    yaxis_range=[y_min, y_max]),
+    )
 
 
 @cache.memoize()
