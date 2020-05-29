@@ -7,5 +7,5 @@ setup(
    description='A useful module',
    author='Man Foo',
    author_email='foomail@foo.com',
-   packages=['src'], install_requires=['scikit-learn']  #same as name
+   packages=['src'], install_requires=['scikit-learn', 'pandas', 'numpy']  #same as name
 )

@@ -1,14 +1,14 @@
 name,short,long,type
 COURSE_TYPE,Science course,Science course,categorical
 N1SCIYRS912,Experience in science teaching,Years science teacher has taught high school science,continuous
-S1STCHFAIR,Fair teachers,9th grader's fall 2009 science teacher treats every student fairly,continuous
-S1STCHMISTKE,Teacher's tolerance for mistake,9th grader's fall 09 science teacher think mistakes are ok if students learn,continuous
-S1STCHRESPCT,Teacher respect,9th grader's fall 2009 science teacher treats students with respect,continuous
-S1STCHVALUES,Teacher's values,9th grader's fall 2009 science teacher values/listens to students' ideas,continuous
-S1TEACTIV,Time/effort extracurriculars,Time/effort in math/science means not enough time for extracurriculars,continuous
-S1TEFRNDS,Time/effort friends,Time/effort in math/science means not enough time with friends,continuous
-S1TEMAKEFUN,Time/effort make fun,Time/effort in math/science means people will make fun of 9th grader,continuous
-S1TEPOPULAR,Time/effort popular,Time/effort in math/science means 9th grader won't be popular,continuous
+S1STCHFAIR_neg,Teacher's fairness,9th grader's fall 2009 science teacher treats every student fairly,continuous
+S1STCHMISTKE_neg,Teacher's tolerance towards mistake,9th grader's fall 09 science teacher think mistakes are ok if students learn,continuous
+S1STCHRESPCT_neg,Teacher's respect,9th grader's fall 2009 science teacher treats students with respect,continuous
+S1STCHVALUES_neg,Teacher values ideas,9th grader's fall 2009 science teacher values/listens to students' ideas,continuous
+S1TEACTIV_neg,Time/effort extracurriculars,Time/effort in math/science means not enough time for extracurriculars,continuous
+S1TEFRNDS_neg,Time/effort friends,Time/effort in math/science means not enough time with friends,continuous
+S1TEMAKEFUN_neg,Time/effort make fun,Time/effort in math/science means people will make fun of 9th grader,continuous
+S1TEPOPULAR_neg,Time/effort popular,Time/effort in math/science means 9th grader won't be popular,continuous
 X1SCIEFF,Science self-efficacy,Student science self-efficacy,continuous
 X1SCIID,Science identity,Scale of student's science identity,continuous
 X1SCIINT,Science interest,Scale of student's interest in fall 2009 science course,continuous
@@ -17,7 +17,7 @@ X1SES,Socioeconomic status,Socioeconomic status,continuous
 X3TGPAENG,English gpa,English gpa,continuous
 X3TGPAMAT,Math gpa,Mathematics gpa,continuous
 X3TGPASCI,Science gpa,Science gpa,continuous
-S1STCHCONF,Teacher's confidence,9th grader's fall 09 science teacher thinks all students can be successful,continuous
+S1STCHCONF_neg,Teacher's confidence,9th grader's fall 09 science teacher thinks all students can be successful,continuous
 ALTCERT,Alternative certification,Science teacher entered profession through alternative certification program,categorical
 N1CONCEPTS,Basic concepts,Teaching basic science concepts,continuous
 N1GROUP,Work group,Science teacher has students work in small groups,categorical
