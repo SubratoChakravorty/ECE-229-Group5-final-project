@@ -96,7 +96,6 @@ def make_correlation_heatmap():
         x=df.index,
         y=df.columns,
     )
-    fig.layout.xaxis.tickangle = 45
     return fig
 
 
@@ -252,31 +251,8 @@ app.layout = html.Div(
         # Correllations
         html.Div(
             [
-                html.Div([
-                    html.H1("Correlation"),
-                    html.P([
-                        "Select x-axis:",
-                        dcc.Dropdown(id='corr_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1STCHRESPCT', 'S1TEPOPULAR', 'S1TEMAKEFUN',
-                                            'S1TEFRNDS', 'X1SCIINT']),
-                        dcc.Dropdown(id='corr_y_selector', options=populate_dropdown('continuous'),
-                                     value='X1SCIEFF'),
-                        dcc.Graph(id="correlation_bar")
-                    ]),
-                ],
-                    className="pretty_container six columns"
-                ),
-                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],
-                         className="pretty_container six columns", ),
-            ],
-            className="flex-display",
-        ),
-
-        # ################################################< TAG4 PART >#############################################
-
-        # Correllations2
-        html.Div(
-            [
+                html.H1("Correlation"),
+                html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())],),
                 html.Div([
                     html.P([
                         "Select x-axis:",
@@ -382,7 +358,6 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
-                        html.H1("Univariate Analysis"),
                         html.P(
                             [
                                 "Select a continuous variable:",
@@ -689,34 +664,6 @@ def get_sunburst_plot(color_var, fields):
     return fig
 
 
-@app.callback(Output('correlation_bar', 'figure'),
-              [Input('corr_x_selector', 'value'), Input('corr_y_selector', 'value')])
-def make_correlation_bar_plot(x: List[str], y: str):
-    if not x:
-        fig = get_empty_sunburst("Select an x variable")
-    elif not y:
-        fig = get_empty_sunburst("Select a y variable")
-    else:
-        fig = get_correlation_bar_plot(x, y)
-    return fig
-
-
-@fig_formatter()
-def get_correlation_bar_plot(x: List[str], y: str):
-    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
-    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
-    for item in x:
-        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-
-    series = correlation_matrix.loc[x, y]
-    short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
-    series = series.rename(index=short_name_lookup)
-    return px.bar(
-        series,
-        x=series.index,
-        y=y,
-    )
-
 @app.callback(Output('importance_bar', 'figure'),
               [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
 def make_importance_bar_plot(x: List[str], y: str):
@@ -745,6 +692,7 @@ def get_importance_bar_plot(x: List[str], y: str):
         y=y,
         color=y,
     )
+
 
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],

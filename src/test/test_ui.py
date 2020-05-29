@@ -11,7 +11,7 @@ category_df = pd.read_csv(src.config.variables_file)
 
 def test_ui001_sunburst_plot_gives_select_category_prompt(dash_duo):
     dash_duo.start_server(app)
-    dash_duo.find_element("span.Select-clear").click()
+    dash_duo.find_element("#expl_category_selector span.Select-clear").click()
     dash_duo.wait_for_contains_text('#sunburst_plot', "Select a category", timeout=5)
 
 
@@ -77,11 +77,6 @@ def test_ui007_toggle_modal(dash_duo):
 
     dash_duo.wait_for_element("#save-xl", timeout=5)
     dash_duo.multiple_click("#save-xl", clicks=1)
-
-
-def test_ui010_correlation_plot(dash_duo):
-    dash_duo.start_server(app)
-    dash_duo.wait_for_contains_text('#correlation_bar', "X1SCIEFF", timeout=5)
 
 
 def test_ui011_prediction_plot(dash_duo):
