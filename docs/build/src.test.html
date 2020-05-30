@@ -17,36 +17,34 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
 
+  
+  
     
 
   
+
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="src.ui package" href="src.ui.html" />
     <link rel="prev" title="src package" href="src.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -96,7 +94,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-src.test.conftest">src.test.conftest module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-src.test.test_backend">src.test.test_backend module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-src.test.test_ui">src.test.test_ui module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src-test-test-ui-module">src.test.test_ui module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-src.test">Module contents</a></li>
 </ul>
 </li>
@@ -115,11 +113,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.test.conftest">src.test.conftest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.test.test_backend">src.test.test_backend module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.test.test_ui">src.test.test_ui module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src-test-test-ui-module">src.test.test_ui module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.test">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src.ui.html">UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws.html">Deployment</a></li>
 </ul>
 
             
@@ -193,113 +192,68 @@
 </div>
 <div class="section" id="module-src.test.conftest">
 <span id="src-test-conftest-module"></span><h2>src.test.conftest module<a class="headerlink" href="#module-src.test.conftest" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
+<dl class="function">
 <dt id="src.test.conftest.pytest_setup_options">
-<code class="sig-prename descclassname">src.test.conftest.</code><code class="sig-name descname">pytest_setup_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/conftest.html#pytest_setup_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.conftest.pytest_setup_options" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.test.conftest.</code><code class="descname">pytest_setup_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/conftest.html#pytest_setup_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.conftest.pytest_setup_options" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-src.test.test_backend">
 <span id="src-test-test-backend-module"></span><h2>src.test.test_backend module<a class="headerlink" href="#module-src.test.test_backend" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
+<dl class="class">
 <dt id="src.test.test_backend.TestDataFetching">
-<em class="property">class </em><code class="sig-prename descclassname">src.test.test_backend.</code><code class="sig-name descname">TestDataFetching</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">src.test.test_backend.</code><code class="descname">TestDataFetching</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_binned_data">
-<code class="sig-name descname">test_get_binned_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_binned_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_binned_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_binned_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_binned_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_binned_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
+<dt id="src.test.test_backend.TestDataFetching.test_get_categories">
+<code class="descname">test_get_categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_categories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_counts">
-<code class="sig-name descname">test_get_counts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_counts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_counts" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_counts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_counts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_counts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_field_data">
-<code class="sig-name descname">test_get_field_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_field_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_field_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_field_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_hierarchical_data">
-<code class="sig-name descname">test_get_hierarchical_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_hierarchical_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_hierarchical_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_hierarchical_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_hierarchical_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_hierarchical_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_stats">
-<code class="sig-name descname">test_get_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_stats" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_var_group">
-<code class="sig-name descname">test_get_var_group</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_var_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_var_group" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_var_group</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_var_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_var_group" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_get_var_info">
-<code class="sig-name descname">test_get_var_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_var_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_var_info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_var_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_get_var_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_get_var_info" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.test.test_backend.TestDataFetching.test_return_fields_returns_a_dict">
-<code class="sig-name descname">test_return_fields_returns_a_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_return_fields_returns_a_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_return_fields_returns_a_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_return_fields_returns_a_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_backend.html#TestDataFetching.test_return_fields_returns_a_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_backend.TestDataFetching.test_return_fields_returns_a_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-src.test.test_ui">
-<span id="src-test-test-ui-module"></span><h2>src.test.test_ui module<a class="headerlink" href="#module-src.test.test_ui" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui001_sunburst_plot_gives_select_category_prompt">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui001_sunburst_plot_gives_select_category_prompt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui001_sunburst_plot_gives_select_category_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui001_sunburst_plot_gives_select_category_prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui002_second_univariate_plot_frequency">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui002_second_univariate_plot_frequency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui002_second_univariate_plot_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui002_second_univariate_plot_frequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui003_second_univariate_plot_box">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui003_second_univariate_plot_box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui003_second_univariate_plot_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui003_second_univariate_plot_box" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui004_histogram_plot">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui004_histogram_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui004_histogram_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui004_histogram_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui005_four_blocks">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui005_four_blocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui005_four_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui005_four_blocks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui006_report">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui006_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui006_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui006_report" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui007_toggle_modal">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui007_toggle_modal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui007_toggle_modal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui007_toggle_modal" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui008_sunburst_plot_gives_select_score_prompt">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui008_sunburst_plot_gives_select_score_prompt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui008_sunburst_plot_gives_select_score_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui008_sunburst_plot_gives_select_score_prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui009_second_univariate_plot_box_gives_select_score_prompt">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui009_second_univariate_plot_box_gives_select_score_prompt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui009_second_univariate_plot_box_gives_select_score_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui009_second_univariate_plot_box_gives_select_score_prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="src.test.test_ui.test_ui010_correlation_plot">
-<code class="sig-prename descclassname">src.test.test_ui.</code><code class="sig-name descname">test_ui010_correlation_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dash_duo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/test/test_ui.html#test_ui010_correlation_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.test.test_ui.test_ui010_correlation_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="src-test-test-ui-module">
+<h2>src.test.test_ui module<a class="headerlink" href="#src-test-test-ui-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-src.test">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.test" title="Permalink to this headline">¶</a></h2>
@@ -317,7 +271,7 @@
         <a href="src.ui.html" class="btn btn-neutral float-right" title="src.ui package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="src.html" class="btn btn-neutral float-left" title="src package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="src.html" class="btn btn-neutral" title="src package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -343,16 +297,26 @@
   
 
 
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

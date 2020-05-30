@@ -17,34 +17,32 @@
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
+
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -91,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../src.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../src.test.html">Test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../src.ui.html">UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../aws.html">Deployment</a></li>
 </ul>
 
             
@@ -154,16 +153,17 @@
            <div itemprop="articleBody">
             
   <h1>Source code for src.univariate_methods</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">src.config</span> <span class="k">as</span> <span class="nn">config</span>
 
 
-<div class="viewcode-block" id="return_fields"><a class="viewcode-back" href="../../src.html#src.univariate_methods.return_fields">[docs]</a><span class="k">def</span> <span class="nf">return_fields</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="return_fields"><a class="viewcode-back" href="../../src.html#src.univariate_methods.return_fields">[docs]</a><span class="k">def</span> <span class="nf">return_fields</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the field values from the dataset</span>
 
@@ -215,7 +215,7 @@
     <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="get_counts"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_counts">[docs]</a><span class="k">def</span> <span class="nf">get_counts</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_counts"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_counts">[docs]</a><span class="k">def</span> <span class="nf">get_counts</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns frequency counts of the input field from the dataframe</span>
 
@@ -238,7 +238,7 @@
 
 
 <div class="viewcode-block" id="get_field_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_field_data">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">get_field_data</span><span class="p">(</span><span class="n">field_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_field_data</span><span class="p">(</span><span class="n">field_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the input field data from the dataframe</span>
 
@@ -264,10 +264,11 @@
     <span class="k">return</span> <span class="n">field_data</span></div>
 
 
-<div class="viewcode-block" id="get_binned_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_binned_data">[docs]</a><span class="k">def</span> <span class="nf">get_binned_data</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_binned_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_binned_data">[docs]</a><span class="k">def</span> <span class="nf">get_binned_data</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the count of continuous data count seperated by range</span>
 
+<span class="sd">    :param width:</span>
 <span class="sd">    :param field_name: Field name</span>
 <span class="sd">    :type field_name: str</span>
 <span class="sd">    :param file_loc: Path to the dataset</span>
@@ -296,7 +297,7 @@
     <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="get_hierarchical_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_hierarchical_data">[docs]</a><span class="k">def</span> <span class="nf">get_hierarchical_data</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">color_var</span><span class="o">=</span><span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">)</span> \
+<div class="viewcode-block" id="get_hierarchical_data"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_hierarchical_data">[docs]</a><span class="k">def</span> <span class="nf">get_hierarchical_data</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">color_var</span><span class="o">=</span><span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns a dataframe with mean and count of groups segregated using input fields</span>
@@ -311,8 +312,8 @@
 <span class="sd">    :rtype: pandas.DataFrame</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;fields must be a list, not {type(fields)}&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_var</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;color_var must be a string, not {type(color_var)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;fields must be a list, not {type(fields)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_var</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;color_var must be a string, not {type(color_var)}&quot;</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">fields</span> <span class="o">+</span> <span class="p">[</span><span class="n">color_var</span><span class="p">]]</span>
@@ -329,7 +330,7 @@
 
 
 <div class="viewcode-block" id="load_data_frame"><a class="viewcode-back" href="../../src.html#src.univariate_methods.load_data_frame">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Used to store dataframes loaded from a csv.</span>
 
@@ -343,7 +344,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_var_group"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_var_group">[docs]</a><span class="k">def</span> <span class="nf">get_var_group</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/var_group.json&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_var_group"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_var_group">[docs]</a><span class="k">def</span> <span class="nf">get_var_group</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">vargroup_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a list of variables of a certain group</span>
 <span class="sd">    </span>
@@ -365,7 +366,7 @@
     <span class="k">return</span> <span class="n">content</span><span class="p">[</span><span class="n">group</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_var_info"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_var_info">[docs]</a><span class="k">def</span> <span class="nf">get_var_info</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/variables.csv&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_var_info"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_var_info">[docs]</a><span class="k">def</span> <span class="nf">get_var_info</span><span class="p">(</span><span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">variables_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get variable information</span>
 <span class="sd">    Usage</span>
@@ -386,7 +387,7 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="get_stats"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_stats">[docs]</a><span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_stats"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_stats">[docs]</a><span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns min,median(mean) and max of a numerical field</span>
 
@@ -399,8 +400,8 @@
 <span class="sd">    :returns: tuple(min, max, median (mean))</span>
 <span class="sd">    :rtype: tuple</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;field must be of type str, and not {type(field)}&#39;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;file_loc must be of type str, and not {type(file_loc)}&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;field must be of type str, and not {type(field)}&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;file_loc must be of type str, and not {type(file_loc)}&#39;</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
@@ -413,7 +414,37 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mid</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">minm</span><span class="p">,</span> <span class="n">maxm</span><span class="p">,</span> <span class="n">mid</span></div>
+    <span class="k">return</span> <span class="n">minm</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">maxm</span></div>
+
+
+
+<div class="viewcode-block" id="get_categories"><a class="viewcode-back" href="../../src.html#src.univariate_methods.get_categories">[docs]</a><span class="k">def</span> <span class="nf">get_categories</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    &#39;returns the most common category as int and dictionary with mapping from integers to categories.</span>
+<span class="sd">    :param field: categorical field</span>
+<span class="sd">    :type str</span>
+<span class="sd">    :param file_loc: path to the dataset</span>
+<span class="sd">    :type str</span>
+<span class="sd">    :return: returns a tuple with an int and dictionary</span>
+<span class="sd">    :type tuple</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;field must be of type str, and not {type(field)}&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;file_loc must be of type str, and not {type(file_loc)}&#39;</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
+    <span class="n">var_info</span> <span class="o">=</span> <span class="n">get_var_info</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">variables_file</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">var_info</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Invalid field name&#39;</span>
+    <span class="k">assert</span> <span class="n">var_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;categorical&#39;</span><span class="p">,</span> <span class="s1">&#39;field column must have categorical data and not&#39;</span> \
+                                                         <span class="s1">&#39; continuous/numerical data&#39;</span>
+
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">mapp</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+        <span class="n">mapp</span><span class="p">[</span><span class="nb">id</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">return</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mapp</span></div>
+
 </pre></div>
 
            </div>
@@ -443,16 +474,26 @@
   
 
 
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

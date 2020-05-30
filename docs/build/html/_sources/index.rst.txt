@@ -43,6 +43,7 @@ News
    Models<src>
    Test<src.test> 
    UI<src.ui>
+   Deployment<aws>
 
 
 Indices and tables
