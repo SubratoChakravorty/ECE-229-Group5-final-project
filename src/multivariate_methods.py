@@ -1,5 +1,5 @@
-from .univariate_methods import load_data_frame
-from .univariate_methods import get_var_info
+from src.univariate_methods import load_data_frame
+from src.univariate_methods import get_var_info
 import src.config as config
 import pandas as pd
 import numpy as np
@@ -161,6 +161,3 @@ class MLmodel:
             return self.clf.predict(test_data)
         else:
             raise Exception("Model not trained")
-
-
-

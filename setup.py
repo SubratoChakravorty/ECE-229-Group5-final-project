@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
    name='SSE',
    version='1.0',
-   description="A dashboard for analysis of students' science self efficiency",
+   description="A dashboard for analysis of students' science-self efficacy",
    author='Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, Heqian Lu, Kai Wang',
    author_email='wangjinjie722@gmail.com',
    packages=['src'], install_requires=
