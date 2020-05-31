@@ -13,7 +13,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
-from flask_caching import Cache
+# from flask_caching import Cache
 
 from src.config import variables_file, student_data_file, cache_dir
 from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
@@ -151,8 +151,8 @@ CACHE_CONFIG = {
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR' : cache_dir,
 }
-cache = Cache()
-cache.init_app(app.server, config=CACHE_CONFIG)
+# cache = Cache()
+# cache.init_app(app.server, config=CACHE_CONFIG)
 
 # Create app layout
 app.layout = html.Div(
@@ -923,7 +923,7 @@ def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
     return report
 
 
-@cache.memoize()
+# @cache.memoize()
 def train_model(endog: str, exog: List[str], x_var: str):
     """
     Train predictive model based on the chosen variables
