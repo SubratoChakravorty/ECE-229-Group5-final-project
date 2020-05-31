@@ -795,6 +795,14 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     :param slider_values: tuple of the values of the sliders, including the hidden ones
     :return: plotly figure
     """
+    if not (exog and endog and x_var):
+        if not exog:
+            return [get_empty_sunburst("Select variables")] * 2
+        elif not endog:
+            return [get_empty_sunburst("Select value to predict")] * 2
+        elif not x_var:
+            return [get_empty_sunburst("Select x-variable")] * 2
+
     n_points = 20
 
     # train model
@@ -810,7 +818,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     # predict
     y = model.predict_model(input_data)
     plt = get_line_plot(x_range, y, x_var, endog)
-    return plt, plt
+    return [plt] * 2
 
 
 def generate_model_input(x_range: np.ndarray, exog: List[str], x_values: Tuple[float], x_var: str, n_points: int) -> \
