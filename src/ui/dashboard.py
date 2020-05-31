@@ -738,7 +738,7 @@ def get_importance_bar_plot(x: List[str], y: str):
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
               [State('ml_sliders', 'children')],
-              prevent_initial_call=False)
+               prevent_initial_call=False)
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
@@ -913,6 +913,8 @@ def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
     :param slider_values: values of all sliders in exog fields
     :return: report text
     """
+    if not exog or not endog or not x_var:
+        return "Please complete the dropdown in Predictor first"
     n_points = 20
     report = ""
 
