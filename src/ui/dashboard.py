@@ -266,9 +266,8 @@ app.layout = html.Div(
                     html.P([
                         "Select x-axis:",
                         dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'S1TEPOPULAR', 'S1TEMAKEFUN', 'S1TEACTIV', 'S1STCHCONF',
-                                            'S1TEFRNDS', 'X1SCIINT', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT',
-                                            'X3TGPASCI']),
+                                     value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI',
+                                     'S1STCHFAIR_neg','S1STCHMISTKE_neg','S1TEMAKEFUN_neg','S1TEFRNDS_neg']),
                         dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
                                      value='X1SCIEFF'),
                         dcc.Graph(id="importance_bar")
@@ -694,6 +693,13 @@ def get_sunburst_plot(color_var, fields):
 @app.callback(Output('importance_bar', 'figure'),
               [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
 def make_importance_bar_plot(x: List[str], y: str):
+    """
+    Create the importance bar plot
+
+    :param x: x variables list
+    :param y: y variable, normally self-efficiency
+    :return: `plotly` figure
+    """
     if not x:
         fig = get_empty_sunburst("Select an x variable")
     elif not y:
@@ -705,6 +711,13 @@ def make_importance_bar_plot(x: List[str], y: str):
 
 @fig_formatter()
 def get_importance_bar_plot(x: List[str], y: str):
+    """
+    Create the importance bar plot
+
+    :param x: x variables list
+    :param y: y variable, normally self-efficiency
+    :return: `plotly` figure
+    """
     assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:

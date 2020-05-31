@@ -165,6 +165,6 @@ texinfo_documents = [
 todo_include_todos = False
 html_theme = 'sphinx_rtd_theme'
 
-source_parsers = {
-    '.md': 'recommonmark.parser.CommonMarkParser',
-}
+# source_parsers = {
+#     '.md': 'recommonmark.parser.CommonMarkParser',
+# }
