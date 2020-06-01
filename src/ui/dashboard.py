@@ -899,6 +899,7 @@ def add_frame(text):
     framed_text += "\n"
     return framed_text
 
+
 @app.callback(Output('report_text', 'children'),
               [Input('ml_independent_var_selector', 'value'),
                Input('ml_dependent_var_selector', 'value'),
@@ -951,8 +952,4 @@ def train_model(endog: str, exog: List[str], x_var: str):
 
 
 if __name__ == '__main__':
-    import os
-    app.run_server(debug=False,
-                   host=os.getenv("HOST", "192.168.1.10"),
-                   port=os.getenv("PORT", "8050"),
-                   dev_tools_hot_reload=False)
+    app.run_server(debug=True, dev_tools_hot_reload=False)
