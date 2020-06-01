@@ -219,7 +219,7 @@ app.layout = html.Div(
                     """
                     ### How to use this dashboard
                     
-                    #### 1. Correlations
+                    #### 1. Feature Importance
                     
                     Understand what drives an interest in science. Look at the bright yellow and dark blue squares 
                     in the correlation heatmap. Those indicate factors that are strongly correlated with each other. 
@@ -257,7 +257,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.Div([
-                    html.H1("Correlation"),
+                    html.H1("Feature Importance"),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                 ],
                     className="pretty_container six columns"
@@ -951,4 +951,8 @@ def train_model(endog: str, exog: List[str], x_var: str):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, dev_tools_hot_reload=False)
+    import os
+    app.run_server(debug=False,
+                   host=os.getenv("HOST", "192.168.1.10"),
+                   port=os.getenv("PORT", "8050"),
+                   dev_tools_hot_reload=False)
