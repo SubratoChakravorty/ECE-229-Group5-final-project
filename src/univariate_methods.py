@@ -184,7 +184,7 @@ def load_data_frame(file_loc=config.student_data_file) -> pd.DataFrame:
     :returns: Data
     :rtype: pandas.DataFrame
     """
-    assert os.path.isfile(file_loc)
+    assert os.path.isfile(file_loc), f"{file_loc} is not in path"
 
     return pd.read_csv(file_loc)
 

@@ -23,7 +23,7 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file):
     :return: For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation
     coefficient between a field and y
     """
-    
+
     df = load_data_frame(file_loc)
     var_info = get_var_info()
 

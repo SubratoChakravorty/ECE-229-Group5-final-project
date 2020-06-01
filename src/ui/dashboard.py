@@ -219,7 +219,7 @@ app.layout = html.Div(
                     """
                     ### How to use this dashboard
                     
-                    #### 1. Correlations
+                    #### 1. Feature Importance
                     
                     Understand what drives an interest in science. Look at the bright yellow and dark blue squares 
                     in the correlation heatmap. Those indicate factors that are strongly correlated with each other. 
@@ -257,7 +257,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.Div([
-                    html.H1("Correlation"),
+                    html.H1("Feature Importance"),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                 ],
                     className="pretty_container six columns"
@@ -738,7 +738,7 @@ def get_importance_bar_plot(x: List[str], y: str):
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
               [State('ml_sliders', 'children')],
-              prevent_initial_call=False)
+               prevent_initial_call=False)
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
@@ -795,6 +795,14 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     :param slider_values: tuple of the values of the sliders, including the hidden ones
     :return: plotly figure
     """
+    if not (exog and endog and x_var):
+        if not exog:
+            return [get_empty_sunburst("Select variables")] * 2
+        elif not endog:
+            return [get_empty_sunburst("Select value to predict")] * 2
+        elif not x_var:
+            return [get_empty_sunburst("Select x-variable")] * 2
+
     n_points = 20
 
     # train model
@@ -810,7 +818,7 @@ def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: flo
     # predict
     y = model.predict_model(input_data)
     plt = get_line_plot(x_range, y, x_var, endog)
-    return plt, plt
+    return [plt] * 2
 
 
 def generate_model_input(x_range: np.ndarray, exog: List[str], x_values: Tuple[float], x_var: str, n_points: int) -> \
@@ -891,6 +899,7 @@ def add_frame(text):
     framed_text += "\n"
     return framed_text
 
+
 @app.callback(Output('report_text', 'children'),
               [Input('ml_independent_var_selector', 'value'),
                Input('ml_dependent_var_selector', 'value'),
@@ -905,6 +914,8 @@ def make_report(exog: List, endog: str, x_var: str, *slider_values: float):
     :param slider_values: values of all sliders in exog fields
     :return: report text
     """
+    if not exog or not endog or not x_var:
+        return "Please complete the dropdown in Predictor first"
     n_points = 20
     report = ""
 
