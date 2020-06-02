@@ -261,7 +261,6 @@ def get_stats(field, file_loc=config.student_data_file, median=True):
     return minm, mid, maxm
 
 
-
 def get_categories(field, file_loc=config.student_data_file) -> Tuple[int, dict]:
     '''
     'returns the most common category as int and dictionary with mapping from integers to categories.
