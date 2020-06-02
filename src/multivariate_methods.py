@@ -59,26 +59,34 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file, method=
     return res
 
 
-def get_correlation_matrix(fields, file_loc=config.student_data_file):
+def get_correlation_matrix(fields, file_loc=config.student_data_file, method='pearson'):
     """
     Computes correlation matrix that captures correlation between features
     present in the fields parameter
+
 
     :param fields: List of fields
     :type fields: list
     :param file_loc: Path to the dataset
     :type file_loc: str
+    :param method: Method of correlation
+    :type method: str
+    - pearson : standard correlation coefficient
+    - kendall : Kendall Tau correlation coefficient
+    - spearman : Spearman rank correlation
     :returns: Correlation matrix.
     :rtype: pandas.DataFrame
     """
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(file_loc, str), f"file_loc must be a string, not {type(file_loc)}"
+    assert method in ['pearson', 'spearman', 'kendall'], 'invalid method of correlation, must be either pearson, or' \
+                                                         'spearman, or kendall'
 
     df = load_data_frame(file_loc)
     df_sub = df[fields]
 
     assert all([(isinstance(field, str) and field in df.columns) for field in fields])
-    corrmat = df_sub.corr()
+    corrmat = df_sub.corr(method=method)
 
     return corrmat
 
