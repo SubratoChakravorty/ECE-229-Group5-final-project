@@ -26,7 +26,7 @@ def test_ui002_second_univariate_plot_frequency(dash_duo):
     dash_duo.wait_for_contains_text('#plot_selector', "frequency plot", timeout=5)
 
     dash_duo.select_dcc_dropdown('#expl_category_selector', index=1)
-    dash_duo.wait_for_contains_text('#second_explore_plot', "\ncount", timeout=5)
+    dash_duo.wait_for_contains_text('#second_explore_plot', "plotly-logomark", timeout=5)
 
 
 def test_ui009_second_univariate_plot_box_gives_select_score_prompt(dash_duo):
