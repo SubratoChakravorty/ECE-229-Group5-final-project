@@ -59,7 +59,7 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file, method=
     return res
 
 
-def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
+def get_correlation_matrix(fields, file_loc=config.student_data_file):
     """
     Computes correlation matrix that captures correlation between features
     present in the fields parameter
