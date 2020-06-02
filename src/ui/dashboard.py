@@ -722,7 +722,7 @@ def get_importance_bar_plot(x: List[str], y: str):
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-    importance = list(map(partial(get_feature_importance, field2=y), x))
+    importance = list(map(partial(get_feature_importance, fields=[y]), x))
     series = pd.Series(importance, index=x, name=y)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)

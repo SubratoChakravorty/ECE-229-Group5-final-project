@@ -50,7 +50,6 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file, method=
     for x in fields:
         if var_info.loc[x]['type'] == 'continuous':
             res['continuous'][x] = df[x].corr(df[y], method=method)
-            print(method)
         elif var_info.loc[x]['type'] == 'categorical':
             df_sub = df[[x, y]].dropna()
             data = [x for _, x in df_sub.groupby(by=x)[y]]
