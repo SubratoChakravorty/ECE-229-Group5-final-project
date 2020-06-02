@@ -722,7 +722,13 @@ def get_importance_bar_plot(x: List[str], y: str):
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-    importance = list(map(partial(get_feature_importance, fields=[y]), x))
+    importance_dict = get_feature_importance(y,fields=x)
+    importance = []
+    for field in x:
+        if vars_df.loc[field]['type'] == 'continuous':
+            importance.append(importance_dict['continuous'][field])
+        elif vars_df.loc[field]['type'] == 'categorical':
+            importance.append(importance_dict['categorical'][field])
     series = pd.Series(importance, index=x, name=y)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)
@@ -738,7 +744,7 @@ def get_importance_bar_plot(x: List[str], y: str):
 @app.callback(Output('ml_sliders', 'children'),
               [Input('ml_independent_var_selector', 'value')],
               [State('ml_sliders', 'children')],
-               prevent_initial_call=False)
+              prevent_initial_call=False)
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
@@ -761,6 +767,7 @@ def assign_slider_text_update_callback(field: str) -> None:
 
     :param field: the categorical data field
     """
+
     if vars_df.loc[field, 'type'] == 'categorical':
         _, category_lookup = get_categories(field, student_data_file)
 

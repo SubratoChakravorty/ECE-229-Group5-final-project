@@ -6,6 +6,7 @@ SSE.egg-info/dependency_links.txt
 SSE.egg-info/requires.txt
 SSE.egg-info/top_level.txt
 src/__init__.py
+src/__main__.py
 src/clean_data.py
 src/config.py
 src/multivariate_methods.py

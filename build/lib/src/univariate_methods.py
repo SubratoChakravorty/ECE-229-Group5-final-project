@@ -109,7 +109,7 @@ def get_field_data(field_name: Union[str, Tuple] = '', file_loc=config.student_d
     return field_data
 
 
-def get_binned_data(field_name='', width=10, file_loc=config.student_data_file):
+def get_binned_data(field_name='', width=1, file_loc=config.student_data_file):
     '''
     Returns the count of continuous data count seperated by range
 
@@ -184,7 +184,7 @@ def load_data_frame(file_loc=config.student_data_file) -> pd.DataFrame:
     :returns: Data
     :rtype: pandas.DataFrame
     """
-    assert os.path.isfile(file_loc)
+    assert os.path.isfile(file_loc), f"{file_loc} is not in path"
 
     return pd.read_csv(file_loc)
 

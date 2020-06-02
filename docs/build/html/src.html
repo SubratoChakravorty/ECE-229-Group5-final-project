@@ -179,14 +179,14 @@
 <li class="toctree-l2"><a class="reference internal" href="src.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.conftest">src.test.conftest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.test_backend">src.test.test_backend module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.test.html#src-test-test-ui-module">src.test.test_ui module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test.test_ui">src.test.test_ui module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.test.html#module-src.test">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src.ui.html">src.ui package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="src.ui.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.ui.html#src-ui-dashboard-module">src.ui.dashboard module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.ui.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.ui.html#module-src.ui.dashboard">src.ui.dashboard module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.ui.html#module-src.ui">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -260,9 +260,9 @@ and -1 in place of test accuracy.</p>
 
 <dl class="function">
 <dt id="src.multivariate_methods.get_correlation_matrix">
-<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_correlation_matrix</code><span class="sig-paren">(</span><em>fields</em>, <em>file_loc='../data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_correlation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_correlation_matrix</code><span class="sig-paren">(</span><em>fields</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_correlation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes correlation matrix that captures correlation between features
-presented in the fields parameter</p>
+present in the fields parameter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -285,23 +285,41 @@ presented in the fields parameter</p>
 
 <dl class="function">
 <dt id="src.multivariate_methods.get_feature_importance">
-<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_feature_importance</code><span class="sig-paren">(</span><em>field1</em>, <em>field2</em>, <em>file_loc='../../data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_feature_importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_feature_importance" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function describes how important a particular feature(variable our user choose) is to predict y value(outcome our user expect to see)</p>
+<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_feature_importance</code><span class="sig-paren">(</span><em>y</em>, <em>fields</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em>, <em>method='pearson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_feature_importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_feature_importance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes feature importance of all the variables in fields parameter with dependent y variable. For categorical
+fields, it provides results from anova analysis and for numerical/continuous fields it returns correlation
+coefficients with y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method</strong> – Method of correlation</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>pearson : standard correlation coefficient</li>
+<li>kendall : Kendall Tau correlation coefficient</li>
+<li>spearman : Spearman rank correlation</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> – two variable fields in our variables list, categorical type(gender or location) and numerical type(scale of something)</li>
-<li><strong>y</strong> – a dependent y field(outcome our user expect to see)</li>
+<li><strong>file_loc</strong> (<em>str</em>) – path to dataset</li>
+<li><strong>fields</strong> (<em>list</em>) – list of field ids where each field id is a string</li>
+<li><strong>y</strong> (<em>str</em>) – a dependent y field id</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation coefficient between a field and y</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a multilevel dictionary, value corresponding to key ‘category’ contains a dictionary with anova results for</p>
 </td>
 </tr>
 </tbody>
 </table>
+<p>categorical fields and value for key ‘continuous’ is dictionary with correlation coefficients.
+:rtype dict</p>
 </dd></dl>
 
 </div>

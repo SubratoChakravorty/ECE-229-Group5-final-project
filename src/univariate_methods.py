@@ -130,10 +130,9 @@ def get_binned_data(field_name='', width=10, file_loc=config.student_data_file):
     field_data = df[field_name]
     Range = max(field_data) - min(field_data)
     bins_num = math.ceil(Range / width)
-    bins = list(range(bins_num))  # * int(width)
-    for i in range(len(bins)):
-        bins[i] *= width
-
+    bins = [min(field_data)-width/2]
+    for i in range(1,bins_num+1):
+        bins.append(bins[i-1] + width)
     cut = pd.cut(field_data, bins)
     cut_res = pd.value_counts(cut)
     res = {}

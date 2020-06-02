@@ -1,5 +1,5 @@
-from .univariate_methods import load_data_frame
-from .univariate_methods import get_var_info
+from src.univariate_methods import load_data_frame
+from src.univariate_methods import get_var_info
 import src.config as config
 import pandas as pd
 import numpy as np
@@ -11,43 +11,57 @@ from scipy import stats
 
 np.random.seed(0)
 
-from .univariate_methods import load_data_frame
-from .univariate_methods import get_var_info
 
-def get_feature_importance(field1,field2,file_loc="../../data/student_data.csv"):
+def get_feature_importance(y, fields, file_loc=config.student_data_file, method='pearson'):
     """
-    This function describes how important a particular feature(variable our user choose) is to predict y value(outcome our user expect to see)
+    Computes feature importance of all the variables in fields parameter with dependent y variable. For categorical
+    fields, it provides results from anova analysis and for numerical/continuous fields it returns correlation
+    coefficients with y.
     
-    :parameter x: two variable fields in our variables list, categorical type(gender or location) and numerical type(scale of something)
-    :parameter y: a dependent y field(outcome our user expect to see)
-    :return: For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation coefficient between a field and y
+    :param method: Method of correlation
+    - pearson : standard correlation coefficient
+    - kendall : Kendall Tau correlation coefficient
+    - spearman : Spearman rank correlation
+    :param file_loc: path to dataset
+    :type file_loc: str
+    :param fields: list of field ids where each field id is a string
+    :type fields: list
+    :param y: a dependent y field id
+    :type y: str
+    :return: a multilevel dictionary, value corresponding to key 'category' contains a dictionary with anova results for
+    categorical fields and value for key 'continuous' is dictionary with correlation coefficients.
+    :rtype dict
     """
-    
+
     df = load_data_frame(file_loc)
-    df = df.dropna()
-    x = df[field1]
-    y = df[field2]
+    var_info = get_var_info()
+
+    assert isinstance(fields, list)
+    assert all([(isinstance(field, str) and field in var_info.index) for field in fields])
+    assert isinstance(y, str)
+    assert y in var_info.index
+    assert isinstance(file_loc, str)
 
     # if x is numerical(continuous) field, we return the pearson correlation between a field and y
-    # for the pearson correlation between a field and y, their size must be the same 
-    if x.dtypes == 'float64' or 'int64':
-        return stats.pearsonr(x, y)[0] # correlation coefficient
-    else:
-    # if x is categorical field, we return the statistical test results:
-    # if x filed has 2 options like sex, we do the T-test(which is included by the ANOVA anlysis)
-    # if x has more options like number of science courses, we do the ANOVA anlysis
-        result = pd.concat([x,y],axis=1)
-        df1 = [x for _, x in result.groupby(result[result.columns[0]])]
-        data = []
-        for i in range(1,len(df1)):
-            data.append(df1[i][df1[i].columns[1]])
-        return stats.f_oneway(*data)[1]
-    return 'wrong data input'
+    # for the pearson correlation between a field and y, their size must be the same
+    res = dict()
+    res['continuous'] = dict()
+    res['categorical'] = dict()
+    for x in fields:
+        if var_info.loc[x]['type'] == 'continuous':
+            res['continuous'][x] = df[x].corr(df[y], method=method)
+        elif var_info.loc[x]['type'] == 'categorical':
+            df_sub = df[[x, y]].dropna()
+            data = [x for _, x in df_sub.groupby(by=x)[y]]
+            res['categorical'][x] = tuple(stats.f_oneway(*data))
 
-def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
-    '''
+    return res
+
+
+def get_correlation_matrix(fields, file_loc=config.student_data_file):
+    """
     Computes correlation matrix that captures correlation between features
-    presented in the fields parameter
+    present in the fields parameter
 
     :param fields: List of fields
     :type fields: list
@@ -55,7 +69,7 @@ def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     :type file_loc: str
     :returns: Correlation matrix.
     :rtype: pandas.DataFrame
-    '''
+    """
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(file_loc, str), f"file_loc must be a string, not {type(file_loc)}"
 
@@ -81,7 +95,7 @@ class MLmodel:
         self.cont_cols = None
 
     def train_model(self, y, fields, regressor=None, test_split=0):
-        '''
+        """
         train a machine learning model with y as dependent variable and variables in fields parameter as independent variables
         :param regressor: sklearn regressor object, if None default RandomForestRegressor is used
         :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else
@@ -90,7 +104,7 @@ class MLmodel:
         :param fields: list,  list of independent variables, can be numerical or categorical
         :return: returns a tuple with training accuracy and test accuracy if test_split > 0 else a tuple with training accuracy
         and -1 in place of test accuracy.
-        '''
+        """
         assert isinstance(fields, list)
         assert all([(isinstance(field, str) and field in self.var_info.index) for field in fields])
         assert y in self.var_info.index
@@ -140,12 +154,12 @@ class MLmodel:
             return self.clf.score(df_sub, Y), -1
 
     def predict_model(self, input_data):
-        '''
+        """
         returns model's prediction for the input_data
         :param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,
         depending upon the number of samples
         :return: returns a 1-d numpy array with predicted y value for each sample
-        '''
+        """
 
         assert isinstance(input_data, dict)
         assert all([field in self.fields for field in input_data.keys()])
@@ -161,6 +175,4 @@ class MLmodel:
             return self.clf.predict(test_data)
         else:
             raise Exception("Model not trained")
-
-
 
