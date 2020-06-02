@@ -31,6 +31,7 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file):
     assert all([(isinstance(field, str) and field in var_info.index) for field in fields])
     assert isinstance(y, str)
     assert y in var_info.index
+    assert isinstance(file_loc, str)
 
     # if x is numerical(continuous) field, we return the pearson correlation between a field and y
     # for the pearson correlation between a field and y, their size must be the same
@@ -165,5 +166,4 @@ class MLmodel:
             return self.clf.predict(test_data)
         else:
             raise Exception("Model not trained")
-
 

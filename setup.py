@@ -20,6 +20,6 @@ setup(
    "dash_bootstrap_components",
    "sphinx==1.8.5",
    "sphinx_rtd_theme==0.4.2",
-   "recommonmark",
-   ]  #same as name
+   "recommonmark", 'scipy', 'numpy'
+    ]  #same as name
 )
