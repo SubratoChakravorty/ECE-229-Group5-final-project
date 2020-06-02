@@ -12,16 +12,25 @@ from scipy import stats
 np.random.seed(0)
 
 
-def get_feature_importance(y, fields, file_loc=config.student_data_file):
+def get_feature_importance(y, fields, file_loc=config.student_data_file, method='pearson'):
     """
-    This function describes how important a particular feature(variable our user choose) is to predict y value(outcome
-    our user expect to see)
+    Computes feature importance of all the variables in fields parameter with dependent y variable. For categorical
+    fields, it provides results from anova analysis and for numerical/continuous fields it returns correlation
+    coefficients with y.
     
+    :param method: Method of correlation
+    - pearson : standard correlation coefficient
+    - kendall : Kendall Tau correlation coefficient
+    - spearman : Spearman rank correlation
     :param file_loc: path to dataset
-    :param fields: list of fields
-    :param y: a dependent y field
-    :return: For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation
-    coefficient between a field and y
+    :type file_loc: str
+    :param fields: list of field ids where each field id is a string
+    :type fields: list
+    :param y: a dependent y field id
+    :type y: str
+    :return: a multilevel dictionary, value corresponding to key 'category' contains a dictionary with anova results for
+    categorical fields and value for key 'continuous' is dictionary with correlation coefficients.
+    :rtype dict
     """
 
     df = load_data_frame(file_loc)
@@ -40,7 +49,8 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file):
     res['categorical'] = dict()
     for x in fields:
         if var_info.loc[x]['type'] == 'continuous':
-            res['continuous'][x] = df[x].corr(df[y])
+            res['continuous'][x] = df[x].corr(df[y], method=method)
+            print(method)
         elif var_info.loc[x]['type'] == 'categorical':
             df_sub = df[[x, y]].dropna()
             data = [x for _, x in df_sub.groupby(by=x)[y]]
@@ -50,9 +60,9 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file):
 
 
 def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
-    '''
+    """
     Computes correlation matrix that captures correlation between features
-    presented in the fields parameter
+    present in the fields parameter
 
     :param fields: List of fields
     :type fields: list
@@ -60,7 +70,7 @@ def get_correlation_matrix(fields, file_loc="../data/student_data.csv"):
     :type file_loc: str
     :returns: Correlation matrix.
     :rtype: pandas.DataFrame
-    '''
+    """
     assert isinstance(fields, list), f"fields must be a list, not {type(fields)}"
     assert isinstance(file_loc, str), f"file_loc must be a string, not {type(file_loc)}"
 
@@ -86,7 +96,7 @@ class MLmodel:
         self.cont_cols = None
 
     def train_model(self, y, fields, regressor=None, test_split=0):
-        '''
+        """
         train a machine learning model with y as dependent variable and variables in fields parameter as independent variables
         :param regressor: sklearn regressor object, if None default RandomForestRegressor is used
         :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else
@@ -95,7 +105,7 @@ class MLmodel:
         :param fields: list,  list of independent variables, can be numerical or categorical
         :return: returns a tuple with training accuracy and test accuracy if test_split > 0 else a tuple with training accuracy
         and -1 in place of test accuracy.
-        '''
+        """
         assert isinstance(fields, list)
         assert all([(isinstance(field, str) and field in self.var_info.index) for field in fields])
         assert y in self.var_info.index
@@ -145,12 +155,12 @@ class MLmodel:
             return self.clf.score(df_sub, Y), -1
 
     def predict_model(self, input_data):
-        '''
+        """
         returns model's prediction for the input_data
         :param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,
         depending upon the number of samples
         :return: returns a 1-d numpy array with predicted y value for each sample
-        '''
+        """
 
         assert isinstance(input_data, dict)
         assert all([field in self.fields for field in input_data.keys()])
