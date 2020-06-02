@@ -1,7 +1,7 @@
 """
 Just run using `python dashboard.py`
 """
-from functools import partial
+from itertools import product
 from typing import List, Union, Dict, Tuple
 
 import dash
@@ -640,8 +640,19 @@ def get_frequency_plot(categorical):
     """
     labels = vars_df.loc[categorical, 'short'].to_dict()
     data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
-    fig = px.bar(data, x=categorical[0], y='count', labels=labels)
-    return fig
+
+    it = product(*tuple(data[c].unique() for c in categorical[1:]))
+    x = data[categorical[0]].unique()
+    bars = []
+    for i in it:
+        df_filter = [all(z) for z in zip(*tuple(data[c] == v for c, v in zip(categorical[1:], i)))]
+        b = go.Bar(
+            name='/'.join(i),
+            x=x,
+            y=data.loc[df_filter, 'count']
+        )
+        bars.append(b)
+    return go.Figure(bars, layout=dict(barmode='stack'))
 
 
 # TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
