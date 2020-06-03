@@ -213,26 +213,34 @@
     <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="get_correlation_matrix"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_correlation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_correlation_matrix</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
+<div class="viewcode-block" id="get_correlation_matrix"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_correlation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_correlation_matrix</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes correlation matrix that captures correlation between features</span>
 <span class="sd">    present in the fields parameter</span>
+
 
 <span class="sd">    :param fields: List of fields</span>
 <span class="sd">    :type fields: list</span>
 <span class="sd">    :param file_loc: Path to the dataset</span>
 <span class="sd">    :type file_loc: str</span>
+<span class="sd">    :param method: Method of correlation</span>
+<span class="sd">    :type method: str</span>
+<span class="sd">    - pearson : standard correlation coefficient</span>
+<span class="sd">    - kendall : Kendall Tau correlation coefficient</span>
+<span class="sd">    - spearman : Spearman rank correlation</span>
 <span class="sd">    :returns: Correlation matrix.</span>
 <span class="sd">    :rtype: pandas.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;fields must be a list, not {type(fields)}&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;file_loc must be a string, not {type(file_loc)}&quot;</span>
+    <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pearson&#39;</span><span class="p">,</span> <span class="s1">&#39;spearman&#39;</span><span class="p">,</span> <span class="s1">&#39;kendall&#39;</span><span class="p">],</span> <span class="s1">&#39;invalid method of correlation, must be either pearson, or&#39;</span> \
+                                                         <span class="s1">&#39;spearman, or kendall&#39;</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
     <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">fields</span><span class="p">]</span>
 
     <span class="k">assert</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
-    <span class="n">corrmat</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+    <span class="n">corrmat</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">corrmat</span></div>
 
