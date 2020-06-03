@@ -1,23 +1,22 @@
 """
 Just run using `python dashboard.py`
 """
-from itertools import product
-from typing import List, Union, Dict, Tuple
-
-import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+import math
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from src.ui import app, cache
+from itertools import product
 import plotly.graph_objects as go
+import dash_core_components as dcc
+import dash_html_components as html
+import dash_bootstrap_components as dbc
+from typing import List, Union, Dict, Tuple
 from dash.dependencies import Input, Output, State
-
 from src.config import variables_file, student_data_file
 from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
-from src.ui import app, cache
 
 # color for frontend
 colors = {
@@ -82,7 +81,8 @@ def fig_formatter(**kw):
             fig = func(*args, **kwargs)
             fig.update_layout(margin=dict(t=t, l=l, r=r, b=b),
                               paper_bgcolor='rgba(0,0,0,0)',
-                              plot_bgcolor='rgba(0,0,0,0)')
+                              plot_bgcolor='rgba(0,0,0,0)',
+                              )
             return fig
 
         return wrapped
@@ -271,21 +271,48 @@ app.layout = html.Div(
                     html.H1("Feature Importance"),
                     html.H6("Understand the correlations between numerical variables"),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
-                ],
-                    className="pretty_container six columns"
+                    ],
+                    className="pretty_container one-third column"
                 ),
                 html.Div([
-                    html.P([
-                        "Select x-axis:",
-                        dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI',
-                                            'S1STCHFAIR_neg', 'S1STCHMISTKE_neg', 'S1TEMAKEFUN_neg', 'S1TEFRNDS_neg']),
-                        dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
-                                     value='X1SCIEFF'),
-                        dcc.Graph(id="importance_bar")
-                    ]),
+                    html.Div([
+                        html.Div([
+                                html.P([
+                                    "Select x-axis:",
+                                    dcc.Dropdown(id='import_x_selector', options=populate_dropdown(), multi=True,
+                                                value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI', # continuous
+                                                        'S1STCHFAIR_neg', # continuous
+                                                        'SCH_LOCALE','SCH_CONTROL','N1GEN','SCIJOB','N1GROUP']),# categorical
+                                    dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                                value='X1SCIEFF'),
+                                    ]),
+                                ],
+                                id="FIselector",
+                                className="mini_container"
+                            ),
+                    #     ],
+                    #     id="FI-container",
+                    #     className="container-display two-third columns",
+                    # ),
+                    # html.Div([
+                            html.P([
+                                html.H6("Importance bar plot for continuous variables"),             
+                                dcc.Graph(id="importance_bar1"),
+                                ],
+                                className="one-half column"
+                            ),
+                            html.P([
+                                html.H6("Log P-value bar plot for categorical variables"),
+                                dcc.Graph(id="importance_bar2")
+                                ],
+                                className="one-half column"
+                            ),
+                        ],
+                        className="pretty_container",
+                    ),
                 ],
-                    className="pretty_container six columns"
+                id="FI-column",
+                className="two-third columns",
                 ),
             ],
             className="flex-display",
@@ -838,7 +865,7 @@ def get_sunburst_plot(color_var, fields):
     return fig
 
 
-@app.callback(Output('importance_bar', 'figure'),
+@app.callback([Output('importance_bar1', 'figure'),Output('importance_bar2', 'figure'),],
               [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
 def make_importance_bar_plot(x: List[str], y: str):
     """
@@ -849,44 +876,55 @@ def make_importance_bar_plot(x: List[str], y: str):
     :return: `plotly` figure
     """
     if not x:
-        fig = get_empty_sunburst("Select an x variable")
+        fig_con = get_empty_sunburst("Select an x variable")
+        fig_cate = get_empty_sunburst("Select an x variable")
     elif not y:
-        fig = get_empty_sunburst("Select a y variable")
+        fig_con = get_empty_sunburst("Select a y variable")
+        fig_cate = get_empty_sunburst("Select a y variable")
     else:
-        fig = get_importance_bar_plot(x, y)
-    return fig
+        fig_con = get_importance_bar_plot(x, y, "continuous")
+        fig_cate = get_importance_bar_plot(x, y, "categorical")
+    return [fig_con, fig_cate]
 
 
 @fig_formatter()
-def get_importance_bar_plot(x: List[str], y: str):
+def get_importance_bar_plot(x: List[str], y: str, t: str):
     """
-    Create the importance bar plot
+    Create the importance bar plot for continuous variables and p value bar for categorical variables.
 
     :param x: x variables list
     :param y: y variable, normally self-efficiency
+    :param t: t variable , the type of x variables, "continuous" or "categorical"
     :return: `plotly` figure
     """
     assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
-    assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
+    assert isinstance(y, str), f"The y variable must be a string, not {type(y)}"
+    assert isinstance(t, str), f"The t variable must be a string, not {type(t)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
     importance_dict = get_feature_importance(y, fields=x)
     importance = []
+    fields = []
     for field in x:
-        if vars_df.loc[field]['type'] == 'continuous':
-            importance.append(importance_dict['continuous'][field])
-        elif vars_df.loc[field]['type'] == 'categorical':
-            importance.append(importance_dict['categorical'][field])
-    series = pd.Series(importance, index=x, name=y)
+        if t == "continuous" and vars_df.loc[field]['type'] == t:
+            importance.append(importance_dict[t][field])
+            fields.append(field)
+        elif t == "categorical" and vars_df.loc[field]['type'] == t:
+            importance.append(math.log(importance_dict[t][field][0]))
+            fields.append(field)
+        else:
+            continue
+    series = pd.Series(importance, index=fields, name=y)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)
-    return px.bar(
+    fig = px.bar(
         series,
         x=series.index,
         y=y,
         color=y,
-        labels=dict(x='')
+        labels=dict(x='',title='Least Used Feature')
     )
+    return fig
 
 
 @app.callback(Output('ml_sliders', 'children'),
