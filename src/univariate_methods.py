@@ -1,4 +1,3 @@
-from functools import lru_cache
 import json
 import math
 import os
@@ -6,6 +5,7 @@ from typing import Union, Tuple
 
 import pandas as pd
 import src.config as config
+from src.ui import cache
 
 
 def return_fields(file_loc=config.student_data_file):
@@ -82,7 +82,7 @@ def get_counts(field_name='', file_loc=config.student_data_file):
     return field_data.value_counts()
 
 
-@lru_cache(maxsize=20)
+@cache.memoize()
 def get_field_data(field_name: Union[str, Tuple] = '', file_loc=config.student_data_file):
     '''
     Returns the input field data from the dataframe
@@ -173,7 +173,7 @@ def get_hierarchical_data(fields, color_var='X1SCIEFF', file_loc=config.student_
     return flat_df, color_var_mean
 
 
-@lru_cache(maxsize=10)
+@cache.memoize()
 def load_data_frame(file_loc=config.student_data_file) -> pd.DataFrame:
     """
     Used to store dataframes loaded from a csv.

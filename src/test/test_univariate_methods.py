@@ -5,7 +5,6 @@ import src.univariate_methods as um
 import pandas as pd
 
 
-# Here's an example test case to get you started
 class TestDataFetching(unittest.TestCase):
     def test_return_fields_returns_a_dict(self):
         result = um.return_fields(Config.student_data_file)

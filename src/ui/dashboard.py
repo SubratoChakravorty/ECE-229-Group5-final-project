@@ -4,7 +4,6 @@ Just run using `python dashboard.py`
 from itertools import product
 from typing import List, Union, Dict, Tuple
 
-import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
@@ -13,12 +12,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
-from flask_caching import Cache
 
-from src.config import variables_file, student_data_file, cache_dir
+from src.config import variables_file, student_data_file
 from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
+from src.ui import app, cache
 
 # color for frontend
 colors = {
@@ -162,16 +161,7 @@ def get_slider(field: str) -> html.Div:
     return div
 
 
-# Initialize app and cache
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-                external_stylesheets=[dbc.themes.BOOTSTRAP],
-                suppress_callback_exceptions=True)
-CACHE_CONFIG = {
-    'CACHE_TYPE': 'filesystem',
-    'CACHE_DIR' : cache_dir,
-}
-cache = Cache()
-cache.init_app(app.server, config=CACHE_CONFIG)
+
 
 # Create app layout
 app.layout = html.Div(
