@@ -92,7 +92,7 @@ def fig_formatter(**kw):
 
 
 correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'continuous'].index.to_list(),
-                                            student_data_file)
+                                            student_data_file, method='spearman')
 
 
 @fig_formatter(t=30)
