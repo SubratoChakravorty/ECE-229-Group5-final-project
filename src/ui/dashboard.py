@@ -35,12 +35,12 @@ vars_df['code'] = vars_df.index
 self_efficacy_predictors = ['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SES', 'X1GEN']
 
 UCSD_text = """
-     _______.        _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  
-    /       |       /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ 
-   |   (----`      |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----'      |   (----`   |  .--.  |
-    \   \           \   \       |   __|        |   _  <    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |
-.----)   |      .----)   |      |  |____       |  |_)  |     |  |           |  `--'  |    |  `----.   .----)   |      |  '--'  |
-|_______/       |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ 
+     _______.     _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  
+    /       |    /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ 
+   |   (----`   |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----'      |   (----`   |  .--.  |
+    \   \        \   \       |   __|        |   _  <    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |
+.----)   |   .----)   |      |  |____       |  |_)  |     |  |           |  `--'  |    |  `----.   .----)   |      |  '--'  |
+|_______/    |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ 
                                                                                                                                 
 
                                         """
@@ -63,6 +63,16 @@ def populate_dropdown(category: str = None) -> List[dict]:
 
 
 def fig_formatter(**kw):
+    """
+    Decorator for functions that produce figures. By default, all margins are stripped, but the margin sized can be
+    set indivdually.
+
+    :param t: top margin
+    :param l: left margin
+    :param r: right margin
+    :param b: bottom margin
+    :return:
+    """
     t = kw.get('t', 0)
     l = kw.get('l', 0)
     r = kw.get('r', 0)
@@ -86,7 +96,10 @@ correlation_matrix = get_correlation_matrix(vars_df.loc[vars_df['type'] == 'cont
 
 
 @fig_formatter(t=30)
-def make_correlation_heatmap():
+def make_correlation_heatmap() -> go.Figure:
+    """
+    Produce the correlation heatmap figure
+    """
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     df = correlation_matrix.rename(columns=short_name_lookup)
     df = df.rename(index=short_name_lookup)
@@ -99,7 +112,13 @@ def make_correlation_heatmap():
     return fig
 
 
-def get_slider(field) -> List:
+def get_slider(field: str) -> html.Div:
+    """
+    Return a hidden div with slider text above the slider.
+
+    :param field: A field from the list of valid fields
+    :return hidden div
+    """
     field_name = vars_df.loc[field, 'short']
     if vars_df.loc[field, 'type'] == 'continuous':
         minimum, median, maximum = tuple(round(v, 1) for v in get_stats(field, student_data_file))
@@ -258,6 +277,7 @@ app.layout = html.Div(
             [
                 html.Div([
                     html.H1("Feature Importance"),
+                    html.H6("Understand the correlations between variables"),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                 ],
                     className="pretty_container six columns"
@@ -266,8 +286,8 @@ app.layout = html.Div(
                     html.P([
                         "Select x-axis:",
                         dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                     value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT','X3TGPASCI',
-                                     'S1STCHFAIR_neg','S1STCHMISTKE_neg','S1TEMAKEFUN_neg','S1TEFRNDS_neg']),
+                                     value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI',
+                                            'S1STCHFAIR_neg', 'S1STCHMISTKE_neg', 'S1TEMAKEFUN_neg', 'S1TEFRNDS_neg']),
                         dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
                                      value='X1SCIEFF'),
                         dcc.Graph(id="importance_bar")
@@ -285,13 +305,15 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H1("Predictor"),
+                        html.H6('Create and test your "student"'),
                         html.P(
                             [
                                 "Select variables:",
                                 dcc.Dropdown(
                                     id="ml_independent_var_selector",
                                     options=populate_dropdown(),
-                                    value=['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SCIINT', 'X1SCIUTI', 'X1GEN'],
+                                    value=['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SCIINT', 'X1SCIUTI',
+                                           'X1GEN'],
                                     multi=True
                                 ),
                                 "Select value to predict:",
@@ -328,10 +350,11 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H1("Explore"),
+                        html.H6("Investigate the relationships between categorical variables"),
                         html.P("Click a category on the inner plot to filter"),
                         html.P(["Select categories:",
                                 dcc.Dropdown(id='expl_category_selector', options=populate_dropdown('categorical'),
-                                             multi=True, value=['SCH_LOCALE', 'N1HIDEG', 'SCIJOB'])]),
+                                             multi=True, value=['COURSE_TYPE', 'N1HIDEG', 'SCIJOB'])]),
                         html.P(["Select score:",
                                 dcc.Dropdown(id='expl_continuous_selector', options=populate_dropdown('continuous'),
                                              value='X1SCIEFF'), ]),
@@ -348,12 +371,12 @@ app.layout = html.Div(
                           html.P("The color of each segment indicates the mean of the selected score"),
                           html.P("The size of each segment represents the size of that student population"),
                           html.P("Click on a category to zoom in"), ],
-                         className="pretty_container four columns",
+                         className="pretty_container five columns",
                          id="sunburst-div"),
                 html.Div([dcc.Graph(id="second_explore_plot"),
                           html.P("Tips:"),
                           html.P("The x-axis is the first-selected categorical variable"), ],
-                         className="pretty_container four columns",
+                         className="pretty_container five columns",
                          id="sunburst-bar-chart"),
             ],
             className="flex-display",
@@ -365,6 +388,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
+                        html.H6("Histogram for continuous variables"),
                         html.P(
                             [
                                 "Select a continuous variable:",
@@ -463,7 +487,7 @@ app.layout = html.Div(
                                 dbc.ModalHeader("Report"),
                                 dbc.ModalBody(
                                     [
-                                        html.Pre(UCSD_text,id="Report_body"),
+                                        html.Pre(UCSD_text, id="Report_body"),
                                         html.H2("This is your profile"),
                                         html.Pre(id="report_text"),
                                         dcc.Graph(id="ml_prediction_plot2")
@@ -641,21 +665,25 @@ def get_frequency_plot(categorical):
     labels = vars_df.loc[categorical, 'short'].to_dict()
     data, _ = get_hierarchical_data(categorical, file_loc=student_data_file)
 
-    it = product(*tuple(data[c].unique() for c in categorical[1:]))
-    x = data[categorical[0]].unique()
-    bars = []
-    for i in it:
-        df_filter = [all(z) for z in zip(*tuple(data[c] == v for c, v in zip(categorical[1:], i)))]
-        b = go.Bar(
-            name='/'.join(i),
-            x=x,
-            y=data.loc[df_filter, 'count']
-        )
-        bars.append(b)
-    return go.Figure(bars, layout=dict(barmode='stack'))
+    # Generate stacked bars if there is more than one category
+    if len(labels) > 1:
+        it = product(*tuple(data[c].unique() for c in categorical[1:]))
+        x = data[categorical[0]].unique()
+        bars = []
+        for i in it:
+            df_filter = [all(z) for z in zip(*tuple(data[c] == v for c, v in zip(categorical[1:], i)))]
+            b = go.Bar(
+                name='/'.join(i),
+                x=x,
+                y=data.loc[df_filter, 'count']
+            )
+            bars.append(b)
+        fig = go.Figure(bars, layout=dict(barmode='stack'))
+    else:
+        fig = px.bar(data, x=categorical[0], y='count', labels=labels)
+    return fig
 
 
-# TODO: use state callback to update instead of creating new figure [State('graph', 'figure')]
 @app.callback(Output('sunburst_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value')])
 def make_sunburst(fields, color_var):
@@ -695,7 +723,7 @@ def get_sunburst_plot(color_var, fields):
         path=fields,
         values='count',
         color='mean',
-        color_continuous_scale='Portland',
+        color_continuous_scale='balance',
         color_continuous_midpoint=color_var_mean,
     )
     return fig
@@ -733,7 +761,7 @@ def get_importance_bar_plot(x: List[str], y: str):
     assert isinstance(y, str), f"The y variable must be a string, not {type(x)}"
     for item in x:
         assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-    importance_dict = get_feature_importance(y,fields=x)
+    importance_dict = get_feature_importance(y, fields=x)
     importance = []
     for field in x:
         if vars_df.loc[field]['type'] == 'continuous':
@@ -759,6 +787,7 @@ def get_importance_bar_plot(x: List[str], y: str):
 def show_ml_sliders(fields: List, state: List):
     """
     Show the sliders that were selected using the multiple dropdown. Hide the others.
+
     :param fields: List of fields
     :param state: children of the ml_sliders <P>
     :return: updated state
@@ -843,6 +872,7 @@ def generate_model_input(x_range: np.ndarray, exog: List[str], x_values: Tuple[f
         Dict[str, Union[np.ndarray, List]]:
     """
     Produce a dictionary to be passed to the model for prediction
+
     :param x_range: The values of x_var
     :param exog: The field to predict
     :param x_values: The slider values
@@ -894,6 +924,7 @@ def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var:
                     yaxis_range=[y_min, y_max]),
     )
 
+
 def add_frame(text):
     """
     Add frame to raw text.
@@ -903,17 +934,17 @@ def add_frame(text):
     """
     raw_text = text.split("*")
     framed_text = ""
-    width, hight = max(map(lambda x:len(x),raw_text)),len(raw_text)
-    framed_text += "-"*(width+2)
+    width, hight = max(map(lambda x: len(x), raw_text)), len(raw_text)
+    framed_text += "-" * (width + 2)
     framed_text += "\n"
     for t in raw_text:
         if not t:
             continue
         framed_text += "|"
         framed_text += t
-        framed_text += " "*(width-len(t))
-        framed_text += "|\n" 
-    framed_text += "-"*(width+2)
+        framed_text += " " * (width - len(t))
+        framed_text += "|\n"
+    framed_text += "-" * (width + 2)
     framed_text += "\n"
     return framed_text
 
