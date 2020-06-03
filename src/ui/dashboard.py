@@ -161,8 +161,6 @@ def get_slider(field: str) -> html.Div:
     return div
 
 
-
-
 # Create app layout
 app.layout = html.Div(
     [
@@ -267,7 +265,7 @@ app.layout = html.Div(
             [
                 html.Div([
                     html.H1("Feature Importance"),
-                    html.H6("Understand the correlations between variables"),
+                    html.H6("Understand the correlations between numerical variables"),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                 ],
                     className="pretty_container six columns"
@@ -285,6 +283,35 @@ app.layout = html.Div(
                 ],
                     className="pretty_container six columns"
                 ),
+            ],
+            className="flex-display",
+        ),
+        html.Div(
+            [
+                html.P([
+                    html.H6("Understand the correlations between categorical variables and a dependent variable"),
+                    "Select categories:",
+                    dcc.Dropdown(id='importance_category_x_selector', options=populate_dropdown('categorical'),
+                                 multi=True,
+                                 value=['COURSE_TYPE', 'N1GEN', 'N1GROUP', 'SCH_LOCALE']),
+                    "Select dependent variable",
+                    dcc.Dropdown(id='importance_category_y_selector', options=populate_dropdown('continuous'),
+                                 value='X1SCIEFF'),
+                    dcc.Markdown(
+                        """Notes:\n- Left: Feature importance can be viewed as a relative scale generated using the 
+                        one-way [ANOVA test](https://en.wikipedia.org/wiki/One-way_analysis_of_variance).\n- Right: 
+                        p-value is the probability that categories share the same mean in the dependent variable. 
+                        Categories with p-values above the dotted line can be rejected as not predictive of the 
+                        dependent variable. Categories with very small p-values are strongly predictive of the 
+                        dependent variable. """
+                    )
+                ],
+                    className="pretty_container four columns"
+                ),
+                html.Div(dcc.Graph(id="categorical_importance_bar"),
+                         className="pretty_container four columns"),
+                html.Div(dcc.Graph(id="categorical_p_bar"),
+                         className="pretty_container four columns"),
             ],
             className="flex-display",
         ),
@@ -515,6 +542,61 @@ app.layout = html.Div(
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
+
+
+@app.callback(
+    [Output('categorical_importance_bar', 'figure'),
+     Output('categorical_p_bar', 'figure')],
+    [Input('importance_category_x_selector', 'value'),
+     Input('importance_category_y_selector', 'value')]
+)
+def make_categorical_importance_plots(exog: List[str], endog: str) -> Tuple[go.Figure, go.Figure]:
+    if not exog:
+        fig1 = get_empty_sunburst("Select a category")
+        fig2 = fig1
+    elif not endog:
+        fig1 = get_empty_sunburst("Select a dependent variable")
+        fig2 = fig1
+    else:
+        fi_dict = get_feature_importance(endog, exog)['categorical']
+        fi_dict = {vars_df.loc[k, 'short']: v for k, v in fi_dict.items()}
+        fig1 = get_categorical_importance_plot(fi_dict)
+        fig2 = get_categorical_p_plot(fi_dict)
+    return fig1, fig2
+
+
+@fig_formatter(t=25)
+def get_categorical_importance_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
+    importance_dict = {k: v[0] for k, v in fi_dict.items()}
+    return go.Figure(go.Bar(
+        x=list(importance_dict.keys()),
+        y=list(importance_dict.values())
+    ),
+        layout=dict(title="Categorical Feature Importance")
+    )
+
+
+@fig_formatter(t=25)
+def get_categorical_p_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
+    p_dict = {k: v[1] for k, v in fi_dict.items()}
+    return go.Figure([
+        go.Bar(
+            x=list(p_dict.keys()),
+            y=list(p_dict.values())
+        ),
+        go.Scatter(
+            x=[list(p_dict.keys())[0], list(p_dict.keys())[-1]],
+            y=[0.05, 0.05],
+            mode='lines',
+            line=dict(dash='dash'),
+        ),
+    ],
+        layout=dict(
+            title="Statistical Significance (p-value)",
+            showlegend=False,
+            yaxis=dict(type="log"),
+        ),
+    )
 
 
 # Report modal
