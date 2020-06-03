@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../src.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../src.test.html">Test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../src.ui.html">UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../aws.html">Deployment</a></li>
 </ul>
 
             
@@ -167,7 +168,7 @@
 
 <div class="viewcode-block" id="test_ui001_sunburst_plot_gives_select_category_prompt"><a class="viewcode-back" href="../../../src.test.html#src.test.test_ui.test_ui001_sunburst_plot_gives_select_category_prompt">[docs]</a><span class="k">def</span> <span class="nf">test_ui001_sunburst_plot_gives_select_category_prompt</span><span class="p">(</span><span class="n">dash_duo</span><span class="p">):</span>
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-    <span class="n">dash_duo</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="s2">&quot;span.Select-clear&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="n">dash_duo</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="s2">&quot;#expl_category_selector span.Select-clear&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#sunburst_plot&#39;</span><span class="p">,</span> <span class="s2">&quot;Select a category&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
 
 
@@ -182,7 +183,7 @@
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#plot_selector&#39;</span><span class="p">,</span> <span class="s2">&quot;frequency plot&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">select_dcc_dropdown</span><span class="p">(</span><span class="s1">&#39;#expl_category_selector&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#second_explore_plot&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">count&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
+    <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#second_explore_plot&#39;</span><span class="p">,</span> <span class="s2">&quot;plotly-logomark&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="test_ui009_second_univariate_plot_box_gives_select_score_prompt"><a class="viewcode-back" href="../../../src.test.html#src.test.test_ui.test_ui009_second_univariate_plot_box_gives_select_score_prompt">[docs]</a><span class="k">def</span> <span class="nf">test_ui009_second_univariate_plot_box_gives_select_score_prompt</span><span class="p">(</span><span class="n">dash_duo</span><span class="p">):</span>
@@ -231,14 +232,13 @@
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_element</span><span class="p">(</span><span class="s2">&quot;#close-xl&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">multiple_click</span><span class="p">(</span><span class="s2">&quot;#close-xl&quot;</span><span class="p">,</span> <span class="n">clicks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_element</span><span class="p">(</span><span class="s2">&quot;#save-xl&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">multiple_click</span><span class="p">(</span><span class="s2">&quot;#save-xl&quot;</span><span class="p">,</span> <span class="n">clicks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_ui010_correlation_plot"><a class="viewcode-back" href="../../../src.test.html#src.test.test_ui.test_ui010_correlation_plot">[docs]</a><span class="k">def</span> <span class="nf">test_ui010_correlation_plot</span><span class="p">(</span><span class="n">dash_duo</span><span class="p">):</span>
+<div class="viewcode-block" id="test_ui011_prediction_plot"><a class="viewcode-back" href="../../../src.test.html#src.test.test_ui.test_ui011_prediction_plot">[docs]</a><span class="k">def</span> <span class="nf">test_ui011_prediction_plot</span><span class="p">(</span><span class="n">dash_duo</span><span class="p">):</span>
     <span class="n">dash_duo</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-    <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#correlation_bar&#39;</span><span class="p">,</span> <span class="s2">&quot;X1SCIEFF&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
+    <span class="n">dash_duo</span><span class="o">.</span><span class="n">wait_for_contains_text</span><span class="p">(</span><span class="s1">&#39;#ml_prediction_plot&#39;</span><span class="p">,</span> <span class="s2">&quot;Science self-efficacy&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

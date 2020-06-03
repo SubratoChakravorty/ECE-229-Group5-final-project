@@ -17,32 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -153,79 +155,101 @@
            <div itemprop="articleBody">
             
   <h1>Source code for src.multivariate_methods</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="kn">import</span> <span class="n">load_data_frame</span>
-<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="kn">import</span> <span class="n">get_var_info</span>
+<span></span><span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="k">import</span> <span class="n">load_data_frame</span>
+<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="k">import</span> <span class="n">get_var_info</span>
 <span class="kn">import</span> <span class="nn">src.config</span> <span class="k">as</span> <span class="nn">config</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
-<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="k">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="k">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.univariate_methods</span> <span class="kn">import</span> <span class="n">load_data_frame</span>
-<span class="kn">from</span> <span class="nn">.univariate_methods</span> <span class="kn">import</span> <span class="n">get_var_info</span>
 
-<div class="viewcode-block" id="get_feature_importance"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_feature_importance">[docs]</a><span class="k">def</span> <span class="nf">get_feature_importance</span><span class="p">(</span><span class="n">field1</span><span class="p">,</span><span class="n">field2</span><span class="p">,</span><span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../../data/student_data.csv&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_feature_importance"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_feature_importance">[docs]</a><span class="k">def</span> <span class="nf">get_feature_importance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function describes how important a particular feature(variable our user choose) is to predict y value(outcome our user expect to see)</span>
+<span class="sd">    Computes feature importance of all the variables in fields parameter with dependent y variable. For categorical</span>
+<span class="sd">    fields, it provides results from anova analysis and for numerical/continuous fields it returns correlation</span>
+<span class="sd">    coefficients with y.</span>
 <span class="sd">    </span>
-<span class="sd">    :parameter x: two variable fields in our variables list, categorical type(gender or location) and numerical type(scale of something)</span>
-<span class="sd">    :parameter y: a dependent y field(outcome our user expect to see)</span>
-<span class="sd">    :return: For categorical fields: returns statistical test results,For numerical fields: returns pearson correlation coefficient between a field and y</span>
+<span class="sd">    :param method: Method of correlation</span>
+<span class="sd">    - pearson : standard correlation coefficient</span>
+<span class="sd">    - kendall : Kendall Tau correlation coefficient</span>
+<span class="sd">    - spearman : Spearman rank correlation</span>
+<span class="sd">    :type method: str</span>
+<span class="sd">    :param file_loc: path to dataset</span>
+<span class="sd">    :type file_loc: str</span>
+<span class="sd">    :param fields: list of field ids where each field id is a string</span>
+<span class="sd">    :type fields: list</span>
+<span class="sd">    :param y: a dependent y field id</span>
+<span class="sd">    :type y: str</span>
+<span class="sd">    :returns: a multilevel dictionary, value corresponding to key &#39;category&#39; contains a dictionary with anova results for</span>
+<span class="sd">    categorical fields and value for key &#39;continuous&#39; is dictionary with correlation coefficients.</span>
+<span class="sd">    :rtype dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field1</span><span class="p">]</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">field2</span><span class="p">]</span>
+    <span class="n">var_info</span> <span class="o">=</span> <span class="n">get_var_info</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">var_info</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">var_info</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
     <span class="c1"># if x is numerical(continuous) field, we return the pearson correlation between a field and y</span>
-    <span class="c1"># for the pearson correlation between a field and y, their size must be the same </span>
-    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="s1">&#39;float64&#39;</span> <span class="ow">or</span> <span class="s1">&#39;int64&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># correlation coefficient</span>
-    <span class="k">else</span><span class="p">:</span>
-    <span class="c1"># if x is categorical field, we return the statistical test results:</span>
-    <span class="c1"># if x filed has 2 options like sex, we do the T-test(which is included by the ANOVA anlysis)</span>
-    <span class="c1"># if x has more options like number of science courses, we do the ANOVA anlysis</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">df1</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">df1</span><span class="p">)):</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df1</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">df1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="s1">&#39;wrong data input&#39;</span></div>
+    <span class="c1"># for the pearson correlation between a field and y, their size must be the same</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;categorical&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">:</span>
+            <span class="n">res</span><span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">var_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;categorical&#39;</span><span class="p">:</span>
+            <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">x</span><span class="p">)[</span><span class="n">y</span><span class="p">]]</span>
+            <span class="n">res</span><span class="p">[</span><span class="s1">&#39;categorical&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
 
-<div class="viewcode-block" id="get_correlation_matrix"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_correlation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_correlation_matrix</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="s2">&quot;../data/student_data.csv&quot;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="get_correlation_matrix"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.get_correlation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_correlation_matrix</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes correlation matrix that captures correlation between features</span>
-<span class="sd">    presented in the fields parameter</span>
+<span class="sd">    present in the fields parameter</span>
 
 <span class="sd">    :param fields: List of fields</span>
 <span class="sd">    :type fields: list</span>
 <span class="sd">    :param file_loc: Path to the dataset</span>
 <span class="sd">    :type file_loc: str</span>
+<span class="sd">    :param method: Method of correlation</span>
+<span class="sd">    - pearson : standard correlation coefficient</span>
+<span class="sd">    - kendall : Kendall Tau correlation coefficient</span>
+<span class="sd">    - spearman : Spearman rank correlation</span>
+<span class="sd">    :type method: str</span>
 <span class="sd">    :returns: Correlation matrix.</span>
 <span class="sd">    :rtype: pandas.DataFrame</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;fields must be a list, not {type(fields)}&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;file_loc must be a string, not {type(file_loc)}&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;fields must be a list, not {type(fields)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;file_loc must be a string, not {type(file_loc)}&quot;</span>
+    <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pearson&#39;</span><span class="p">,</span> <span class="s1">&#39;spearman&#39;</span><span class="p">,</span> <span class="s1">&#39;kendall&#39;</span><span class="p">],</span> <span class="s1">&#39;invalid method of correlation, must be either pearson, or&#39;</span> \
+                                                         <span class="s1">&#39;spearman, or kendall&#39;</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data_frame</span><span class="p">(</span><span class="n">file_loc</span><span class="p">)</span>
     <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">fields</span><span class="p">]</span>
 
     <span class="k">assert</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
-    <span class="n">corrmat</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+    <span class="n">corrmat</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">corrmat</span></div>
 
 
 <div class="viewcode-block" id="MLmodel"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel">[docs]</a><span class="k">class</span> <span class="nc">MLmodel</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">student_data_file</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
@@ -236,7 +260,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cont_cols</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="MLmodel.train_model"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel.train_model">[docs]</a>    <span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regressor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_split</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        train a machine learning model with y as dependent variable and variables in fields parameter as independent variables</span>
 <span class="sd">        :param regressor: sklearn regressor object, if None default RandomForestRegressor is used</span>
 <span class="sd">        :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned else</span>
@@ -245,7 +269,7 @@
 <span class="sd">        :param fields: list,  list of independent variables, can be numerical or categorical</span>
 <span class="sd">        :return: returns a tuple with training accuracy and test accuracy if test_split &gt; 0 else a tuple with training accuracy</span>
 <span class="sd">        and -1 in place of test accuracy.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
         <span class="k">assert</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_info</span><span class="o">.</span><span class="n">index</span>
@@ -277,8 +301,8 @@
 
         <span class="c1"># Append classifier to preprocessing pipeline.</span>
         <span class="c1"># Now we have a full prediction pipeline.</span>
-        <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
-        <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+        <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestRegressor</span>
+        <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
         <span class="k">if</span> <span class="n">regressor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">regressor</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;preprocessor&#39;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span>
@@ -295,12 +319,12 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="MLmodel.predict_model"><a class="viewcode-back" href="../../src.html#src.multivariate_methods.MLmodel.predict_model">[docs]</a>    <span class="k">def</span> <span class="nf">predict_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        returns model&#39;s prediction for the input_data</span>
 <span class="sd">        :param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,</span>
 <span class="sd">        depending upon the number of samples</span>
 <span class="sd">        :return: returns a 1-d numpy array with predicted y value for each sample</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">input_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
@@ -316,6 +340,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Model not trained&quot;</span><span class="p">)</span></div></div>
+
 </pre></div>
 
            </div>
@@ -345,26 +370,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

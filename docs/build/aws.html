@@ -17,33 +17,35 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="src.ui package" href="src.ui.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -160,37 +162,36 @@
 <p>Amazon Elastic Compute Cloud is a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers.</p>
 <p>You can access the website at <a class="reference external" href="https://www.9thgraders.com">https://www.9thgraders.com</a></p>
 <ul class="simple">
-<li>Configure Virtual Private Cloud</li>
-<li>Configure the EC2 server on AWS</li>
-<li>Install the necessary components on the server</li>
+<li><p>Configure Virtual Private Cloud</p></li>
+<li><p>Configure the EC2 server on AWS</p></li>
+<li><p>Install the necessary components on the server</p></li>
 </ul>
-<dl class="docutils">
-<dt>This requires several applications which can be listed as below:</dt>
-<dd><ul class="first last simple">
-<li>Python</li>
-<li>pip</li>
-<li>apache2</li>
-<li>mod_wsgi</li>
-<li>dash, dash-renderer, dash-html-components</li>
-<li>plotly</li>
-<li>Flask</li>
+<dl class="simple">
+<dt>This requires several applications which can be listed as below:</dt><dd><ul class="simple">
+<li><p>Python</p></li>
+<li><p>pip</p></li>
+<li><p>apache2</p></li>
+<li><p>mod_wsgi</p></li>
+<li><p>dash, dash-renderer, dash-html-components</p></li>
+<li><p>plotly</p></li>
+<li><p>Flask</p></li>
 </ul>
 </dd>
 </dl>
 <ul class="simple">
-<li>Configure the mode_wsgi</li>
+<li><p>Configure the mode_wsgi</p></li>
 </ul>
 <p>run the command <code class="docutils literal notranslate"><span class="pre">mod_wsgi-express</span> <span class="pre">module-config</span></code>, you should see something like:
 LoadModule wsgi_module “/usr/local/lib/python3.6/dist-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so”
 WSGIPythonHome “/usr”
 Write the output into <em>/etc/apache2/mods-available/wsgi.load</em></p>
 <ul class="simple">
-<li>Enable the site</li>
+<li><p>Enable the site</p></li>
 </ul>
 <p>Now the site can be enabled by <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">a2ensite</span> <span class="pre">FlaskApp</span></code> and reload the apache with <code class="docutils literal notranslate"><span class="pre">service</span> <span class="pre">apache2</span> <span class="pre">reload</span></code>.</p>
 <ul class="simple">
-<li>Setup WSGI</li>
-<li>Move your project to the project path</li>
+<li><p>Setup WSGI</p></li>
+<li><p>Move your project to the project path</p></li>
 </ul>
 <p>Now you should be able to visit the site via IP address after reloading the apache.</p>
 </div>
@@ -204,7 +205,7 @@ Write the output into <em>/etc/apache2/mods-available/wsgi.load</em></p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="src.ui.html" class="btn btn-neutral" title="src.ui package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="src.ui.html" class="btn btn-neutral float-left" title="src.ui package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -230,26 +231,16 @@ Write the output into <em>/etc/apache2/mods-available/wsgi.load</em></p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

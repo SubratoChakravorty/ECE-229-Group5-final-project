@@ -17,32 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -156,10 +158,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Just run using `python dashboard.py`</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
@@ -167,13 +168,13 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
-<span class="kn">from</span> <span class="nn">flask_caching</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="k">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 
-<span class="kn">from</span> <span class="nn">src.config</span> <span class="kn">import</span> <span class="n">variables_file</span><span class="p">,</span> <span class="n">student_data_file</span><span class="p">,</span> <span class="n">cache_dir</span>
-<span class="kn">from</span> <span class="nn">src.multivariate_methods</span> <span class="kn">import</span> <span class="n">get_correlation_matrix</span><span class="p">,</span> <span class="n">get_feature_importance</span><span class="p">,</span> <span class="n">MLmodel</span>
-<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="kn">import</span> <span class="n">get_hierarchical_data</span><span class="p">,</span> <span class="n">get_var_info</span><span class="p">,</span> <span class="n">get_field_data</span><span class="p">,</span> <span class="n">get_binned_data</span><span class="p">,</span> <span class="n">get_stats</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">src.config</span> <span class="k">import</span> <span class="n">variables_file</span><span class="p">,</span> <span class="n">student_data_file</span>
+<span class="kn">from</span> <span class="nn">src.multivariate_methods</span> <span class="k">import</span> <span class="n">get_correlation_matrix</span><span class="p">,</span> <span class="n">get_feature_importance</span><span class="p">,</span> <span class="n">MLmodel</span>
+<span class="kn">from</span> <span class="nn">src.univariate_methods</span> <span class="k">import</span> <span class="n">get_hierarchical_data</span><span class="p">,</span> <span class="n">get_var_info</span><span class="p">,</span> <span class="n">get_field_data</span><span class="p">,</span> <span class="n">get_binned_data</span><span class="p">,</span> <span class="n">get_stats</span><span class="p">,</span> \
     <span class="n">get_categories</span>
+<span class="kn">from</span> <span class="nn">src.ui</span> <span class="k">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">cache</span>
 
 <span class="c1"># color for frontend</span>
 <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span>
@@ -190,12 +191,12 @@
 <span class="n">self_efficacy_predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;COST_PERCEPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;TCH_PRCVD_ATT&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIID&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SES&#39;</span><span class="p">,</span> <span class="s1">&#39;X1GEN&#39;</span><span class="p">]</span>
 
 <span class="n">UCSD_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">     _______.        _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  </span>
-<span class="s2">    /       |       /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ </span>
-<span class="s2">   |   (----`      |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----&#39;      |   (----`   |  .--.  |</span>
-<span class="s2">    \   \           \   \       |   __|        |   _  &lt;    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |</span>
-<span class="s2">.----)   |      .----)   |      |  |____       |  |_)  |     |  |           |  `--&#39;  |    |  `----.   .----)   |      |  &#39;--&#39;  |</span>
-<span class="s2">|_______/       |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ </span>
+<span class="s2">     _______.     _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  </span>
+<span class="s2">    /       |    /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ </span>
+<span class="s2">   |   (----`   |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----&#39;      |   (----`   |  .--.  |</span>
+<span class="s2">    \   \        \   \       |   __|        |   _  &lt;    \_    _/         |  |  |  |    |  |            \   \       |  |  |  |</span>
+<span class="s2">.----)   |   .----)   |      |  |____       |  |_)  |     |  |           |  `--&#39;  |    |  `----.   .----)   |      |  &#39;--&#39;  |</span>
+<span class="s2">|_______/    |_______/       |_______|      |______/      |__|            \______/      \______|   |_______/       |_______/ </span>
 <span class="s2">                                                                                                                                </span>
 
 <span class="s2">                                        &quot;&quot;&quot;</span>
@@ -210,7 +211,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">category</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;categorical&#39;</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;category must be &#39;continuous&#39; or &#39;categorical&#39;, not </span><span class="si">{category}</span><span class="s2">&quot;</span>
+                            <span class="s1">&#39;categorical&#39;</span><span class="p">],</span> <span class="n">f</span><span class="s2">&quot;category must be &#39;continuous&#39; or &#39;categorical&#39;, not </span><span class="si">{category}</span><span class="s2">&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vars_df</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">category</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">vars_df</span><span class="p">[</span><span class="s1">&#39;short&#39;</span><span class="p">]</span>
@@ -218,6 +219,16 @@
 
 
 <div class="viewcode-block" id="fig_formatter"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.fig_formatter">[docs]</a><span class="k">def</span> <span class="nf">fig_formatter</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator for functions that produce figures. By default, all margins are stripped, but the margin sized can be</span>
+<span class="sd">    set indivdually.</span>
+
+<span class="sd">    :param t: top margin</span>
+<span class="sd">    :param l: left margin</span>
+<span class="sd">    :param r: right margin</span>
+<span class="sd">    :param b: bottom margin</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -237,11 +248,14 @@
 
 
 <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">get_correlation_matrix</span><span class="p">(</span><span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vars_df</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-                                            <span class="n">student_data_file</span><span class="p">)</span>
+                                            <span class="n">student_data_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_correlation_heatmap"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.make_correlation_heatmap">[docs]</a><span class="nd">@fig_formatter</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">make_correlation_heatmap</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">make_correlation_heatmap</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Produce the correlation heatmap figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">short_name_lookup</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">short_name_lookup</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">short_name_lookup</span><span class="p">)</span>
@@ -254,7 +268,13 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
-<div class="viewcode-block" id="get_slider"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.get_slider">[docs]</a><span class="k">def</span> <span class="nf">get_slider</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<div class="viewcode-block" id="get_slider"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.get_slider">[docs]</a><span class="k">def</span> <span class="nf">get_slider</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a hidden div with slider text above the slider.</span>
+
+<span class="sd">    :param field: A field from the list of valid fields</span>
+<span class="sd">    :return hidden div</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">field_name</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">:</span>
         <span class="n">minimum</span><span class="p">,</span> <span class="n">median</span><span class="p">,</span> <span class="n">maximum</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">get_stats</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">student_data_file</span><span class="p">))</span>
@@ -267,9 +287,9 @@
                 <span class="n">value</span><span class="o">=</span><span class="n">median</span><span class="p">,</span>
                 <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                 <span class="n">updatemode</span><span class="o">=</span><span class="s1">&#39;drag&#39;</span><span class="p">,</span>
-                <span class="n">marks</span><span class="o">=</span><span class="p">{</span><span class="n">minimum</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{minimum: .1f}</span><span class="s1">&#39;</span><span class="p">,</span>
-                       <span class="n">median</span> <span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{median: .1f}</span><span class="s1">&#39;</span><span class="p">,</span>
-                       <span class="n">maximum</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{maximum: .1f}</span><span class="s1">&#39;</span><span class="p">},</span>
+                <span class="n">marks</span><span class="o">=</span><span class="p">{</span><span class="n">minimum</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{minimum: .1f}</span><span class="s1">&#39;</span><span class="p">,</span>
+                       <span class="n">median</span> <span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{median: .1f}</span><span class="s1">&#39;</span><span class="p">,</span>
+                       <span class="n">maximum</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{maximum: .1f}</span><span class="s1">&#39;</span><span class="p">},</span>
             <span class="p">),</span>
         <span class="p">],</span>
             <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;display&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">},</span>
@@ -294,20 +314,11 @@
             <span class="nb">id</span><span class="o">=</span><span class="n">field</span> <span class="o">+</span> <span class="s1">&#39;_slider_div&#39;</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;field </span><span class="si">{field}</span><span class="s2"> is invalid&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;field </span><span class="si">{field}</span><span class="s2"> is invalid&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">div</span></div>
 
 
-<span class="c1"># Initialize app and cache</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">meta_tags</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;viewport&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;width=device-width&quot;</span><span class="p">}],</span>
-                <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="n">dbc</span><span class="o">.</span><span class="n">themes</span><span class="o">.</span><span class="n">BOOTSTRAP</span><span class="p">],</span>
-                <span class="n">suppress_callback_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">CACHE_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;CACHE_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;filesystem&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;CACHE_DIR&#39;</span> <span class="p">:</span> <span class="n">cache_dir</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">()</span>
-<span class="n">cache</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">CACHE_CONFIG</span><span class="p">)</span>
+
 
 <span class="c1"># Create app layout</span>
 <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
@@ -413,6 +424,7 @@
             <span class="p">[</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
                     <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="s2">&quot;Feature Importance&quot;</span><span class="p">),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span><span class="s2">&quot;Understand the correlations between variables&quot;</span><span class="p">),</span>
                     <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;correlation_matrix&quot;</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">make_correlation_heatmap</span><span class="p">())],</span> <span class="p">),</span>
                 <span class="p">],</span>
                     <span class="n">className</span><span class="o">=</span><span class="s2">&quot;pretty_container six columns&quot;</span>
@@ -421,8 +433,8 @@
                     <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">([</span>
                         <span class="s2">&quot;Select x-axis:&quot;</span><span class="p">,</span>
                         <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;import_x_selector&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">populate_dropdown</span><span class="p">(</span><span class="s1">&#39;continuous&#39;</span><span class="p">),</span> <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                     <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;N1SCIYRS912&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPAENG&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPAMAT&#39;</span><span class="p">,</span><span class="s1">&#39;X3TGPASCI&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;S1STCHFAIR_neg&#39;</span><span class="p">,</span><span class="s1">&#39;S1STCHMISTKE_neg&#39;</span><span class="p">,</span><span class="s1">&#39;S1TEMAKEFUN_neg&#39;</span><span class="p">,</span><span class="s1">&#39;S1TEFRNDS_neg&#39;</span><span class="p">]),</span>
+                                     <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;N1SCIYRS912&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPAENG&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPAMAT&#39;</span><span class="p">,</span> <span class="s1">&#39;X3TGPASCI&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;S1STCHFAIR_neg&#39;</span><span class="p">,</span> <span class="s1">&#39;S1STCHMISTKE_neg&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEMAKEFUN_neg&#39;</span><span class="p">,</span> <span class="s1">&#39;S1TEFRNDS_neg&#39;</span><span class="p">]),</span>
                         <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;import_y_selector&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">populate_dropdown</span><span class="p">(</span><span class="s1">&#39;continuous&#39;</span><span class="p">),</span>
                                      <span class="n">value</span><span class="o">=</span><span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">),</span>
                         <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;importance_bar&quot;</span><span class="p">)</span>
@@ -440,13 +452,15 @@
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                     <span class="p">[</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="s2">&quot;Predictor&quot;</span><span class="p">),</span>
+                        <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span><span class="s1">&#39;Create and test your &quot;student&quot;&#39;</span><span class="p">),</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
                             <span class="p">[</span>
                                 <span class="s2">&quot;Select variables:&quot;</span><span class="p">,</span>
                                 <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
                                     <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;ml_independent_var_selector&quot;</span><span class="p">,</span>
                                     <span class="n">options</span><span class="o">=</span><span class="n">populate_dropdown</span><span class="p">(),</span>
-                                    <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COST_PERCEPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;TCH_PRCVD_ATT&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIID&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIINT&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">,</span> <span class="s1">&#39;X1GEN&#39;</span><span class="p">],</span>
+                                    <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COST_PERCEPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;TCH_PRCVD_ATT&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIID&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIINT&#39;</span><span class="p">,</span> <span class="s1">&#39;X1SCIUTI&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;X1GEN&#39;</span><span class="p">],</span>
                                     <span class="n">multi</span><span class="o">=</span><span class="kc">True</span>
                                 <span class="p">),</span>
                                 <span class="s2">&quot;Select value to predict:&quot;</span><span class="p">,</span>
@@ -483,10 +497,11 @@
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                     <span class="p">[</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="s2">&quot;Explore&quot;</span><span class="p">),</span>
+                        <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span><span class="s2">&quot;Investigate the relationships between categorical variables&quot;</span><span class="p">),</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Click a category on the inner plot to filter&quot;</span><span class="p">),</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">([</span><span class="s2">&quot;Select categories:&quot;</span><span class="p">,</span>
                                 <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;expl_category_selector&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">populate_dropdown</span><span class="p">(</span><span class="s1">&#39;categorical&#39;</span><span class="p">),</span>
-                                             <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SCH_LOCALE&#39;</span><span class="p">,</span> <span class="s1">&#39;N1HIDEG&#39;</span><span class="p">,</span> <span class="s1">&#39;SCIJOB&#39;</span><span class="p">])]),</span>
+                                             <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COURSE_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;N1HIDEG&#39;</span><span class="p">,</span> <span class="s1">&#39;SCIJOB&#39;</span><span class="p">])]),</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">([</span><span class="s2">&quot;Select score:&quot;</span><span class="p">,</span>
                                 <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;expl_continuous_selector&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">populate_dropdown</span><span class="p">(</span><span class="s1">&#39;continuous&#39;</span><span class="p">),</span>
                                              <span class="n">value</span><span class="o">=</span><span class="s1">&#39;X1SCIEFF&#39;</span><span class="p">),</span> <span class="p">]),</span>
@@ -503,12 +518,12 @@
                           <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;The color of each segment indicates the mean of the selected score&quot;</span><span class="p">),</span>
                           <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;The size of each segment represents the size of that student population&quot;</span><span class="p">),</span>
                           <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Click on a category to zoom in&quot;</span><span class="p">),</span> <span class="p">],</span>
-                         <span class="n">className</span><span class="o">=</span><span class="s2">&quot;pretty_container four columns&quot;</span><span class="p">,</span>
+                         <span class="n">className</span><span class="o">=</span><span class="s2">&quot;pretty_container five columns&quot;</span><span class="p">,</span>
                          <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;sunburst-div&quot;</span><span class="p">),</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;second_explore_plot&quot;</span><span class="p">),</span>
                           <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Tips:&quot;</span><span class="p">),</span>
                           <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;The x-axis is the first-selected categorical variable&quot;</span><span class="p">),</span> <span class="p">],</span>
-                         <span class="n">className</span><span class="o">=</span><span class="s2">&quot;pretty_container four columns&quot;</span><span class="p">,</span>
+                         <span class="n">className</span><span class="o">=</span><span class="s2">&quot;pretty_container five columns&quot;</span><span class="p">,</span>
                          <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;sunburst-bar-chart&quot;</span><span class="p">),</span>
             <span class="p">],</span>
             <span class="n">className</span><span class="o">=</span><span class="s2">&quot;flex-display&quot;</span><span class="p">,</span>
@@ -520,6 +535,7 @@
             <span class="p">[</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                     <span class="p">[</span>
+                        <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span><span class="s2">&quot;Histogram for continuous variables&quot;</span><span class="p">),</span>
                         <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
                             <span class="p">[</span>
                                 <span class="s2">&quot;Select a continuous variable:&quot;</span><span class="p">,</span>
@@ -618,7 +634,7 @@
                                 <span class="n">dbc</span><span class="o">.</span><span class="n">ModalHeader</span><span class="p">(</span><span class="s2">&quot;Report&quot;</span><span class="p">),</span>
                                 <span class="n">dbc</span><span class="o">.</span><span class="n">ModalBody</span><span class="p">(</span>
                                     <span class="p">[</span>
-                                        <span class="n">html</span><span class="o">.</span><span class="n">Pre</span><span class="p">(</span><span class="n">UCSD_text</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;Report_body&quot;</span><span class="p">),</span>
+                                        <span class="n">html</span><span class="o">.</span><span class="n">Pre</span><span class="p">(</span><span class="n">UCSD_text</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;Report_body&quot;</span><span class="p">),</span>
                                         <span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="s2">&quot;This is your profile&quot;</span><span class="p">),</span>
                                         <span class="n">html</span><span class="o">.</span><span class="n">Pre</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;report_text&quot;</span><span class="p">),</span>
                                         <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;ml_prediction_plot2&quot;</span><span class="p">)</span>
@@ -665,6 +681,13 @@
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s2">&quot;modal-xl&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">)],</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">toggle_modal</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">is_open</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modal style report window</span>
+<span class="sd">    :param n1: click or not for open button</span>
+<span class="sd">    :param n2: click or not for close button</span>
+<span class="sd">    :param is_open: boolean </span>
+<span class="sd">    :return: boolean is_open</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">n1</span> <span class="ow">or</span> <span class="n">n2</span><span class="p">:</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">is_open</span>
     <span class="k">return</span> <span class="n">is_open</span></div>
@@ -681,6 +704,11 @@
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;continuous_selector&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)],</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_text</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update 4 small windows above histogram</span>
+<span class="sd">    :param data: column data in selected field</span>
+<span class="sd">    :return: 4 stastistical number, max, min, mean, median number</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">get_field_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">student_data_file</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
@@ -766,7 +794,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="n">get_empty_sunburst</span><span class="p">(</span><span class="s2">&quot;select a score&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{plot}</span><span class="s2"> is not a valid plot option&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{plot}</span><span class="s2"> is not a valid plot option&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
@@ -795,11 +823,26 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">categorical</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_hierarchical_data</span><span class="p">(</span><span class="n">categorical</span><span class="p">,</span> <span class="n">file_loc</span><span class="o">=</span><span class="n">student_data_file</span><span class="p">)</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">categorical</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="c1"># Generate stacked bars if there is more than one category</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">categorical</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="n">bars</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+            <span class="n">df_filter</span> <span class="o">=</span> <span class="p">[</span><span class="nb">all</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="n">v</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">categorical</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">)))]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_filter</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">bars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;stack&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">categorical</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
-<span class="c1"># TODO: use state callback to update instead of creating new figure [State(&#39;graph&#39;, &#39;figure&#39;)]</span>
 <div class="viewcode-block" id="make_sunburst"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.make_sunburst">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;sunburst_plot&#39;</span><span class="p">,</span> <span class="s1">&#39;figure&#39;</span><span class="p">),</span>
               <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;expl_category_selector&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;expl_continuous_selector&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">make_sunburst</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">color_var</span><span class="p">):</span>
@@ -839,7 +882,7 @@
         <span class="n">path</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span>
         <span class="n">values</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">&#39;Portland&#39;</span><span class="p">,</span>
+        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">&#39;balance&#39;</span><span class="p">,</span>
         <span class="n">color_continuous_midpoint</span><span class="o">=</span><span class="n">color_var_mean</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span></div>
@@ -873,11 +916,17 @@
 <span class="sd">    :param y: y variable, normally self-efficiency</span>
 <span class="sd">    :return: `plotly` figure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The x variable must be a list, not {type(x)}&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The y variable must be a string, not {type(x)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;The x variable must be a list, not {type(x)}&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;The y variable must be a string, not {type(x)}&quot;</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;elements of x must be strings, not {type(item)}&quot;</span>
-    <span class="n">importance</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_feature_importance</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">y</span><span class="p">]),</span> <span class="n">x</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">f</span><span class="s2">&quot;elements of x must be strings, not {type(item)}&quot;</span>
+    <span class="n">importance_dict</span> <span class="o">=</span> <span class="n">get_feature_importance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">importance</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">:</span>
+            <span class="n">importance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importance_dict</span><span class="p">[</span><span class="s1">&#39;continuous&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;categorical&#39;</span><span class="p">:</span>
+            <span class="n">importance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importance_dict</span><span class="p">[</span><span class="s1">&#39;categorical&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">])</span>
     <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">importance</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
     <span class="n">short_name_lookup</span> <span class="o">=</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">short_name_lookup</span><span class="p">)</span>
@@ -892,11 +941,12 @@
 
 <div class="viewcode-block" id="show_ml_sliders"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.show_ml_sliders">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;ml_sliders&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
               <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;ml_independent_var_selector&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)],</span>
-              <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;ml_sliders&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">)],)</span>
-               <span class="c1">#prevent_initial_call=False)</span>
+              <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;ml_sliders&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">)],</span>
+              <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">show_ml_sliders</span><span class="p">(</span><span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Show the sliders that were selected using the multiple dropdown. Hide the others.</span>
+
 <span class="sd">    :param fields: List of fields</span>
 <span class="sd">    :param state: children of the ml_sliders &lt;P&gt;</span>
 <span class="sd">    :return: updated state</span>
@@ -916,18 +966,19 @@
 
 <span class="sd">    :param field: the categorical data field</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;categorical&#39;</span><span class="p">:</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">category_lookup</span> <span class="o">=</span> <span class="n">get_categories</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">student_data_file</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">slider_text_update</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{vars_df.loc[field, &#39;short&#39;]}</span><span class="s2"> | </span><span class="si">{category_lookup[value]}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{vars_df.loc[field, &#39;short&#39;]}</span><span class="s2"> | </span><span class="si">{category_lookup[value]}</span><span class="s2">&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">slider_text_update</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{vars_df.loc[field, &#39;short&#39;]}</span><span class="s2"> | </span><span class="si">{value:.1f}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{vars_df.loc[field, &#39;short&#39;]}</span><span class="s2"> | </span><span class="si">{value:.1f}</span><span class="s2">&quot;</span><span class="p">]</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">Output</span><span class="p">(</span><span class="n">field</span> <span class="o">+</span> <span class="s1">&#39;_slider_state&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
-                 <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="n">field</span> <span class="o">+</span> <span class="s1">&#39;_slider&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)],)(</span><span class="n">slider_text_update</span><span class="p">)</span></div>
-                 <span class="c1">#prevent_initial_call=False)(slider_text_update)</span>
+                 <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="n">field</span> <span class="o">+</span> <span class="s1">&#39;_slider&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)],</span>
+                 <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">False</span><span class="p">)(</span><span class="n">slider_text_update</span><span class="p">)</span></div>
 
 
 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">vars_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
@@ -980,6 +1031,7 @@
         <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Produce a dictionary to be passed to the model for prediction</span>
+
 <span class="sd">    :param x_range: The values of x_var</span>
 <span class="sd">    :param exog: The field to predict</span>
 <span class="sd">    :param x_values: The slider values</span>
@@ -1031,6 +1083,7 @@
                     <span class="n">yaxis_range</span><span class="o">=</span><span class="p">[</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">]),</span>
     <span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="add_frame"><a class="viewcode-back" href="../../../src.ui.html#src.ui.dashboard.add_frame">[docs]</a><span class="k">def</span> <span class="nf">add_frame</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add frame to raw text.</span>
@@ -1040,17 +1093,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">raw_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
     <span class="n">framed_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">width</span><span class="p">,</span> <span class="n">hight</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">raw_text</span><span class="p">)),</span><span class="nb">len</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
-    <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">width</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">hight</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">raw_text</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
+    <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">raw_text</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span>
         <span class="n">framed_text</span> <span class="o">+=</span> <span class="n">t</span>
-        <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span><span class="o">*</span><span class="p">(</span><span class="n">width</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-        <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;|</span><span class="se">\n</span><span class="s2">&quot;</span> 
-    <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">width</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;|</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">framed_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">framed_text</span></div>
 
@@ -1137,26 +1190,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
