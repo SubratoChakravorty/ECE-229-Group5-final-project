@@ -573,6 +573,7 @@ there.
     display: flex;
   }
   #wells,
+  #FIselector,
   #gas,
   #oil {
     margin-right: 10px;
