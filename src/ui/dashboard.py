@@ -551,6 +551,13 @@ app.layout = html.Div(
      Input('importance_category_y_selector', 'value')]
 )
 def make_categorical_importance_plots(exog: List[str], endog: str) -> Tuple[go.Figure, go.Figure]:
+    """
+    Callback to generate the categorical feature importance plots
+
+    :param exog: exogenous (independent) variables
+    :param endog: endogenous (dependent) variable
+    :return: tuple of figures: (importance bar plot, p-value plot)
+    """
     if not exog:
         fig1 = get_empty_sunburst("Select a category")
         fig2 = fig1
@@ -567,6 +574,12 @@ def make_categorical_importance_plots(exog: List[str], endog: str) -> Tuple[go.F
 
 @fig_formatter(t=25)
 def get_categorical_importance_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
+    """
+    Generate the categorical importance bar plot given the feature importance dictionary
+
+    :param fi_dict: feature importance dictionary. Independent variables are keys, values are tuple(importance, p-value)
+    :return: Bar plot figure
+    """
     importance_dict = {k: v[0] for k, v in fi_dict.items()}
     return go.Figure(go.Bar(
         x=list(importance_dict.keys()),
@@ -578,6 +591,12 @@ def get_categorical_importance_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.F
 
 @fig_formatter(t=25)
 def get_categorical_p_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
+    """
+    Generate the p-value bar plot given the feature importance dictionary
+
+    :param fi_dict: feature importance dictionary. Independent variables are keys, values are tuple(importance, p-value)
+    :return: Bar plot figure
+    """
     p_dict = {k: v[1] for k, v in fi_dict.items()}
     return go.Figure([
         go.Bar(
@@ -608,6 +627,7 @@ def get_categorical_p_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
 def toggle_modal(n1, n2, is_open):
     """
     Modal style report window
+
     :param n1: click or not for open button
     :param n2: click or not for close button
     :param is_open: boolean 
@@ -631,6 +651,7 @@ def toggle_modal(n1, n2, is_open):
 def update_text(data):
     """
     Update 4 small windows above histogram
+
     :param data: column data in selected field
     :return: 4 stastistical number, max, min, mean, median number
     """
