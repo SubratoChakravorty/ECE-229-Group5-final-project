@@ -22,13 +22,14 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file, method=
     - pearson : standard correlation coefficient
     - kendall : Kendall Tau correlation coefficient
     - spearman : Spearman rank correlation
+    :type method: str
     :param file_loc: path to dataset
     :type file_loc: str
     :param fields: list of field ids where each field id is a string
     :type fields: list
     :param y: a dependent y field id
     :type y: str
-    :return: a multilevel dictionary, value corresponding to key 'category' contains a dictionary with anova results for
+    :returns: a multilevel dictionary, value corresponding to key 'category' contains a dictionary with anova results for
     categorical fields and value for key 'continuous' is dictionary with correlation coefficients.
     :rtype dict
     """
@@ -63,16 +64,15 @@ def get_correlation_matrix(fields, file_loc=config.student_data_file, method='pe
     Computes correlation matrix that captures correlation between features
     present in the fields parameter
 
-
     :param fields: List of fields
     :type fields: list
     :param file_loc: Path to the dataset
     :type file_loc: str
     :param method: Method of correlation
-    :type method: str
     - pearson : standard correlation coefficient
     - kendall : Kendall Tau correlation coefficient
     - spearman : Spearman rank correlation
+    :type method: str
     :returns: Correlation matrix.
     :rtype: pandas.DataFrame
     """

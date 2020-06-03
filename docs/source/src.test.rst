@@ -12,14 +12,6 @@ src.test.conftest module
    :undoc-members:
    :show-inheritance:
 
-src.test.test\_backend module
------------------------------
-
-.. automodule:: src.test.test_backend
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 src.test.test\_ui module
 ------------------------
 
