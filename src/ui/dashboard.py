@@ -193,6 +193,10 @@ app.layout = html.Div(
                                     style={"margin-bottom": "0px"},
                                 ),
                                 html.H5(
+                                    """An analysis of ninth graders' feelings towards science""",
+                                    style={"margin-top": "0px"}
+                                ),
+                                html.H6(
                                     """ECE229 - Team 5: Ian Pegg, Subrato Chakravorty, Yan Sun, Daniel You, 
                                     Heqian Lu, Kai Wang""",
                                     style={"margin-top": "0px"}
