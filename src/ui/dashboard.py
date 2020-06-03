@@ -274,45 +274,38 @@ app.layout = html.Div(
                     of interest\n- Double-click to zoom out"""),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                     ],
-                    className="pretty_container one-third column"
+                    className="pretty_container one-half columns"
                 ),
                 html.Div([
                     html.Div([
-                        html.Div([
-                            dcc.Markdown("""##### Continuous variables importance:\n- Large positive values have a 
-                            strong positive correlation with the selected dependent variable.\n- Large negative 
-                            values have a strong negative correlation with the selected dependent variable."""),
-                            html.P([
-                                "Select x-axis:",
-                                dcc.Dropdown(id='import_x_selector', options=populate_dropdown(), multi=True,
-                                            value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI', # continuous
-                                                    'S1STCHFAIR_neg', # continuous
-                                                    'SCH_LOCALE','SCH_CONTROL','N1GEN','SCIJOB','N1GROUP']),# categorical
-                                dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
-                                            value='X1SCIEFF'),
+                        dcc.Markdown("""##### Continuous variables importance:\n- Large positive values have a 
+                        strong positive correlation with the selected dependent variable.\n- Large negative 
+                        values have a strong negative correlation with the selected dependent variable."""),
+                        html.P([
+                            "Select x-axis:",
+                            dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
+                                        value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI', # continuous
+                                                'S1STCHFAIR_neg',]),
+                            dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
+                                        value='X1SCIEFF'),
                                 ]),
                             ],
-                                id="FIselector",
-                                className="mini_container"
-                            ),
-                            html.P([
+                            id="FIselector",
+                            className="mini_container"
+                    ),
+                    html.Div([
+                        html.P([
                                 html.H6("Importance bar plot for continuous variables"),             
                                 dcc.Graph(id="importance_bar1"),
+                                ],
+                                ),
                             ],
-                                className="one-half column"
-                            ),
-                            html.P([
-                                html.H6("Log P-value bar plot for categorical variables"),
-                                dcc.Graph(id="importance_bar2")
-                            ],
-                                className="one-half column"
-                            ),
-                        ],
-                        className="pretty_container",
-                    ),
-                ],
-                id="FI-column",
-                className="two-third columns",
+                            id="importance_bar",
+                            className="mini_container"
+                        ),
+                    ],
+                    id="FI-column",
+                    className="one-half columns",
                 ),
             ],
             className="flex-display",
@@ -622,7 +615,8 @@ def get_categorical_importance_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.F
     importance_dict = {k: v[0] for k, v in fi_dict.items()}
     return go.Figure(go.Bar(
         x=list(importance_dict.keys()),
-        y=list(importance_dict.values())
+        y=list(importance_dict.values()),
+        marker={'color': list(importance_dict.values())},
     ),
         layout=dict(title="Categorical Feature Importance")
     )
@@ -640,7 +634,8 @@ def get_categorical_p_plot(fi_dict: Dict[str, Tuple[int, int]]) -> go.Figure:
     return go.Figure([
         go.Bar(
             x=list(p_dict.keys()),
-            y=list(p_dict.values())
+            y=list(p_dict.values()),
+            marker={'color': list(p_dict.values())},
         ),
         go.Scatter(
             x=[list(p_dict.keys())[0], list(p_dict.keys())[-1]],
@@ -873,7 +868,7 @@ def get_sunburst_plot(color_var, fields):
     return fig
 
 
-@app.callback([Output('importance_bar1', 'figure'),Output('importance_bar2', 'figure'),],
+@app.callback(Output('importance_bar1', 'figure'),
               [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
 def make_importance_bar_plot(x: List[str], y: str):
     """
@@ -891,8 +886,8 @@ def make_importance_bar_plot(x: List[str], y: str):
         fig_cate = get_empty_sunburst("Select a y variable")
     else:
         fig_con = get_importance_bar_plot(x, y, "continuous")
-        fig_cate = get_importance_bar_plot(x, y, "categorical")
-    return [fig_con, fig_cate]
+        # fig_cate = get_importance_bar_plot(x, y, "categorical")
+    return fig_con
 
 
 @fig_formatter()
@@ -930,7 +925,7 @@ def get_importance_bar_plot(x: List[str], y: str, t: str):
         x=series.index,
         y=y,
         color=y,
-        labels=dict(x='',title='Least Used Feature')
+        labels=dict(x='')
     )
     return fig
 
