@@ -32,7 +32,7 @@ vars_df = get_var_info(variables_file)
 vars_df['code'] = vars_df.index
 self_efficacy_predictors = ['COST_PERCEPTION', 'TCH_PRCVD_ATT', 'X1SCIID', 'X1SES', 'X1GEN']
 
-UCSD_text = """
+UCSD_text = r"""
      _______.     _______.    _______       .______   ____    ____        __    __       ______         _______.    _______  
     /       |    /       |   |   ____|      |   _  \  \   \  /   /       |  |  |  |     /      |       /       |   |       \ 
    |   (----`   |   (----`   |  |__         |  |_)  |  \   \/   /        |  |  |  |    |  ,----'      |   (----`   |  .--.  |
@@ -688,7 +688,7 @@ def update_text(data):
     Update 4 small windows above histogram
 
     :param data: column data in selected field
-    :return: 4 stastistical number, max, min, mean, median number
+    :return: 4 statistical number, max, min, mean, median number
     """
     if not data:
         return "", "", "", ""
@@ -871,61 +871,58 @@ def get_sunburst_plot(color_var, fields):
 
 @app.callback(Output('importance_bar1', 'figure'),
               [Input('import_x_selector', 'value'), Input('import_y_selector', 'value')])
-def make_importance_bar_plot(x: List[str], y: str):
+def make_importance_bar_plot(exog: List[str], endog: str):
     """
     Create the importance bar plot
 
-    :param x: x variables list
-    :param y: y variable, normally self-efficiency
+    :param exog: exogenous (independent) variables list
+    :param endog: endogenous (dependent) variable, typically self-efficacy
     :return: `plotly` figure
     """
-    if not x:
-        fig_con = get_empty_sunburst("Select an x variable")
-        fig_cate = get_empty_sunburst("Select an x variable")
-    elif not y:
-        fig_con = get_empty_sunburst("Select a y variable")
-        fig_cate = get_empty_sunburst("Select a y variable")
+    if not exog:
+        fig = get_empty_sunburst("Select an x variable")
+    elif not endog:
+        fig = get_empty_sunburst("Select a y variable")
     else:
-        fig_con = get_importance_bar_plot(x, y, "continuous")
-        # fig_cate = get_importance_bar_plot(x, y, "categorical")
-    return fig_con
+        fig = get_importance_bar_plot(exog, endog, "continuous")
+    return fig
 
 
 @fig_formatter()
-def get_importance_bar_plot(x: List[str], y: str, t: str):
+def get_importance_bar_plot(exog: List[str], endog: str, var_type: str):
     """
     Create the importance bar plot for continuous variables and p value bar for categorical variables.
 
-    :param x: x variables list
-    :param y: y variable, normally self-efficiency
-    :param t: t variable , the type of x variables, "continuous" or "categorical"
+    :param exog: exogenous (independent) variables
+    :param endog: endogenous (dependent) variable, typically self-efficacy
+    :param var_type: the type of x variables, "continuous" or "categorical"
     :return: `plotly` figure
     """
-    assert isinstance(x, list), f"The x variable must be a list, not {type(x)}"
-    assert isinstance(y, str), f"The y variable must be a string, not {type(y)}"
-    assert isinstance(t, str), f"The t variable must be a string, not {type(t)}"
-    for item in x:
-        assert isinstance(item, str), f"elements of x must be strings, not {type(item)}"
-    importance_dict = get_feature_importance(y, fields=x)
+    assert isinstance(exog, list), f"The exog must be a list, not {type(exog)}"
+    assert isinstance(endog, str), f"The endog must be a string, not {type(endog)}"
+    assert isinstance(var_type, str), f"The var_type must be a string, not {type(var_type)}"
+    for item in exog:
+        assert isinstance(item, str), f"elements of exog must be strings, not {type(item)}"
+    importance_dict = get_feature_importance(endog, fields=exog)
     importance = []
     fields = []
-    for field in x:
-        if t == "continuous" and vars_df.loc[field]['type'] == t:
-            importance.append(importance_dict[t][field])
+    for field in exog:
+        if var_type == "continuous" and vars_df.loc[field]['type'] == var_type:
+            importance.append(importance_dict[var_type][field])
             fields.append(field)
-        elif t == "categorical" and vars_df.loc[field]['type'] == t:
-            importance.append(math.log(importance_dict[t][field][0]))
+        elif var_type == "categorical" and vars_df.loc[field]['type'] == var_type:
+            importance.append(math.log(importance_dict[var_type][field][0]))
             fields.append(field)
         else:
             continue
-    series = pd.Series(importance, index=fields, name=y)
+    series = pd.Series(importance, index=fields, name=endog)
     short_name_lookup = vars_df.loc[correlation_matrix.columns, 'short'].to_dict()
     series = series.rename(index=short_name_lookup)
     fig = px.bar(
         series,
         x=series.index,
-        y=y,
-        color=y,
+        y=endog,
+        color=endog,
         labels=dict(x='')
     )
     return fig
@@ -983,7 +980,7 @@ slider_inputs = [Input(field + '_slider', 'value') for field in vars_df.index]
               [Input('ml_independent_var_selector', 'value'),
                Input('ml_dependent_var_selector', 'value'),
                Input('ml_x_axis_selector', 'value')] + slider_inputs)
-def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: float):
+def make_prediction_plot(exog: List, endog: str, x_var: str, *slider_values: Tuple[float, ...]):
     """
     Callback to generate the prediction plot
 
