@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "/usr/bin/python3",
-    "python.venvPath": "/Users/wangkai/opt/anaconda3/envs/py37/bin/python3",
-    "code-runner.cwd": "/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project",
-    "code-runner.runInTerminal": true,
-}

@@ -16,7 +16,6 @@ main.py
 /dash*
 /foo*
 .vscode/
-.coverage
 src/teste.py
 *DS_Store*
 *.pyc
