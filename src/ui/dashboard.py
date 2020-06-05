@@ -3,6 +3,7 @@ Usage:
 ``python -m src``
 """
 import math
+import os.path
 from itertools import product
 from typing import List, Union, Dict, Tuple
 
@@ -15,7 +16,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
-from src.config import variables_file, student_data_file
+from src.config import *
 from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
 from src.ui import app, cache
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
@@ -165,6 +166,18 @@ def get_slider(field: str) -> html.Div:
     return div
 
 
+def load_markdown_text(file: str) -> str:
+    """
+    Load markdown text from assets
+
+    :param file: name of markdown file (without extension or path)
+    :return: contents of markdown file
+    """
+    with open(os.path.join(ui_assets_dir, f'{file}.md'), 'r') as f:
+        md = f.read()
+    return md
+
+
 # Create app layout
 app.layout = html.Div(
     [
@@ -230,39 +243,7 @@ app.layout = html.Div(
         # Introduction
         html.Div(
             [
-                dcc.Markdown(
-                    """
-                    ### How to use this dashboard
-                    
-                    #### 1. Feature Importance
-                    
-                    Understand what drives an interest in science. Look at the bright yellow and dark blue squares 
-                    in the correlation heatmap. Those indicate factors that are strongly correlated with each other. 
-                    Explore these in more detail using the selection menus. Use this understanding to choose variables
-                    that you think will be important in determining whether a student will continue in STEM. Test
-                    these variables in the next section.
-                    
-                    #### 2. Predictor
-                    
-                    This is an opportunity to create a "student" and see how various factors impact their interest
-                    in STEM. Choose the measurable you are looking to predict, choose the student's variables, then
-                    experiment to what factors might boost an interest in STEM.
-                    
-                    #### 3. Explore
-                    
-                    Gain a better understanding of the data. This section allows you to explore some of the patterns
-                    you see in greater detail, and to better understand the data behind the predictions.
-                    
-                    ### Dataset
-                    This study employs public-use data from the 
-                    [High School Longitudinal Study of 2009 (HSLS:09)](https://nces.ed.gov/surveys/hsls09/). 
-                    The goal of the study is to understand the factors that lead students to choose science, technology, 
-                    engineering, and mathematics courses, majors, and careers.
-
-                    The dataset can be downloaded 
-                    [here](https://nces.ed.gov/EDAT/Data/Zip/HSLS_2016_v1_0_CSV_Datasets.zip).
-                    """
-                )
+                dcc.Markdown(load_markdown_text('introduction'), dedent=False)
             ],
             className="pretty_container",
             style={"margin-bottom": "25px"}
@@ -273,17 +254,14 @@ app.layout = html.Div(
             [
                 html.Div([
                     html.H1("Feature Importance"),
-                    dcc.Markdown("""##### Correlation heatmap:\n- Hover to view details\n- Zoom by selecting an area 
-                    of interest\n- Double-click to zoom out"""),
+                    dcc.Markdown(load_markdown_text('correlation-heatmap')),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
                 ],
                     className="pretty_container six columns"
                 ),
                 html.Div([
                     html.Div([
-                        dcc.Markdown("""##### Continuous variables importance:\n- Large positive values have a 
-                        strong positive correlation with the selected dependent variable.\n- Large negative 
-                        values have a strong negative correlation with the selected dependent variable."""),
+                        dcc.Markdown(load_markdown_text('continuous-var-importance')),
                         html.P([
                             "Select x-axis:",
                             dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
@@ -325,14 +303,7 @@ app.layout = html.Div(
                     "Select dependent variable",
                     dcc.Dropdown(id='importance_category_y_selector', options=populate_dropdown('continuous'),
                                  value='X1SCIEFF'),
-                    dcc.Markdown(
-                        """Notes:\n- Left: Feature importance can be viewed as a relative scale generated using the 
-                        one-way [ANOVA test](https://en.wikipedia.org/wiki/One-way_analysis_of_variance).\n- Right: 
-                        p-value is the probability that categories share the same mean in the dependent variable. 
-                        Categories with p-values above the dotted line can be rejected as not predictive of the 
-                        dependent variable. Categories with very small p-values are strongly predictive of the 
-                        dependent variable. """
-                    )
+                    dcc.Markdown(load_markdown_text('feature-importance'))
                 ],
                     className="pretty_container four columns"
                 ),
@@ -381,11 +352,7 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     [
-                        dcc.Markdown("""### Create and test your student:\n- Use the dropdowns to select the parameters 
-                    you would like to adjust and the parameter you would like to predict\n- Use the sliders to adjust 
-                    the values of your chosen parameters\n- This model was generated using random forest regression 
-                    and is re-trained each time a new dropdown selection is made. Please allow it a few seconds to 
-                    complete training after each change."""),
+                        dcc.Markdown(load_markdown_text('ml-model')),
                         dcc.Graph(id="ml_prediction_plot")
                     ],
                     className="pretty_container eight columns",
@@ -439,9 +406,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
-                        dcc.Markdown("""##### Histogram for continuous variables:\n- Use the dropdown to select the 
-                        continuous numerical variable of interest.\n- Use the slider to adjust the histogram 
-                        resolution."""),
+                        dcc.Markdown(load_markdown_text('histogram')),
                         html.P(
                             [
                                 "Select a continuous variable:",
