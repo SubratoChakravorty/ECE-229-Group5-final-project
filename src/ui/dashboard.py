@@ -1,5 +1,6 @@
 """
-Just run using `python dashboard.py`
+Usage:
+``python -m src``
 """
 import math
 import numpy as np
@@ -63,7 +64,7 @@ def populate_dropdown(category: str = None) -> List[dict]:
 def fig_formatter(**kw):
     """
     Decorator for functions that produce figures. By default, all margins are stripped, but the margin sized can be
-    set indivdually.
+    set individually.
 
     :param t: top margin
     :param l: left margin
@@ -724,12 +725,12 @@ def get_histogram(bar_width, fields):
     :return: `plotly` histogram figure
     """
     data = get_field_data(fields, file_loc=student_data_file)
-    Width = (max(data) - min(data)) / bar_width
-    data = get_binned_data(fields, Width, file_loc=student_data_file)
+    width = (max(data) - min(data)) / bar_width
+    data = get_binned_data(fields, width, file_loc=student_data_file)
     fig = go.Figure(data=[go.Bar(
         x=data["range"],
         y=data["count"],
-        width=[Width] * bar_width,
+        width=[width] * bar_width,
         name="Adjustable Histogram"
     )])
     return fig
@@ -751,7 +752,6 @@ def get_empty_sunburst(text: str):
     )
 
 
-# todo: check out "subcategory axes"
 @app.callback(Output('second_explore_plot', 'figure'),
               [Input('expl_category_selector', 'value'), Input('expl_continuous_selector', 'value'),
                Input('plot_selector', 'value')])

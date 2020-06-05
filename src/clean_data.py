@@ -27,13 +27,7 @@ def clean(school_path='../data/hsls_09_school_v1_0.csv', student_path='../data/h
     st = pd.read_csv(student_path)
 
     print(len(sc), len(st))
-    # print(sc.head())
-    # print(st.head())
-
     print("Clean data...")
-    # remove -5 values, private data
-    # sc = sc.replace(-5, np.nan)
-    # st = st.replace(-5, np.nan)
 
     # Remove invalid data
     sc = sc.replace([-5, -9, -8, -7], np.nan)
@@ -44,8 +38,6 @@ def clean(school_path='../data/hsls_09_school_v1_0.csv', student_path='../data/h
     sc = sc.dropna(axis=1, how='all')
     st = st.dropna(axis=1, how='all')
 
-    # sc = sc.fillna(sc.min(axis=0))
-    # st = st.fillna(st.min(axis=0))
     print('Finish Cleaning')
     print(len(sc), len(st))
     return [sc, st]
