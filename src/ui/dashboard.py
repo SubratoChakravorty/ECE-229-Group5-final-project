@@ -273,8 +273,8 @@ app.layout = html.Div(
                     dcc.Markdown("""##### Correlation heatmap:\n- Hover to view details\n- Zoom by selecting an area 
                     of interest\n- Double-click to zoom out"""),
                     html.Div([dcc.Graph(id="correlation_matrix", figure=make_correlation_heatmap())], ),
-                    ],
-                    className="pretty_container one-half columns"
+                ],
+                    className="pretty_container six columns"
                 ),
                 html.Div([
                     html.Div([
@@ -284,28 +284,29 @@ app.layout = html.Div(
                         html.P([
                             "Select x-axis:",
                             dcc.Dropdown(id='import_x_selector', options=populate_dropdown('continuous'), multi=True,
-                                        value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI', # continuous
-                                                'S1STCHFAIR_neg',]),
+                                         value=['N1SCIYRS912', 'X1SCIUTI', 'X3TGPAENG', 'X3TGPAMAT', 'X3TGPASCI',
+                                                # continuous
+                                                'S1STCHFAIR_neg', ]),
                             dcc.Dropdown(id='import_y_selector', options=populate_dropdown('continuous'),
-                                        value='X1SCIEFF'),
-                                ]),
-                            ],
-                            id="FIselector",
-                            className="mini_container"
+                                         value='X1SCIEFF'),
+                        ]),
+                    ],
+                        id="FIselector",
+                        # className="mini_container"
                     ),
                     html.Div([
                         html.P([
-                                html.H6("Importance bar plot for continuous variables"),             
-                                dcc.Graph(id="importance_bar1"),
-                                ],
-                                ),
-                            ],
-                            id="importance_bar",
-                            className="mini_container"
+                            html.H6("Importance bar plot for continuous variables"),
+                            dcc.Graph(id="importance_bar1"),
+                        ],
                         ),
                     ],
+                        id="importance_bar",
+                        # className="mini_container"
+                    ),
+                ],
                     id="FI-column",
-                    className="one-half columns",
+                    className="pretty_container six columns",
                 ),
             ],
             className="flex-display",
@@ -376,14 +377,14 @@ app.layout = html.Div(
                     id="ml_controls",
                 ),
                 html.Div(
-                [
-                    dcc.Markdown("""### Create and test your student:\n- Use the dropdowns to select the parameters 
+                    [
+                        dcc.Markdown("""### Create and test your student:\n- Use the dropdowns to select the parameters 
                     you would like to adjust and the parameter you would like to predict\n- Use the sliders to adjust 
                     the values of your chosen parameters\n- This model was generated using random forest regression 
                     and is re-trained each time a new dropdown selection is made. Please allow it a few seconds to 
                     complete training after each change."""),
-                    dcc.Graph(id="ml_prediction_plot")
-                ],
+                        dcc.Graph(id="ml_prediction_plot")
+                    ],
                     className="pretty_container eight columns",
                 ),
             ],
@@ -1072,7 +1073,7 @@ def get_line_plot(x: Union[np.ndarray, list], y: Union[np.ndarray, list], x_var:
         layout=dict(xaxis_title=vars_df.loc[x_var, 'short'],
                     yaxis_title=vars_df.loc[endog, 'short'],
                     yaxis_range=[y_min, y_max],
-                    autosize=True,),
+                    autosize=True, ),
     )
 
 
