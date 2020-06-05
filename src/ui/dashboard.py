@@ -3,19 +3,21 @@ Usage:
 ``python -m src``
 """
 import math
+from itertools import product
+from typing import List, Union, Dict, Tuple
+
+import dash_bootstrap_components as dbc
+import dash_core_components as dcc
+import dash_html_components as html
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from src.ui import app, cache
-from itertools import product
 import plotly.graph_objects as go
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_bootstrap_components as dbc
-from typing import List, Union, Dict, Tuple
 from dash.dependencies import Input, Output, State
+
 from src.config import variables_file, student_data_file
 from src.multivariate_methods import get_correlation_matrix, get_feature_importance, MLmodel
+from src.ui import app, cache
 from src.univariate_methods import get_hierarchical_data, get_var_info, get_field_data, get_binned_data, get_stats, \
     get_categories
 
