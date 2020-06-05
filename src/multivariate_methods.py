@@ -14,14 +14,15 @@ np.random.seed(0)
 
 def get_feature_importance(y, fields, file_loc=config.student_data_file, method='pearson'):
     """
-    Computes feature importance of all the variables in fields parameter with dependent y variable. For categorical
-    fields, it provides results from anova analysis and for numerical/continuous fields it returns correlation
-    coefficients with y.
+    Computes feature importance of all the variables in fields parameter \
+    with dependent y variable. For categorical fields, it provides results \
+    from anova analysis and for numerical/continuous fields it returns \
+    correlation coefficients with y.
     
-    :param method: Method of correlation
-    - pearson : standard correlation coefficient
-    - kendall : Kendall Tau correlation coefficient
-    - spearman : Spearman rank correlation
+    :param method: Method of correlation\n
+    - pearson : standard correlation coefficient\n
+    - kendall : Kendall Tau correlation coefficient\n
+    - spearman : Spearman rank correlation\n
     :type method: str
     :param file_loc: path to dataset
     :type file_loc: str
@@ -29,9 +30,10 @@ def get_feature_importance(y, fields, file_loc=config.student_data_file, method=
     :type fields: list
     :param y: a dependent y field id
     :type y: str
-    :returns: a multilevel dictionary, value corresponding to key 'category' contains a dictionary with anova results
-    for categorical fields and value for key 'continuous' is dictionary with correlation coefficients.
-    :rtype dict
+    :returns: A multilevel dictionary, value corresponding to key 'category' \
+    contains a dictionary with anova results for categorical fields and value \
+    for key 'continuous' is dictionary with correlation coefficients.
+    :rtype: dict
     """
 
     df = load_data_frame(file_loc)
@@ -68,10 +70,10 @@ def get_correlation_matrix(fields, file_loc=config.student_data_file, method='pe
     :type fields: list
     :param file_loc: Path to the dataset
     :type file_loc: str
-    :param method: Method of correlation
-    - pearson : standard correlation coefficient
-    - kendall : Kendall Tau correlation coefficient
-    - spearman : Spearman rank correlation
+    :param method: Method of correlation\n
+    - pearson : standard correlation coefficient\n
+    - kendall : Kendall Tau correlation coefficient\n
+    - spearman : Spearman rank correlation\n
     :type method: str
     :returns: Correlation matrix.
     :rtype: pandas.DataFrame
@@ -107,13 +109,18 @@ class MLmodel:
         Train a machine learning model with y as dependent variable and variables in fields parameter as independent
         variables
 
-        :param regressor: sklearn regressor object, if None default RandomForestRegressor is used
-        :param test_split: float, if non-zero, train-test split is performed and training and test accuracy is returned
+        :param regressor: If None default RandomForestRegressor is used
+        :type regressor: sklearn regressor object
+        :param test_split: If non-zero, train-test split is performed and training and test accuracy is returned \
         else model trained on complete data and training accuracy along with -1 in place of test accuracy returned.
-        :param y: string, dependent variable, should be numerical/continuous
-        :param fields: list,  list of independent variables, can be numerical or categorical
-        :return: returns a tuple with training accuracy and test accuracy if test_split > 0 else a tuple with training
+        :type test_split: float
+        :param y: Dependent variable, should be numerical/continuous
+        :type t: str
+        :param fields: List of independent variables, can be numerical or categorical
+        :type fields: list
+        :returns: A tuple with training accuracy and test accuracy if test_split > 0 else a tuple with training \
         accuracy and -1 in place of test accuracy.
+        :rtype: tuple
         """
         assert isinstance(fields, list)
         assert all([(isinstance(field, str) and field in self.var_info.index) for field in fields])
@@ -166,9 +173,10 @@ class MLmodel:
         """
         Returns model's prediction for the input_data.
 
-        :param input_data: dict, a dictionary with fields as keys and a scalar value or a list of values for each field,
-        depending upon the number of samples
-        :return: returns a 1-d numpy array with predicted y value for each sample
+        :param input_data: A dictionary with fields as keys and a scalar value or a list of values for each field, depending upon the number of samples
+        :type input_data: dict
+        :returns: A 1-d numpy array with predicted y value for each sample
+        :rtype: numpy.ndarray
         """
 
         assert isinstance(input_data, dict)

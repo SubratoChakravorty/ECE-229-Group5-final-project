@@ -121,7 +121,9 @@ def get_slider(field: str) -> html.Div:
     Return a hidden div with slider text above the slider.
 
     :param field: A field from the list of valid fields
-    :return hidden div
+    :type field: str
+    :returns: hidden div
+    :rtype: html.Div
     """
     field_name = vars_df.loc[field, 'short']
     if vars_df.loc[field, 'type'] == 'continuous':

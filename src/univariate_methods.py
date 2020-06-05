@@ -218,19 +218,18 @@ def get_var_group(group, file_loc=config.vargroup_file):
 
 def get_var_info(file_loc=config.variables_file):
     """
-    Get variable information
-    Usage:
-    1. Single variable:
-    ``get_var_info("N1ALTCERT")``
-    2. Batch variables:
-    ``get_var_info(["N1ALTCERT", "N1COURSE"])``
+    Get variable information\n
+    Usage:\n
+    1. Single variable: ``get_var_info("N1ALTCERT")``\n
+    2. Batch variables: ``get_var_info(["N1ALTCERT", "N1COURSE"])``\n
     
     :param file_loc: Path to the dataset
     :type file_loc: str
-    :returns: A pd.DataFrame associated with the variable or a subset of pd.DataFrame corresponds to each variable in
-    name.
+    :returns: A pd.DataFrame associated with the variable or a subset of \
+    pd.DataFrame corresponds to each variable in name.
     :rtype: pandas.DataFrame
     """
+
     assert isinstance(file_loc, str)
 
     return load_data_frame(file_loc, index_col=0)
