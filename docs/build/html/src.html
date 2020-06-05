@@ -17,36 +17,34 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
 
+  
+  
     
 
   
+
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="src.ui package" href="src.ui.html" />
-    <link rel="prev" title="Description" href="Description.html" /> 
+    <link rel="prev" title="Setup" href="QuickStart.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -86,7 +84,13 @@
             
               <p class="caption"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Description.html">Brief Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Description.html">Introduction</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Home:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="QuickStart.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QuickStart.html#test">Test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QuickStart.html#build-the-docs">Build the docs</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API:</span></p>
 <ul class="current">
@@ -190,27 +194,31 @@
 </div>
 <div class="section" id="module-src.clean_data">
 <span id="src-clean-data-module"></span><h2>src.clean_data module<a class="headerlink" href="#module-src.clean_data" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
+<dl class="function">
 <dt id="src.clean_data.clean">
-<code class="sig-prename descclassname">src.clean_data.</code><code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">school_path</span><span class="o">=</span><span class="default_value">'../data/hsls_09_school_v1_0.csv'</span></em>, <em class="sig-param"><span class="n">student_path</span><span class="o">=</span><span class="default_value">'../data/hsls_16_student_v1_0.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/clean_data.html#clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.clean_data.clean" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.clean_data.</code><code class="descname">clean</code><span class="sig-paren">(</span><em>school_path='../data/hsls_09_school_v1_0.csv'</em>, <em>student_path='../data/hsls_16_student_v1_0.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/clean_data.html#clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.clean_data.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method preprocesses the data for both schools and students     and returns dataframe objects corresponding to each of these factors.</p>
 <p>Returns a list of the following:
 Dataframe object containing school variables.
 Dataframe object containing student variables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>school_path</strong> (<em>str</em>) – Path to the school.csv file</p></li>
-<li><p><strong>student_path</strong> (<em>str</em>) – Path to the student.csv file</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>school_path</strong> (<em>str</em>) – Path to the school.csv file</li>
+<li><strong>student_path</strong> (<em>str</em>) – Path to the student.csv file</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Cleaned school and student data.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple of two pandas.DataFrame</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Cleaned school and student data.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple of two pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -219,309 +227,358 @@ Dataframe object containing student variables.</p>
 </div>
 <div class="section" id="module-src.multivariate_methods">
 <span id="src-multivariate-methods-module"></span><h2>src.multivariate_methods module<a class="headerlink" href="#module-src.multivariate_methods" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
+<dl class="class">
 <dt id="src.multivariate_methods.MLmodel">
-<em class="property">class </em><code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">MLmodel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">src.multivariate_methods.</code><code class="descname">MLmodel</code><span class="sig-paren">(</span><em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
+<dl class="method">
 <dt id="src.multivariate_methods.MLmodel.predict_model">
-<code class="sig-name descname">predict_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.predict_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.predict_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_model</code><span class="sig-paren">(</span><em>input_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.predict_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.predict_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns model’s prediction for the input_data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>input_data</strong> (<em>dict</em>) – A dictionary with fields as keys and a scalar value or a list of values for each field, depending upon the number of samples</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-d numpy array with predicted y value for each sample</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_data</strong> (<em>dict</em>) – A dictionary with fields as keys and a scalar value or a list of values for each field, depending upon the number of samples</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A 1-d numpy array with predicted y value for each sample</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="src.multivariate_methods.MLmodel.train_model">
-<code class="sig-name descname">train_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">regressor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">test_split</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.train_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train_model</code><span class="sig-paren">(</span><em>y</em>, <em>fields</em>, <em>regressor=None</em>, <em>test_split=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#MLmodel.train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.MLmodel.train_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train a machine learning model with y as dependent variable and variables in fields parameter as independent
 variables</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>regressor</strong> (<em>sklearn regressor object</em>) – If None default RandomForestRegressor is used</p></li>
-<li><p><strong>test_split</strong> (<em>float</em>) – If non-zero, train-test split is performed and training and test accuracy is returned         else model trained on complete data and training accuracy along with -1 in place of test accuracy returned.</p></li>
-<li><p><strong>y</strong> – Dependent variable, should be numerical/continuous</p></li>
-<li><p><strong>fields</strong> (<em>list</em>) – List of independent variables, can be numerical or categorical</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>regressor</strong> (<em>sklearn regressor object</em>) – If None default RandomForestRegressor is used</li>
+<li><strong>test_split</strong> (<em>float</em>) – If non-zero, train-test split is performed and training and test accuracy is returned         else model trained on complete data and training accuracy along with -1 in place of test accuracy returned.</li>
+<li><strong>y</strong> – Dependent variable, should be numerical/continuous</li>
+<li><strong>fields</strong> (<em>list</em>) – List of independent variables, can be numerical or categorical</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple with training accuracy and test accuracy if test_split &gt; 0 else a tuple with training         accuracy and -1 in place of test accuracy.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A tuple with training accuracy and test accuracy if test_split &gt; 0 else a tuple with training         accuracy and -1 in place of test accuracy.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.multivariate_methods.get_correlation_matrix">
-<code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">get_correlation_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_correlation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_correlation_matrix</code><span class="sig-paren">(</span><em>fields</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em>, <em>method='pearson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_correlation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_correlation_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes correlation matrix that captures correlation between features
 present in the fields parameter</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fields</strong> (<em>list</em>) – List of fields</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
-<li><p><strong>method</strong> – Method of correlation</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fields</strong> (<em>list</em>) – List of fields</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
+<li><strong>method</strong> – Method of correlation</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
-<li><p>pearson : standard correlation coefficient</p></li>
-<li><p>kendall : Kendall Tau correlation coefficient</p></li>
-<li><p>spearman : Spearman rank correlation</p></li>
+<li>pearson : standard correlation coefficient</li>
+<li>kendall : Kendall Tau correlation coefficient</li>
+<li>spearman : Spearman rank correlation</li>
 </ul>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Correlation matrix.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pandas.DataFrame</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Correlation matrix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.multivariate_methods.get_feature_importance">
-<code class="sig-prename descclassname">src.multivariate_methods.</code><code class="sig-name descname">get_feature_importance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_feature_importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_feature_importance" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.multivariate_methods.</code><code class="descname">get_feature_importance</code><span class="sig-paren">(</span><em>y</em>, <em>fields</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em>, <em>method='pearson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multivariate_methods.html#get_feature_importance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.multivariate_methods.get_feature_importance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes feature importance of all the variables in fields parameter     with dependent y variable. For categorical fields, it provides results     from anova analysis and for numerical/continuous fields it returns     correlation coefficients with y.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>method</strong> – Method of correlation</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method</strong> – Method of correlation</td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
-<li><p>pearson : standard correlation coefficient</p></li>
-<li><p>kendall : Kendall Tau correlation coefficient</p></li>
-<li><p>spearman : Spearman rank correlation</p></li>
+<li>pearson : standard correlation coefficient</li>
+<li>kendall : Kendall Tau correlation coefficient</li>
+<li>spearman : Spearman rank correlation</li>
 </ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_loc</strong> (<em>str</em>) – path to dataset</p></li>
-<li><p><strong>fields</strong> (<em>list</em>) – list of field ids where each field id is a string</p></li>
-<li><p><strong>y</strong> (<em>str</em>) – a dependent y field id</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_loc</strong> (<em>str</em>) – path to dataset</li>
+<li><strong>fields</strong> (<em>list</em>) – list of field ids where each field id is a string</li>
+<li><strong>y</strong> (<em>str</em>) – a dependent y field id</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A multilevel dictionary, value corresponding to key ‘category’     contains a dictionary with anova results for categorical fields and value     for key ‘continuous’ is dictionary with correlation coefficients.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A multilevel dictionary, value corresponding to key ‘category’     contains a dictionary with anova results for categorical fields and value     for key ‘continuous’ is dictionary with correlation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-src.univariate_methods">
 <span id="src-univariate-methods-module"></span><h2>src.univariate_methods module<a class="headerlink" href="#module-src.univariate_methods" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_binned_data">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_binned_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_binned_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_binned_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_binned_data</code><span class="sig-paren">(</span><em>field_name=''</em>, <em>width=10</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_binned_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_binned_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the count of continuous data count seperated by range</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> – </p></li>
-<li><p><strong>field_name</strong> (<em>str</em>) – Field name</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>width</strong> – </li>
+<li><strong>field_name</strong> (<em>str</em>) – Field name</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Midnumber of range and the count of data in different range</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Midnumber of range and the count of data in different range</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_categories">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_categories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>int<span class="p">, </span>dict<span class="p">]</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_categories" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_categories</code><span class="sig-paren">(</span><em>field</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span> &#x2192; Tuple[int, dict]<a class="reference internal" href="_modules/src/univariate_methods.html#get_categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the most common category as int and dictionary with mapping from integers to categories.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<em>str</em>) – categorical field</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>field</strong> (<em>str</em>) – categorical field</li>
+<li><strong>file_loc</strong> (<em>str</em>) – path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>returns a tuple with an int and dictionary</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">returns a tuple with an int and dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_counts">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_counts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_counts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_counts" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_counts</code><span class="sig-paren">(</span><em>field_name=''</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_counts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_counts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns frequency counts of the input field from the dataframe</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</p></li>
-<li><p><strong>field_name</strong> (<em>str</em>) – The name of the field</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</li>
+<li><strong>field_name</strong> (<em>str</em>) – The name of the field</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Frequency distribution</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Frequency distribution</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_field_data">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_field_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field_name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Tuple<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_field_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_field_data</code><span class="sig-paren">(</span><em>field_name: Union[str</em>, <em>Tuple] = ''</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_field_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the input field data from the dataframe</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field_name</strong> (<em>str</em><em> or </em><em>list of str</em>) – Field name</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>field_name</strong> (<em>str</em><em> or </em><em>list of str</em>) – Field name</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Input field data.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.Series</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Input field data.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.Series</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_hierarchical_data">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_hierarchical_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em>, <em class="sig-param"><span class="n">color_var</span><span class="o">=</span><span class="default_value">'X1SCIEFF'</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>pandas.core.frame.DataFrame<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_hierarchical_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_hierarchical_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_hierarchical_data</code><span class="sig-paren">(</span><em>fields</em>, <em>color_var='X1SCIEFF'</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span> &#x2192; Tuple[pandas.core.frame.DataFrame, float]<a class="reference internal" href="_modules/src/univariate_methods.html#get_hierarchical_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_hierarchical_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dataframe with mean and count of groups segregated using input fields</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fields</strong> (<em>list</em>) – List of fields</p></li>
-<li><p><strong>color_var</strong> (<em>str</em>) – continuous endogenous (dependent) variable</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fields</strong> (<em>list</em>) – List of fields</li>
+<li><strong>color_var</strong> (<em>str</em>) – continuous endogenous (dependent) variable</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dataframe with info to build a sunburst plot</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dataframe with info to build a sunburst plot</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_stats">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em>, <em class="sig-param"><span class="n">median</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_stats" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_stats</code><span class="sig-paren">(</span><em>field</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em>, <em>median=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns min,median(mean) and max of a numerical field</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>median</strong> (<em>bool</em>) – Returns median as the middle value if True, else mean</p></li>
-<li><p><strong>field</strong> (<em>str</em>) – variable name</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>median</strong> (<em>bool</em>) – Returns median as the middle value if True, else mean</li>
+<li><strong>field</strong> (<em>str</em>) – variable name</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>tuple(min, max, median (mean))</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple(min, max, median (mean))</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_var_group">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_var_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group</span></em>, <em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/var_group.json'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_var_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_var_group" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_var_group</code><span class="sig-paren">(</span><em>group</em>, <em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/var_group.json'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_var_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_var_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of variables of a certain group.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<em>str</em>) – Group of the variable to get</p></li>
-<li><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>group</strong> (<em>str</em>) – Group of the variable to get</li>
+<li><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of variables in the specific group</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of variables in the specific group</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.get_var_info">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">get_var_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/variables.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_var_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_var_info" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">get_var_info</code><span class="sig-paren">(</span><em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/variables.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#get_var_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.get_var_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get variable information</p>
 <p>Usage:</p>
 <ol class="arabic simple">
-<li><p>Single variable: <code class="docutils literal notranslate"><span class="pre">get_var_info(&quot;N1ALTCERT&quot;)</span></code></p></li>
-<li><p>Batch variables: <code class="docutils literal notranslate"><span class="pre">get_var_info([&quot;N1ALTCERT&quot;,</span> <span class="pre">&quot;N1COURSE&quot;])</span></code></p></li>
+<li>Single variable: <code class="docutils literal notranslate"><span class="pre">get_var_info(&quot;N1ALTCERT&quot;)</span></code></li>
+<li>Batch variables: <code class="docutils literal notranslate"><span class="pre">get_var_info([&quot;N1ALTCERT&quot;,</span> <span class="pre">&quot;N1COURSE&quot;])</span></code></li>
 </ol>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A pd.DataFrame associated with the variable or a subset of     pd.DataFrame corresponds to each variable in name.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A pd.DataFrame associated with the variable or a subset of     pd.DataFrame corresponds to each variable in name.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.load_data_frame">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">load_data_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/src/univariate_methods.html#load_data_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.load_data_frame" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">load_data_frame</code><span class="sig-paren">(</span><em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/src/univariate_methods.html#load_data_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.load_data_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and cache dataframes from csv.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Data</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_loc</strong> (<em>str</em>) – Path to the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="src.univariate_methods.return_fields">
-<code class="sig-prename descclassname">src.univariate_methods.</code><code class="sig-name descname">return_fields</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_loc</span><span class="o">=</span><span class="default_value">'/Users/danielyou/Desktop/ECE-229-Group5-final-project/data/student_data.csv'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#return_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.return_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.univariate_methods.</code><code class="descname">return_fields</code><span class="sig-paren">(</span><em>file_loc='/Users/wangkai/Downloads/ece229/project/ECE-229-Group5-final-project/data/student_data.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/univariate_methods.html#return_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.univariate_methods.return_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the field values from the dataset</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Key-value pair</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_loc</strong> (<em>str</em>) – Path to the csv file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Key-value pair</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -541,7 +598,7 @@ present in the fields parameter</p>
         <a href="src.ui.html" class="btn btn-neutral float-right" title="src.ui package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Description.html" class="btn btn-neutral float-left" title="Description" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="QuickStart.html" class="btn btn-neutral" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -567,16 +624,26 @@ present in the fields parameter</p>
   
 
 
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

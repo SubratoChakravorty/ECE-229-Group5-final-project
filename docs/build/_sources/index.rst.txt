@@ -3,8 +3,6 @@
 Welcome to SSE's documentation!
 ===================================
 
-Let's `Get Started! <./Quick-Start.html>`
-
 You can read the latest code at https://github.com/SubratoChakravorty/ECE-229-Group5-final-project
 
 News
@@ -15,7 +13,9 @@ News
    :maxdepth: 2
    :caption: Home:
 
-   Brief Description<Description.md>
+   Introduction<Description.md>
+   Quick-Start<QuickStart.md>
+
 
 .. toctree::
    :maxdepth: 3
