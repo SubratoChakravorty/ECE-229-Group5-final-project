@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Configuring AWS" href="aws.html" />
-    <link rel="prev" title="src.test package" href="src.test.html" /> 
+    <link rel="next" title="src.test package" href="test.html" />
+    <link rel="prev" title="src package" href="src.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -92,7 +92,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="src.html">Models</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="src.test.html">src.test package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">src.ui package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-src.ui.dashboard">src.ui.dashboard module</a></li>
@@ -109,7 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="src.test.html">Test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Test</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">UI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.ui.dashboard">src.ui.dashboard module</a></li>
@@ -190,7 +189,8 @@
 </div>
 <div class="section" id="module-src.ui.dashboard">
 <span id="src-ui-dashboard-module"></span><h2>src.ui.dashboard module<a class="headerlink" href="#module-src.ui.dashboard" title="Permalink to this headline">¶</a></h2>
-<p>Just run using <cite>python dashboard.py</cite></p>
+<p>Usage:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">src</span></code></p>
 <dl class="py function">
 <dt id="src.ui.dashboard.add_frame">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">add_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#add_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.add_frame" title="Permalink to this definition">¶</a></dt>
@@ -236,7 +236,7 @@ categorical</p>
 <dt id="src.ui.dashboard.fig_formatter">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">fig_formatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#fig_formatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.fig_formatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator for functions that produce figures. By default, all margins are stripped, but the margin sized can be
-set indivdually.</p>
+set individually.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -278,6 +278,16 @@ set indivdually.</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt id="src.ui.dashboard.get_categorical_importance_plot">
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">get_categorical_importance_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#get_categorical_importance_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.get_categorical_importance_plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="src.ui.dashboard.get_categorical_p_plot">
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">get_categorical_p_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#get_categorical_p_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.get_categorical_p_plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="src.ui.dashboard.get_empty_sunburst">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">get_empty_sunburst</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#get_empty_sunburst"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.get_empty_sunburst" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -308,16 +318,52 @@ set indivdually.</p>
 <dd><p>Return a hidden div with slider text above the slider.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>field</strong> – A field from the list of valid fields</p>
+<dd class="field-odd"><p><strong>field</strong> (<em>str</em>) – A field from the list of valid fields</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>hidden div</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>html.Div</p>
 </dd>
 </dl>
-<p>:return hidden div</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="src.ui.dashboard.get_sunburst_plot">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">get_sunburst_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#get_sunburst_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.get_sunburst_plot" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt id="src.ui.dashboard.load_markdown_text">
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">load_markdown_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/src/ui/dashboard.html#load_markdown_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.load_markdown_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load markdown text from assets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file</strong> – name of markdown file (without extension or path)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>contents of markdown file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.ui.dashboard.make_categorical_importance_plots">
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">make_categorical_importance_plots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exog</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">endog</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>plotly.graph_objs._figure.Figure<span class="p">, </span>plotly.graph_objs._figure.Figure<span class="p">]</span><a class="reference internal" href="_modules/src/ui/dashboard.html#make_categorical_importance_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.make_categorical_importance_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback to generate the categorical feature importance plots</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exog</strong> – exogenous (independent) variables</p></li>
+<li><p><strong>endog</strong> – endogenous (dependent) variable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of figures: (importance bar plot, p-value plot)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="src.ui.dashboard.make_correlation_heatmap">
@@ -343,13 +389,13 @@ set indivdually.</p>
 
 <dl class="py function">
 <dt id="src.ui.dashboard.make_importance_bar_plot">
-<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">make_importance_bar_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#make_importance_bar_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.make_importance_bar_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">make_importance_bar_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exog</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">endog</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#make_importance_bar_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.make_importance_bar_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the importance bar plot</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> – x variables list</p></li>
-<li><p><strong>y</strong> – y variable, normally self-efficiency</p></li>
+<li><p><strong>exog</strong> – exogenous (independent) variables list</p></li>
+<li><p><strong>endog</strong> – endogenous (dependent) variable, typically self-efficacy</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -360,7 +406,7 @@ set indivdually.</p>
 
 <dl class="py function">
 <dt id="src.ui.dashboard.make_prediction_plot">
-<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">make_prediction_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exog</span><span class="p">:</span> <span class="n">List</span></em>, <em class="sig-param"><span class="n">endog</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">x_var</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">slider_values</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#make_prediction_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.make_prediction_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">make_prediction_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exog</span><span class="p">:</span> <span class="n">List</span></em>, <em class="sig-param"><span class="n">endog</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">x_var</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">slider_values</span><span class="p">:</span> <span class="n">Tuple[float, …]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#make_prediction_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.make_prediction_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback to generate the prediction plot</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -467,11 +513,19 @@ continuous variable, used to color the segments.</p>
 <dl class="py function">
 <dt id="src.ui.dashboard.toggle_modal">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">toggle_modal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n1</span></em>, <em class="sig-param"><span class="n">n2</span></em>, <em class="sig-param"><span class="n">is_open</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#toggle_modal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.toggle_modal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modal style report window
-:param n1: click or not for open button
-:param n2: click or not for close button
-:param is_open: boolean 
-:return: boolean is_open</p>
+<dd><p>Modal style report window</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n1</strong> – click or not for open button</p></li>
+<li><p><strong>n2</strong> – click or not for close button</p></li>
+<li><p><strong>is_open</strong> – boolean</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>boolean is_open</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -495,9 +549,15 @@ continuous variable, used to color the segments.</p>
 <dl class="py function">
 <dt id="src.ui.dashboard.update_text">
 <code class="sig-prename descclassname">src.ui.dashboard.</code><code class="sig-name descname">update_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/ui/dashboard.html#update_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.ui.dashboard.update_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update 4 small windows above histogram
-:param data: column data in selected field
-:return: 4 stastistical number, max, min, mean, median number</p>
+<dd><p>Update 4 small windows above histogram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – column data in selected field</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>4 statistical number, max, min, mean, median number</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -514,10 +574,10 @@ continuous variable, used to color the segments.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="aws.html" class="btn btn-neutral float-right" title="Configuring AWS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="test.html" class="btn btn-neutral float-right" title="src.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="src.test.html" class="btn btn-neutral float-left" title="src.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="src.html" class="btn btn-neutral float-left" title="src package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

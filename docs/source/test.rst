@@ -1,21 +1,28 @@
-src.test package
+test package
 ================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
 
 Submodules
 ----------
 
-src.test.conftest module
+test.conftest module
 ------------------------
 
-.. automodule:: src.test.conftest
+.. automodule:: test.conftest
    :members:
    :undoc-members:
    :show-inheritance:
 
-src.test.test\_ui module
+test.test\_ui module
 ------------------------
 
-.. automodule:: src.test.test_ui
+.. automodule:: test.test_ui
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +31,7 @@ src.test.test\_ui module
 Module contents
 ---------------
 
-.. automodule:: src.test
+.. automodule:: test
    :members:
    :undoc-members:
    :show-inheritance:

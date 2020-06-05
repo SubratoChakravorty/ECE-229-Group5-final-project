@@ -22,7 +22,7 @@ News
    :caption: API:
 
    Models<src>
-   Test<src.test> 
+   Test<test> 
    UI<src.ui>
    Deployment<aws>
 

@@ -89,7 +89,7 @@
 <p class="caption"><span class="caption-text">API:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../src.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../src.test.html">Test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test.html">Test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../src.ui.html">UI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../aws.html">Deployment</a></li>
 </ul>
@@ -184,13 +184,7 @@
     <span class="n">st</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">student_path</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sc</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">))</span>
-    <span class="c1"># print(sc.head())</span>
-    <span class="c1"># print(st.head())</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Clean data...&quot;</span><span class="p">)</span>
-    <span class="c1"># remove -5 values, private data</span>
-    <span class="c1"># sc = sc.replace(-5, np.nan)</span>
-    <span class="c1"># st = st.replace(-5, np.nan)</span>
 
     <span class="c1"># Remove invalid data</span>
     <span class="n">sc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -201,8 +195,6 @@
     <span class="n">sc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
     <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 
-    <span class="c1"># sc = sc.fillna(sc.min(axis=0))</span>
-    <span class="c1"># st = st.fillna(st.min(axis=0))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finish Cleaning&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sc</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="n">st</span><span class="p">]</span></div>
