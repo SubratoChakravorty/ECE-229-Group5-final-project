@@ -12,7 +12,7 @@ setup(
    "dash>=1.4",
    "pandas>=1.0",
    "plotly>=4.6",
-   "pytest==5.4.2",
+   "pytest==9.0.3",
    "selenium>=3",
    "scikit-learn>=0.22",
    "flask",
